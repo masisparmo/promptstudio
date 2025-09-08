@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prompt Engineering Studio: Belajar dan Hasilkan Prompt dengan Mudah</title>
+    <title>Prompt Engineering Studio: Gemini</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -24,6 +24,14 @@
             --card-border: #e5e7eb;
             --prompt-card-bg: #f9fafb;
             --prompt-card-border: #4f46e5;
+            --negative-bg: #fef2f2;
+            --negative-border: #fca5a5;
+            --negative-header-text: #b91c1c;
+            --negative-body-text: #dc2626;
+            --positive-bg: #f0fdf4;
+            --positive-border: #86efac;
+            --positive-header-text: #15803d;
+            --positive-body-text: #16a34a;
         }
 
         html.dark {
@@ -41,6 +49,14 @@
             --card-border: #374151;
             --prompt-card-bg: #1f2937;
             --prompt-card-border: #6366f1;
+            --negative-bg: #450a0a;
+            --negative-border: #7f1d1d;
+            --negative-header-text: #fca5a5;
+            --negative-body-text: #f87171;
+            --positive-bg: #166534;
+            --positive-border: #22c55e;
+            --positive-header-text: #bbf7d0;
+            --positive-body-text: #86efac;
         }
 
         body {
@@ -212,9 +228,50 @@
         #aspect-ratio-button .text-secondary {
              color: var(--text-secondary);
         }
-        /* PERBAIKAN: Background solid untuk dropdown */
+       
+        /* Background solid untuk dropdown dan modal */
         .bg-primary-solid {
             background-color: var(--bg-primary);
+        }
+
+        /* Styling untuk kotak prompt negatif */
+        .negative-prompt-box, .positive-prompt-box {
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            border-width: 1px;
+        }
+        .negative-prompt-box {
+            background-color: var(--negative-bg);
+            border-color: var(--negative-border);
+        }
+        .negative-prompt-box h4 {
+            color: var(--negative-header-text);
+        }
+        .negative-prompt-box p {
+            color: var(--negative-body-text);
+        }
+        .positive-prompt-box {
+            background-color: var(--positive-bg);
+            border-color: var(--positive-border);
+        }
+        .positive-prompt-box h4 {
+            color: var(--positive-header-text);
+        }
+        .positive-prompt-box p {
+            color: var(--positive-body-text);
+        }
+
+        /* Typing Indicator */
+        .typing-indicator span {
+            animation: blink 1.4s infinite both;
+            display: inline-block;
+        }
+        .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes blink {
+            0% { opacity: 0.2; }
+            20% { opacity: 1; }
+            100% { opacity: 0.2; }
         }
     </style>
 </head>
@@ -410,13 +467,13 @@
                             <h3 class="text-xl font-semibold text-indigo-400">4. Prompt Negatif</h3>
                             <p class="mt-1 text-secondary">Tentukan elemen yang <strong>tidak</strong> Anda inginkan dalam video. Cara terbaik adalah dengan mendeskripsikan apa yang tidak ingin Anda lihat, bukan menggunakan bahasa instruktif.</p>
                             <div class="grid md:grid-cols-2 gap-4 mt-2">
-                                <div class="bg-red-900/30 border border-red-500 p-3 rounded-lg">
-                                    <h4 class="font-semibold text-red-400">❌ JANGAN GUNAKAN:</h4>
-                                    <p class="text-sm text-red-300">Bahasa instruktif seperti "tidak ada" atau "jangan". Contoh: "tidak ada dinding".</p>
+                                <div class="negative-prompt-box">
+                                    <h4 class="font-semibold">❌ JANGAN GUNAKAN:</h4>
+                                    <p class="text-sm">Bahasa instruktif seperti "tidak ada" atau "jangan". Contoh: "tidak ada dinding".</p>
                                 </div>
-                                <div class="bg-green-900/30 border border-green-500 p-3 rounded-lg">
-                                    <h4 class="font-semibold text-green-400">✅ GUNAKAN:</h4>
-                                    <p class="text-sm text-green-300">Deskripsikan apa yang ingin dihindari. Contoh: "-negative_prompt 'dinding, bingkai, bangunan'".</p>
+                                <div class="positive-prompt-box">
+                                    <h4 class="font-semibold">✅ GUNAKAN:</h4>
+                                    <p class="text-sm">Deskripsikan apa yang ingin dihindari. Contoh: "-negative_prompt 'dinding, bingkai, bangunan'".</p>
                                 </div>
                              </div>
                         </div>
@@ -645,15 +702,16 @@
     </div>
 
     <!-- Floating Assistant Button -->
-    <button id="assistant-button" class="btn btn-primary fixed bottom-6 right-6 rounded-full shadow-lg z-50 flex items-center justify-center transform hover:scale-110 transition-transform px-4 py-3">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+    <button id="assistant-button" class="bg-accent-color hover:bg-accent-hover text-accent-text fixed bottom-6 right-6 rounded-full shadow-lg z-50 flex items-center justify-center transform hover:scale-110 transition-transform w-14 h-14 active:scale-95 active:shadow-inner" 
+    style="box-shadow: 0 4px 10px rgba(0,0,0,0.2), 0 0 0 2px var(--bg-primary), 0 0 0 4px var(--accent-color);">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.51c1.136-1.01 2.894-1.01 4.03 0 1.135 1.01.99 2.768-.336 3.878-1.325 1.11-2.438 2.388-2.438 3.96v.152" />
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 18.75h.01" />
         </svg>
-        <span class="font-semibold text-xs">TANYA AHLI</span>
     </button>
 
     <!-- Assistant Modal -->
-    <div id="assistant-modal" class="hidden fixed bottom-20 right-6 w-full max-w-sm h-[60vh] bg-secondary rounded-lg shadow-2xl z-50 flex-col transition-all duration-300 ease-out transform opacity-0 translate-y-4">
+    <div id="assistant-modal" class="hidden fixed bottom-24 right-6 w-full max-w-sm h-[60vh] bg-secondary rounded-lg shadow-2xl z-50 flex-col transition-all duration-300 ease-out transform opacity-0 translate-y-4">
         <div class="flex justify-between items-center p-4 border-b border-border-color bg-tertiary rounded-t-lg">
             <h3 class="font-bold text-base">Asisten Ahli Prompt</h3>
             <button id="close-assistant-modal" class="text-secondary text-2xl font-bold leading-none hover:text-primary">&times;</button>
@@ -805,7 +863,7 @@
         const removeVideoButton = document.getElementById('remove-video-button');
         let uploadedVideoFile = null;
 
-        // --- NEW: Custom Dropdown Elements ---
+        // --- Custom Dropdown Elements ---
         const aspectRatioDropdown = document.getElementById('aspect-ratio-dropdown');
         const aspectRatioButton = document.getElementById('aspect-ratio-button');
         const aspectRatioMenu = document.getElementById('aspect-ratio-menu');
@@ -842,7 +900,6 @@
             let prompt = "";
 
             if (uploadedImageBase64) {
-                 // PERBAIKAN: Hapus '[Gambar Input]' dari prompt
                 prompt = `${detail || `Sempurnakan foto dari "${produk}" ini menjadi lebih profesional`}`;
                 if(gaya) {
                     prompt += `, dengan gaya visual ${gaya}`;
@@ -900,7 +957,7 @@
              if (isEditing) {
                  tujuanGambarContainer.classList.add('hidden'); 
                  tujuanGambarEl.disabled = true;
-                 produkGambarLabelText.parentElement.classList.remove('hidden'); // Ensure it's visible
+                 produkGambarLabelText.parentElement.classList.remove('hidden'); 
                  
                  produkGambarLabelText.textContent = "1. Objek Utama pada Gambar";
                  produkGambarEl.placeholder = "Contoh: Laptop ASUS di atas meja kayu";
@@ -1195,7 +1252,7 @@
         assistantButton.addEventListener('click', toggleAssistant);
         closeAssistantModal.addEventListener('click', toggleAssistant);
         
-        function addMessageToChat(message, sender) {
+        function addMessageToChat(message, sender, isTyping = false) {
             const messageWrapper = document.createElement('div');
             const messageBubble = document.createElement('div');
             
@@ -1209,22 +1266,51 @@
                 messageWrapper.classList.add('justify-start');
                 messageBubble.classList.add('bg-tertiary', 'text-primary');
             }
-            messageBubble.textContent = message;
+
+            if (isTyping) {
+                messageBubble.innerHTML = '<div class="typing-indicator"><span>.</span><span>.</span><span>.</span></div>';
+                messageBubble.id = 'typing-bubble';
+            } else {
+                 messageBubble.textContent = message;
+            }
+
             messageWrapper.appendChild(messageBubble);
             assistantChatBody.appendChild(messageWrapper);
             assistantChatBody.scrollTop = assistantChatBody.scrollHeight; // Auto-scroll to bottom
         }
 
-        function handleSendMessage() {
+        function updateLastAssistantMessage(newMessage) {
+            const typingBubble = document.getElementById('typing-bubble');
+            if (typingBubble) {
+                typingBubble.innerHTML = ''; 
+                typingBubble.textContent = newMessage;
+                typingBubble.removeAttribute('id');
+            }
+             assistantChatBody.scrollTop = assistantChatBody.scrollHeight;
+        }
+
+        async function handleSendMessage() {
             const message = assistantInput.value.trim();
-            if (message) {
-                addMessageToChat(message, 'user');
-                assistantInput.value = '';
-                // Simulate assistant response
-                setTimeout(() => {
-                    const response = "Terima kasih atas pertanyaan Anda. Sebagai Asisten AI, saya sedang belajar. Untuk saat ini, saya bisa memberikan tips umum. Pastikan prompt Anda detail, spesifik, dan jelaskan konteks serta gaya yang diinginkan untuk hasil terbaik!";
-                    addMessageToChat(response, 'assistant');
-                }, 1000);
+            if (!message) return;
+
+            addMessageToChat(message, 'user');
+            assistantInput.value = '';
+            assistantInput.disabled = true;
+            sendAssistantMessage.disabled = true;
+            
+            addMessageToChat('', 'assistant', true);
+
+            const systemPrompt = "Anda adalah seorang ahli rekayasa prompt (prompt engineering) dengan pengalaman puluhan tahun, khususnya untuk model AI generatif gambar seperti Nano Banana dan model video seperti Veo3. Anda memberikan jawaban yang praktis, mendalam, dan profesional atas pertanyaan pengguna mengenai cara membuat prompt yang efektif. Selalu jawab dalam Bahasa Indonesia.";
+            
+            try {
+                const response = await makeApiCallWithRetry(systemPrompt, message);
+                updateLastAssistantMessage(response);
+            } catch (error) {
+                updateLastAssistantMessage("Maaf, saya sedang mengalami gangguan. Silakan coba lagi nanti. " + error.message);
+            } finally {
+                assistantInput.disabled = false;
+                sendAssistantMessage.disabled = false;
+                assistantInput.focus();
             }
         }
 
@@ -1280,4 +1366,3 @@
     </script>
 </body>
 </html>
-
