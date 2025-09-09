@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prompt Engineering Studio: Panduan Cara Mudah Membuat Prompt Gambar dan Video</title>
+    <title>Prompt Engineering Studio: Panduan Mudah Cara Membuat Prompt Gambar dan Video</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -356,9 +356,9 @@
             <div class="w-12 h-12"></div>
             <div class="flex-grow text-center">
                  <h1 class="text-4xl md:text-5xl font-bold tracking-tight">
-                    Prompt Engineering Studio
+                    PROMPT STUDIO
                 </h1>
-                <p class="mt-2 text-lg text-secondary">Panduan & Alat Desain Prompt untuk Gemini</p>
+                <p class="mt-2 text-lg text-secondary">Cara Mudah Membuat Prompt Image & Video</p>
             </div>
             <button id="theme-toggle" class="p-2 rounded-full bg-tertiary hover:bg-border-color transition-colors w-12 h-12 flex items-center justify-center">
                 <svg id="theme-icon-light" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
@@ -698,7 +698,7 @@
         </footer>
     </div>
 
-    <button id="assistant-button" class="text-accent-text fixed bottom-8 right-8 rounded-full shadow-lg z-50 flex items-center justify-center w-14 h-14">
+    <button id="assistant-button" class="hidden text-accent-text fixed bottom-8 right-8 rounded-full shadow-lg z-50 flex items-center justify-center w-14 h-14">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
           <path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.51c1.136-1.01 2.894-1.01 4.03 0 1.135 1.01.99 2.768-.336 3.878-1.325 1.11-2.438 2.388-2.438 3.96v.152" />
           <path stroke-linecap="round" stroke-linejoin="round" d="M12 18.75h.01" />
@@ -716,7 +716,7 @@
         <div class="p-4 border-t border-border-color">
             <div class="relative">
                 <input type="text" id="assistant-input" class="form-input w-full p-3 pr-14" placeholder="Tanya sesuatu...">
-                <button id="send-assistant-message" class="absolute right-1 top-1/2 -translate-y-1/2 btn btn-primary !p-2">
+                <button id="send-assistant-message" class="absolute right-1 top-1/2 -translate-y-1.2 btn btn-primary !p-2">
                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                         <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
                     </svg>
@@ -738,6 +738,7 @@
         const apiKeySection = document.getElementById('api-key-section');
         const apiKeyInput = document.getElementById('api-key-input');
         const startWithApiKeyBtn = document.getElementById('start-with-api-key');
+        const assistantButton = document.getElementById('assistant-button');
         
         // --- Welcome Screen Logic ---
         useSharedEnvBtn.addEventListener('click', () => {
@@ -755,6 +756,7 @@
                 apiMode = 'user';
                 welcomeScreen.style.display = 'none';
                 mainApp.classList.add('active');
+                assistantButton.classList.remove('hidden');
             } else {
                 apiKeyInput.focus();
                 apiKeyInput.classList.add('border-red-500', 'animate-pulse');
@@ -938,7 +940,7 @@
                  gayaGambarLabelText.textContent = "2. Gaya Visual Baru (Opsional)";
                  gayaGambarEl.placeholder = "Contoh: cat air, sinematik, minimalis";
                  detailGambarLabelText.textContent = "3. Jelaskan Perubahan yang Diinginkan";
-                 detailGambarEl.placeholder = "Contoh: Hapus latar belakang, ganti dengan pemandangan kantor modern.";
+                 detailGambarLabelText.placeholder = "Contoh: Hapus latar belakang, ganti dengan pemandangan kantor modern.";
              } else {
                  tujuanGambarContainer.classList.remove('hidden');
                  tujuanGambarEl.disabled = false;
@@ -1179,7 +1181,6 @@
        });
 
         // --- Floating Assistant Logic ---
-        const assistantButton = document.getElementById('assistant-button');
         const assistantModal = document.getElementById('assistant-modal');
         const closeAssistantModal = document.getElementById('close-assistant-modal');
         const assistantChatBody = document.getElementById('assistant-chat-body');
@@ -1311,5 +1312,3 @@
     </script>
 </body>
 </html>
-
-
