@@ -327,7 +327,7 @@
             <!-- Option 2: User API Key -->
             <div class="card p-6 flex flex-col items-center text-center">
                  <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-purple-500 mb-4"><path d="m15 12-8.373 8.373a1 1 0 1 1-1.414-1.414L12.172 12 5.213 5.043a1 1 0 1 1 1.414-1.414L15 12Z"/><path d="m3 12 2.394 2.394a1 1 0 0 0 1.414 0L9.121 12l-2.313-2.313a1 1 0 0 0-1.414 0L3 12Z"/></svg>
-                <h2 class="text-xl font-bold mb-2">Gunakan kode API Gemini milik Anda</h2>
+                <h2 class="text-xl font-bold mb-2">Gunakan kode API Gemini</h2>
                 <p class="text-secondary mb-4 text-sm">Masukkan kode API Key Gemini milik Anda sendiri.</p>
                 <button id="use-user-api-key" class="btn btn-secondary w-full">MASUKKAN API KEY</button>
             </div>
@@ -368,7 +368,7 @@
 
         <div class="flex justify-center mb-8 bg-secondary rounded-lg p-1.5 shadow-md max-w-md mx-auto">
             <button id="tab-belajar" class="tab-button active w-1/2 py-2 px-4 rounded-md" onclick="showTab('belajar')">
-                PANDUAN PROMPT
+                PUSAT PEMBELAJARAN
             </button>
             <button id="tab-desainer" class="tab-button w-1/2 py-2 px-4 rounded-md" onclick="showTab('desainer')">
                 DESAINER PROMPT
@@ -830,7 +830,6 @@
         const allFormInputs = document.querySelectorAll('.form-input, .form-select');
         const enhanceButton = document.getElementById('enhance-prompt-button');
         const enhanceButtonText = document.getElementById('enhance-prompt-text');
-        const enhanceButtonIcon = document.getElementById('enhance-prompt-icon');
         const imageUploadEl = document.getElementById('image-upload');
         const dropZone = document.getElementById('drop-zone');
         const imagePreviewContainer = document.getElementById('image-preview-container');
@@ -935,12 +934,12 @@
                  tujuanGambarContainer.classList.add('hidden'); 
                  tujuanGambarEl.disabled = true;
                  produkGambarLabelText.parentElement.classList.remove('hidden'); 
-                 produkGambarLabelText.textContent = "1. Objek Utama pada Gambar";
+                 produkGambarLabelText.textContent = "Objek Utama pada Gambar";
                  produkGambarEl.placeholder = "Contoh: Laptop ASUS di atas meja kayu";
-                 gayaGambarLabelText.textContent = "2. Gaya Visual Baru (Opsional)";
+                 gayaGambarLabelText.textContent = "Gaya Visual Baru (Opsional)";
                  gayaGambarEl.placeholder = "Contoh: cat air, sinematik, minimalis";
-                 detailGambarLabelText.textContent = "3. Jelaskan Perubahan yang Diinginkan";
-                 detailGambarLabelText.placeholder = "Contoh: Hapus latar belakang, ganti dengan pemandangan kantor modern.";
+                 detailGambarLabelText.textContent = "Jelaskan Perubahan yang Diinginkan";
+                 detailGambarEl.placeholder = "Contoh: Hapus latar belakang, ganti dengan pemandangan kantor modern.";
              } else {
                  tujuanGambarContainer.classList.remove('hidden');
                  tujuanGambarEl.disabled = false;
@@ -971,7 +970,6 @@
              }
             const isKemasan = tujuanGambarEl.value === 'Kemasan' && !isEditing;
             kemasanContainerEl.classList.toggle('hidden', !isKemasan);
-            let num = isEditing ? 1 : 2;
             document.querySelector('label[for="produk-gambar"] .form-num').textContent = `${isEditing ? '1.' : (isKemasan ? '3.' : '2.')}`;
             document.querySelector('label[for="gaya-gambar"] .form-num').textContent = `${isEditing ? '2.' : (isKemasan ? '4.' : '3.')}`;
             document.querySelector('label[for="detail-gambar"] .form-num').textContent = `${isEditing ? '3.' : (isKemasan ? '5.' : '4.')}`;
@@ -1030,7 +1028,6 @@
             }
             enhanceButton.disabled = true;
             enhanceButtonText.textContent = 'MENINGKATKAN...';
-            enhanceButtonIcon.innerHTML = `<span class="loader"></span>`;
             const isVideo = designerTabVideo.classList.contains('active');
             const systemPrompt = isVideo 
                 ? "Anda adalah seorang sutradara film dan ahli rekayasa prompt video. Ambil prompt dasar berikut dan buatlah menjadi jauh lebih deskriptif, sinematik, dan profesional. Tambahkan detail spesifik tentang gerakan kamera, sinematografi, pencahayaan, tempo, dan desain suara. Pertahankan subjek inti dan rasio aspek. Balas HANYA dengan teks prompt yang disempurnakan tanpa tambahan atau awalan apapun. Selalu berikan jawaban dalam Bahasa Indonesia."
@@ -1047,7 +1044,6 @@
             } finally {
                 enhanceButton.disabled = false;
                 enhanceButtonText.textContent = 'BUAT LEBIH KREATIF';
-                enhanceButtonIcon.innerHTML = `✨`;
             }
         }
         
