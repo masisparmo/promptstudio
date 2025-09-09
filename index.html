@@ -17,7 +17,7 @@
             --text-secondary: #4b5563;
             --border-color: #d1d5db;
             --accent-color: #4f46e5;
-            --accent-hover: #4338ca;
+            --accent-hover: #6366f1; /* Made hover slightly lighter */
             --accent-text: #ffffff;
             --code-bg: #e5e7eb;
             --code-text: #be123c;
@@ -42,7 +42,7 @@
             --text-secondary: #9ca3af;
             --border-color: #374151;
             --accent-color: #6366f1;
-            --accent-hover: #4f46e5;
+            --accent-hover: #818cf8; /* Made hover slightly lighter */
             --accent-text: #ffffff;
             --code-bg: #1f2937;
             --code-text: #a7f3d0;
@@ -66,14 +66,14 @@
             transition: background-color 0.3s ease, color 0.3s ease;
         }
 
-        /* Modern button styles */
+        /* PERBAIKAN: Gaya tombol 3D yang solid */
         .btn {
             padding: 0.75rem 1.5rem;
             border-radius: 0.5rem;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            transition: all 0.2s ease-in-out;
+            transition: all 0.15s ease-out;
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -85,23 +85,38 @@
         .btn-primary {
             background-color: var(--accent-color);
             color: var(--accent-text);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+            border-bottom: 4px solid color-mix(in srgb, var(--accent-color) 80%, black);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            transform: translateY(0);
         }
 
         .btn-primary:hover {
             background-color: var(--accent-hover);
             transform: translateY(-2px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .btn-primary:active {
+            transform: translateY(1px); /* Efek ditekan */
+            border-bottom-width: 2px; /* Meratakan tombol saat ditekan */
+            box-shadow: none;
         }
         
         .btn-secondary {
             background-color: var(--bg-tertiary);
             color: var(--text-primary);
             border: 1px solid var(--border-color);
+            border-bottom: 4px solid color-mix(in srgb, var(--bg-tertiary) 80%, black);
         }
 
         .btn-secondary:hover {
             background-color: var(--border-color);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary:active {
+            transform: translateY(1px);
+            border-bottom-width: 2px;
         }
 
         .btn:disabled {
@@ -109,6 +124,7 @@
             cursor: not-allowed;
             transform: none;
             box-shadow: none;
+            border-bottom: 4px solid color-mix(in srgb, var(--bg-tertiary) 80%, black);
         }
         
         /* General components */
@@ -200,6 +216,22 @@
         /* Floating Assistant Styles */
         #assistant-modal {
             transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        
+        /* PERBAIKAN: Gaya 3D untuk Tombol Asisten */
+        #assistant-button {
+            background-color: var(--accent-color);
+            border-bottom: 5px solid color-mix(in srgb, var(--accent-color) 70%, black);
+            transition: all 0.15s ease-out;
+        }
+        #assistant-button:hover {
+            background-color: var(--accent-hover);
+            transform: translateY(-2px);
+        }
+        #assistant-button:active {
+            transform: translateY(2px);
+            border-bottom-width: 2px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
         }
 
         /* Custom Dropdown for Aspect Ratio */
@@ -322,14 +354,20 @@
     
     <!-- Main Application -->
     <div id="main-app" class="container mx-auto p-4 md:p-8">
-        <!-- Header -->
-        <header class="relative text-center mb-8">
-            <h1 class="text-4xl md:text-5xl font-bold tracking-tight">
-                Prompt Engineering Studio
-            </h1>
-            <p class="mt-2 text-lg text-secondary">Panduan & Alat Desain Prompt untuk Gemini</p>
-            <!-- Theme Toggle -->
-            <button id="theme-toggle" class="absolute top-0 right-0 p-2 rounded-full bg-tertiary hover:bg-border-color transition-colors">
+        <!-- PERBAIKAN: Header diubah menjadi flexbox untuk mencegah tumpang tindih -->
+        <header class="flex justify-between items-center mb-8">
+            <!-- Spacer untuk menyeimbangkan tombol tema dan menjaga judul tetap di tengah -->
+            <div class="w-12 h-12"></div>
+            
+            <div class="flex-grow text-center">
+                 <h1 class="text-4xl md:text-5xl font-bold tracking-tight">
+                    Prompt Engineering Studio
+                </h1>
+                <p class="mt-2 text-lg text-secondary">Panduan & Alat Desain Prompt untuk Gemini</p>
+            </div>
+
+            <!-- Tombol Tema -->
+            <button id="theme-toggle" class="p-2 rounded-full bg-tertiary hover:bg-border-color transition-colors w-12 h-12 flex items-center justify-center">
                 <svg id="theme-icon-light" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
                 <svg id="theme-icon-dark" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
             </button>
@@ -701,17 +739,16 @@
         </footer>
     </div>
 
-    <!-- Floating Assistant Button -->
-    <button id="assistant-button" class="bg-accent-color hover:bg-accent-hover text-accent-text fixed bottom-6 right-6 rounded-full shadow-lg z-50 flex items-center justify-center transform hover:scale-110 transition-transform w-14 h-14 active:scale-95 active:shadow-inner" 
-    style="box-shadow: 0 4px 10px rgba(0,0,0,0.2), 0 0 0 2px var(--bg-primary), 0 0 0 4px var(--accent-color);">
+    <!-- PERBAIKAN: Posisi Tombol Asisten dinaikkan dan gaya 3D diterapkan -->
+    <button id="assistant-button" class="text-accent-text fixed bottom-8 right-8 rounded-full shadow-lg z-50 flex items-center justify-center w-14 h-14">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
           <path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.51c1.136-1.01 2.894-1.01 4.03 0 1.135 1.01.99 2.768-.336 3.878-1.325 1.11-2.438 2.388-2.438 3.96v.152" />
           <path stroke-linecap="round" stroke-linejoin="round" d="M12 18.75h.01" />
         </svg>
     </button>
 
-    <!-- Assistant Modal -->
-    <div id="assistant-modal" class="hidden fixed bottom-24 right-6 w-full max-w-sm h-[60vh] bg-secondary rounded-lg shadow-2xl z-50 flex-col transition-all duration-300 ease-out transform opacity-0 translate-y-4">
+    <!-- PERBAIKAN: Posisi Modal Asisten disesuaikan dengan tombolnya -->
+    <div id="assistant-modal" class="hidden fixed bottom-28 right-8 w-full max-w-sm h-[60vh] bg-secondary rounded-lg shadow-2xl z-50 flex-col transition-all duration-300 ease-out transform opacity-0 translate-y-4">
         <div class="flex justify-between items-center p-4 border-b border-border-color bg-tertiary rounded-t-lg">
             <h3 class="font-bold text-base">Asisten Ahli Prompt</h3>
             <button id="close-assistant-modal" class="text-secondary text-2xl font-bold leading-none hover:text-primary">&times;</button>
