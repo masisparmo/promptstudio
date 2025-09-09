@@ -310,7 +310,7 @@
     <div id="welcome-screen" class="min-h-screen flex flex-col items-center justify-center p-4">
         <div class="text-center mb-8">
             <h1 class="text-4xl md:text-5xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">
-                PROMPT STUDIO
+                Prompt Engineering Studio
             </h1>
             <p class="mt-2 text-lg text-slate-500 dark:text-slate-400">Pilih Lingkungan Eksekusi Gemini Anda</p>
         </div>
@@ -320,15 +320,15 @@
             <div class="card p-6 flex flex-col items-center text-center">
                 <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-indigo-500 mb-4"><path d="M10 20.5c0 .83.67 1.5 1.5 1.5h1c.83 0 1.5-.67 1.5-1.5v-6c0-.83-.67-1.5-1.5-1.5h-1c-.83 0-1.5.67-1.5 1.5v6Z"/><path d="M18.5 22c.83 0 1.5-.67 1.5-1.5v-11c0-.83-.67-1.5-1.5-1.5h-1c-.83 0-1.5.67-1.5 1.5v11c0 .83.67 1.5 1.5 1.5h1Z"/><path d="M5.5 22c.83 0 1.5-.67 1.5-1.5V15c0-.83-.67-1.5-1.5-1.5h-1C3.67 13.5 3 14.17 3 15v5.5c0 .83.67 1.5 1.5 1.5h1Z"/><path d="m2 14 3-3 3 3"/><path d="M13 3 7.5 8.5"/><path d="m14 4 6 6"/><path d="M10.5 8.5 16 3"/></svg>
                 <h2 class="text-xl font-bold mb-2">Lingkungan Gemini</h2>
-                <p class="text-secondary mb-4 text-sm">Hanya perlu login menggunakan akun Gemini atau Google Anda. Tidak perlu API Key.</p>
+                <p class="text-secondary mb-4 text-sm">Gunakan lingkungan Gemini yang telah disediakan. Tidak perlu API Key.</p>
                 <button id="use-shared-env" class="btn btn-primary w-full">LANJUTKAN</button>
             </div>
             
             <!-- Option 2: User API Key -->
             <div class="card p-6 flex flex-col items-center text-center">
                  <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-purple-500 mb-4"><path d="m15 12-8.373 8.373a1 1 0 1 1-1.414-1.414L12.172 12 5.213 5.043a1 1 0 1 1 1.414-1.414L15 12Z"/><path d="m3 12 2.394 2.394a1 1 0 0 0 1.414 0L9.121 12l-2.313-2.313a1 1 0 0 0-1.414 0L3 12Z"/></svg>
-                <h2 class="text-xl font-bold mb-2">Gunakan Gemini API Key Pribadi</h2>
-                <p class="text-secondary mb-4 text-sm">Masukkan API Key Gemini milik Anda.</p>
+                <h2 class="text-xl font-bold mb-2">Gunakan API Key Pribadi</h2>
+                <p class="text-secondary mb-4 text-sm">Masukkan API Key Gemini Anda sendiri untuk kontrol penuh.</p>
                 <button id="use-user-api-key" class="btn btn-secondary w-full">MASUKKAN API KEY</button>
             </div>
         </div>
@@ -356,9 +356,9 @@
             <div class="w-12 h-12"></div>
             <div class="flex-grow text-center">
                  <h1 class="text-4xl md:text-5xl font-bold tracking-tight">
-                    PROMPT STUDIO
+                    Prompt Engineering Studio
                 </h1>
-                <p class="mt-2 text-lg text-secondary">Panduan Cara Mudah Membuat Prompt</p>
+                <p class="mt-2 text-lg text-secondary">Panduan & Alat Desain Prompt untuk Gemini</p>
             </div>
             <button id="theme-toggle" class="p-2 rounded-full bg-tertiary hover:bg-border-color transition-colors w-12 h-12 flex items-center justify-center">
                 <svg id="theme-icon-light" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
@@ -368,11 +368,9 @@
 
         <div class="flex justify-center mb-8 bg-secondary rounded-lg p-1.5 shadow-md max-w-md mx-auto">
             <button id="tab-belajar" class="tab-button active w-1/2 py-2 px-4 rounded-md" onclick="showTab('belajar')">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block mr-2" viewBox="0 0 20 20" fill="currentColor"><path d="M10.394 2.08a1 1 0 00-.788 0l-7 3.5a1 1 0 00.002 1.84L5.5 8.118v4.904a1 1 0 00.5.866l4 2.5a1 1 0 001 0l4-2.5a1 1 0 00.5-.866v-4.904l1.892-1.04a1 1 0 00.002-1.84l-7-3.5zM6.5 9.43V7.12l3.5 1.75v2.31L6.5 9.43zm7 0l-3.5 1.75v-2.31l3.5-1.75v2.31zM10 4.65l3.5 1.75L10 8.15 6.5 6.4 10 4.65z" /></svg>
                 PANDUAN PROMPT
             </button>
             <button id="tab-desainer" class="tab-button w-1/2 py-2 px-4 rounded-md" onclick="showTab('desainer')">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block mr-2" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0L7.86 5.89c-.33.14-.66.33-.96.56L4.1 4.84c-1.25-.98-2.86.3-2.4 1.7l.64 1.95c.12.38.12.78 0 1.16l-.64 1.95c-.46 1.4 1.15 2.68 2.4 1.7l2.8-1.6c.3-.24.63-.42.96-.56l.65 2.72c.38 1.56 2.6 1.56 2.98 0l.65-2.72c.33.14.66.33.96.56l2.8 1.6c1.25.98 2.86-.3 2.4-1.7l-.64-1.95c-.12-.38-.12-.78 0 1.16l.64 1.95c.46 1.4-1.15-2.68-2.4-1.7l-2.8 1.6c-.3.24-.63-.42-.96-.56L11.49 3.17zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd" /></svg>
                 DESAINER PROMPT
             </button>
         </div>
@@ -513,7 +511,7 @@
             </section>
             <section id="content-desainer" class="content-section">
                 <div class="card p-6 md:p-8">
-                     <h2 class="text-3xl font-bold mb-2">Desainer Prompt</h2>
+                     <h2 class="text-3xl font-bold mb-2">Desainer Prompt Bisnis</h2>
                      <p class="mb-6 text-secondary">Rancang prompt profesional untuk kebutuhan bisnis Anda. Pilih jenis output dan isi form di bawah ini.</p>
                     <div class="flex border-b border-border-color mb-6">
                         <button id="designer-tab-image" class="designer-tab-button active">
@@ -681,7 +679,6 @@
                                  <div class="flex justify-between items-center mb-2">
                                      <h3 class="text-lg font-semibold">Hasil Prompt Anda:</h3>
                                      <button id="enhance-prompt-button" class="btn btn-primary px-3 py-1.5 text-xs">
-                                         <span id="enhance-prompt-icon">✨</span>
                                          <span id="enhance-prompt-text">BUAT LEBIH KREATIF</span>
                                      </button>
                                  </div>
@@ -697,7 +694,7 @@
         </main>
         
         <footer class="text-center mt-12 text-secondary text-sm">
-            <p>&copy; 2025 Prompt Engineering Studio. Oleh ISPARMO.</p>
+            <p>&copy; 2025 Prompt Engineering Studio. Dibuat untuk pembelajaran dan produktivitas.</p>
         </footer>
     </div>
 
@@ -744,9 +741,7 @@
         
         // --- Welcome Screen Logic ---
         useSharedEnvBtn.addEventListener('click', () => {
-            apiMode = 'shared';
-            welcomeScreen.style.display = 'none';
-            mainApp.classList.add('active');
+            window.open('https://g.co/gemini/share/ec7fc3fd066b', '_blank');
         });
 
         useUserApiKeyBtn.addEventListener('click', () => {
@@ -1316,3 +1311,5 @@
     </script>
 </body>
 </html>
+
+
