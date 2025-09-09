@@ -17,7 +17,7 @@
             --text-secondary: #4b5563;
             --border-color: #d1d5db;
             --accent-color: #4f46e5;
-            --accent-hover: #6366f1; /* Made hover slightly lighter */
+            --accent-hover: #6366f1;
             --accent-text: #ffffff;
             --code-bg: #e5e7eb;
             --code-text: #be123c;
@@ -37,12 +37,12 @@
         html.dark {
             --bg-primary: #030712;
             --bg-secondary: #111827;
-            --bg-tertiary: #374151; /* Darker gray for illustrations */
+            --bg-tertiary: #374151;
             --text-primary: #f9fafb;
             --text-secondary: #9ca3af;
             --border-color: #374151;
             --accent-color: #6366f1;
-            --accent-hover: #818cf8; /* Made hover slightly lighter */
+            --accent-hover: #818cf8;
             --accent-text: #ffffff;
             --code-bg: #1f2937;
             --code-text: #a7f3d0;
@@ -66,7 +66,6 @@
             transition: background-color 0.3s ease, color 0.3s ease;
         }
 
-        /* PERBAIKAN: Gaya tombol 3D yang solid */
         .btn {
             padding: 0.75rem 1.5rem;
             border-radius: 0.5rem;
@@ -97,8 +96,8 @@
         }
 
         .btn-primary:active {
-            transform: translateY(1px); /* Efek ditekan */
-            border-bottom-width: 2px; /* Meratakan tombol saat ditekan */
+            transform: translateY(1px);
+            border-bottom-width: 2px;
             box-shadow: none;
         }
         
@@ -127,7 +126,6 @@
             border-bottom: 4px solid color-mix(in srgb, var(--bg-tertiary) 80%, black);
         }
         
-        /* General components */
         .card {
             background-color: var(--bg-secondary);
             border: 1px solid var(--card-border);
@@ -160,7 +158,6 @@
             color: var(--code-text);
         }
 
-        /* Tab styles */
         .tab-button {
             transition: all 0.3s ease;
             font-weight: 600;
@@ -190,7 +187,6 @@
             border-bottom-color: var(--accent-color);
         }
 
-        /* Hide/Show Logic */
         .content-section, .designer-form, #main-app, #api-key-section {
             display: none;
         }
@@ -198,7 +194,6 @@
             display: block;
         }
 
-        /* Loader */
         .loader {
             width: 16px; height: 16px; border: 2px solid currentColor;
             border-bottom-color: transparent; border-radius: 50%;
@@ -207,18 +202,16 @@
         }
         @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* Custom scrollbar */
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: var(--bg-secondary); }
         ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--text-secondary); }
 
-        /* Floating Assistant Styles */
         #assistant-modal {
             transition: opacity 0.3s ease, transform 0.3s ease;
+            background-color: var(--bg-secondary);
         }
         
-        /* PERBAIKAN: Gaya 3D untuk Tombol Asisten */
         #assistant-button {
             background-color: var(--accent-color);
             border-bottom: 5px solid color-mix(in srgb, var(--accent-color) 70%, black);
@@ -234,7 +227,6 @@
             box-shadow: 0 1px 3px rgba(0,0,0,0.2);
         }
 
-        /* Custom Dropdown for Aspect Ratio */
         .aspect-ratio-option {
             color: var(--text-primary);
             cursor: pointer;
@@ -261,12 +253,10 @@
              color: var(--text-secondary);
         }
        
-        /* Background solid untuk dropdown dan modal */
         .bg-primary-solid {
             background-color: var(--bg-primary);
         }
 
-        /* Styling untuk kotak prompt negatif */
         .negative-prompt-box, .positive-prompt-box {
             padding: 0.75rem;
             border-radius: 0.5rem;
@@ -293,7 +283,6 @@
             color: var(--positive-body-text);
         }
 
-        /* Typing Indicator */
         .typing-indicator span {
             animation: blink 1.4s infinite both;
             display: inline-block;
@@ -305,6 +294,15 @@
             20% { opacity: 1; }
             100% { opacity: 0.2; }
         }
+
+        #assistant-chat-body {
+            overflow-y: auto; 
+        }
+
+        .chat-bubble {
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
     </style>
 </head>
 <body class="antialiased">
@@ -312,7 +310,7 @@
     <div id="welcome-screen" class="min-h-screen flex flex-col items-center justify-center p-4">
         <div class="text-center mb-8">
             <h1 class="text-4xl md:text-5xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">
-                Prompt Studio
+                Prompt Engineering Studio
             </h1>
             <p class="mt-2 text-lg text-slate-500 dark:text-slate-400">Pilih Lingkungan Eksekusi Gemini Anda</p>
         </div>
@@ -354,26 +352,20 @@
     
     <!-- Main Application -->
     <div id="main-app" class="container mx-auto p-4 md:p-8">
-        <!-- PERBAIKAN: Header diubah menjadi flexbox untuk mencegah tumpang tindih -->
         <header class="flex justify-between items-center mb-8">
-            <!-- Spacer untuk menyeimbangkan tombol tema dan menjaga judul tetap di tengah -->
             <div class="w-12 h-12"></div>
-            
             <div class="flex-grow text-center">
                  <h1 class="text-4xl md:text-5xl font-bold tracking-tight">
                     Prompt Engineering Studio
                 </h1>
-                <p class="mt-2 text-lg text-secondary">Cara Mudah Membuat Prompt Gambar & Video</p>
+                <p class="mt-2 text-lg text-secondary">Panduan & Alat Desain Prompt untuk Gemini</p>
             </div>
-
-            <!-- Tombol Tema -->
             <button id="theme-toggle" class="p-2 rounded-full bg-tertiary hover:bg-border-color transition-colors w-12 h-12 flex items-center justify-center">
                 <svg id="theme-icon-light" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
                 <svg id="theme-icon-dark" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
             </button>
         </header>
 
-        <!-- Tab Navigation -->
         <div class="flex justify-center mb-8 bg-secondary rounded-lg p-1.5 shadow-md max-w-md mx-auto">
             <button id="tab-belajar" class="tab-button active w-1/2 py-2 px-4 rounded-md" onclick="showTab('belajar')">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block mr-2" viewBox="0 0 20 20" fill="currentColor"><path d="M10.394 2.08a1 1 0 00-.788 0l-7 3.5a1 1 0 00.002 1.84L5.5 8.118v4.904a1 1 0 00.5.866l4 2.5a1 1 0 001 0l4-2.5a1 1 0 00.5-.866v-4.904l1.892-1.04a1 1 0 00.002-1.84l-7-3.5zM6.5 9.43V7.12l3.5 1.75v2.31L6.5 9.43zm7 0l-3.5 1.75v-2.31l3.5-1.75v2.31zM10 4.65l3.5 1.75L10 8.15 6.5 6.4 10 4.65z" /></svg>
@@ -385,22 +377,15 @@
             </button>
         </div>
 
-        <!-- Content Area -->
         <main>
-            <!-- Learning Center Section -->
             <section id="content-belajar" class="content-section active space-y-8">
-                
-                <!-- Image Generation Section (ORIGINAL CONTENT RESTORED) -->
                 <article class="card p-6 md:p-8">
                     <h2 class="text-3xl font-bold mb-4">Materi 1: Prompt Engineering untuk Gambar (Nano Banana)</h2>
                     <p class="mb-6 text-secondary">Menguasai Gemini Image Generation dimulai dari satu prinsip fundamental: <strong>Deskripsikan adegan, jangan hanya mendaftar kata kunci</strong>. Kekuatan inti model ini adalah pemahaman bahasanya yang mendalam. Paragraf naratif yang deskriptif hampir selalu menghasilkan gambar yang lebih baik dan koheren.</p>
-                    
                     <div class="space-y-8">
-                        
                         <div>
                             <h3 class="text-2xl font-bold">Strategi Prompt untuk Menciptakan Gambar</h3>
                             <p class="mt-2 text-secondary">Berikut adalah strategi dan template yang terbukti efektif untuk berbagai kebutuhan kreatif dan bisnis.</p>
-                            
                             <div class="mt-4 space-y-6">
                                 <div class="prompt-card p-4">
                                     <h4 class="font-semibold">1. Adegan Fotorealistis</h4>
@@ -424,11 +409,9 @@
                                 </div>
                             </div>
                         </div>
-
                         <div>
                             <h3 class="text-2xl font-bold mt-8">Strategi Prompt untuk Mengedit Gambar</h3>
                             <p class="mt-2 text-secondary">Berikan gambar bersama dengan prompt teks Anda untuk pengeditan, komposisi, dan transfer gaya yang canggih.</p>
-
                              <div class="mt-4 space-y-6">
                                 <div class="prompt-card p-4">
                                     <h4 class="font-semibold">1. Menambah & Menghapus Elemen</h4>
@@ -452,7 +435,6 @@
                                 </div>
                             </div>
                         </div>
-
                          <div>
                             <h3 class="text-2xl font-bold mt-8">Praktik Terbaik untuk Hasil Profesional</h3>
                             <ul class="list-disc list-inside mt-2 space-y-2 text-secondary">
@@ -465,12 +447,9 @@
                         </div>
                     </div>
                 </article>
-
-                <!-- Video Generation Section (ORIGINAL CONTENT RESTORED) -->
                 <article class="card p-6 md:p-8">
                     <h2 class="text-3xl font-bold mb-4">Materi 2: Prompt Engineering untuk Video (Veo3)</h2>
                     <p class="mb-6 text-secondary">Prompt yang baik bersifat deskriptif dan jelas. Untuk mendapatkan hasil maksimal dari Veo, mulailah dengan mengidentifikasi ide inti Anda, sempurnakan dengan kata kunci, dan gabungkan terminologi khusus video.</p>
-                    
                      <div class="space-y-6">
                         <div>
                             <h3 class="text-xl font-semibold text-indigo-400">1. Elemen Dasar Penulisan Prompt</h3>
@@ -485,7 +464,6 @@
                                 <li><b>Suasana (Ambiance):</b> Bagaimana warna dan cahaya berkontribusi (misal: "nada biru dingin", "cahaya senja hangat").</li>
                             </ul>
                         </div>
-
                         <div>
                             <h3 class="text-xl font-semibold text-indigo-400">2. Prompting untuk Audio</h3>
                              <p class="mt-1 text-secondary">Veo3 dapat menangkap isyarat audio untuk menghasilkan soundtrack yang sinkron.</p>
@@ -495,12 +473,10 @@
                                  <li><b>Suara Sekitar (Ambient Noise):</b> Deskripsikan lanskap suara lingkungan. (Contoh: "Dengungan samar yang menakutkan bergema di latar belakang.").</li>
                              </ul>
                         </div>
-
                         <div>
                             <h3 class="text-xl font-semibold text-indigo-400">3. Menggunakan Gambar Referensi (Image-to-Video)</h3>
                             <p class="mt-1 text-secondary">Anda dapat menganimasikan objek, menghidupkan gambar, dan menambahkan gerakan ke pemandangan dengan menggunakan gambar sebagai titik awal. Veo akan menggunakan foto tersebut sebagai frame pertama video Anda.</p>
                         </div>
-
                         <div>
                             <h3 class="text-xl font-semibold text-indigo-400">4. Prompt Negatif</h3>
                             <p class="mt-1 text-secondary">Tentukan elemen yang <strong>tidak</strong> Anda inginkan dalam video. Cara terbaik adalah dengan mendeskripsikan apa yang tidak ingin Anda lihat, bukan menggunakan bahasa instruktif.</p>
@@ -515,7 +491,6 @@
                                 </div>
                              </div>
                         </div>
-                        
                         <h3 class="text-2xl font-bold mt-8 mb-4">Contoh Prompt Video: Dari Sederhana ke Detail</h3>
                         <div class="space-y-4">
                             <div class="prompt-card p-4">
@@ -536,13 +511,10 @@
                     </div>
                 </article>
             </section>
-
-            <!-- Prompt Designer Section -->
             <section id="content-desainer" class="content-section">
                 <div class="card p-6 md:p-8">
                      <h2 class="text-3xl font-bold mb-2">Desainer Prompt Bisnis</h2>
                      <p class="mb-6 text-secondary">Rancang prompt profesional untuk kebutuhan bisnis Anda. Pilih jenis output dan isi form di bawah ini.</p>
-
                     <div class="flex border-b border-border-color mb-6">
                         <button id="designer-tab-image" class="designer-tab-button active">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block mr-2" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd" /></svg>
@@ -553,10 +525,8 @@
                             Video (Veo3)
                         </button>
                     </div>
-
                      <div class="grid md:grid-cols-2 gap-8">
                          <div class="space-y-5">
-                             <!-- Image Designer Form (ORIGINAL CONTENT RESTORED) -->
                              <div id="image-designer-form" class="designer-form active space-y-5">
                                  <div id="tujuan-gambar-container">
                                      <label for="tujuan-gambar" class="block mb-2 text-sm font-medium text-secondary">1. Apa Tujuan Utama Anda?</label>
@@ -568,7 +538,6 @@
                                          <option value="Kemasan">Desain Kemasan (Packaging)</option>
                                      </select>
                                  </div>
-                                 
                                  <div class="space-y-3">
                                      <label class="block text-sm font-medium text-secondary">Opsional: Upload Gambar untuk Diedit/Dianalisa</label>
                                      <div id="drop-zone" class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-dashed rounded-md cursor-pointer transition-colors border-border-color hover:border-accent-color">
@@ -587,7 +556,6 @@
                                          </div>
                                      </div>
                                  </div>
-
                                  <div id="kemasan-container" class="hidden">
                                      <label for="jenis-kemasan" class="block mb-2 text-sm font-medium text-secondary">2. Pilih Jenis Kemasan</label>
                                      <select id="jenis-kemasan" class="form-select w-full p-2.5">
@@ -607,7 +575,6 @@
                                      <textarea id="detail-gambar" rows="4" class="form-input w-full p-2.5" placeholder="Contoh: latar belakang marmer putih, percikan air"></textarea>
                                  </div>
                              </div>
-                             <!-- Video Designer Form (ORIGINAL CONTENT RESTORED) -->
                              <div id="video-designer-form" class="designer-form space-y-5">
                                  <div class="space-y-3">
                                      <label class="block text-sm font-medium text-secondary">Opsional: Upload Gambar Referensi (Image-to-Video)</label>
@@ -645,7 +612,6 @@
                                  </div>
                              </div>
                          </div>
-
                          <div class="space-y-6">
                              <div id="image-preview-container" class="hidden space-y-3">
                                  <h4 class="text-md font-semibold">Preview & Analisa Gambar Referensi</h4>
@@ -664,7 +630,6 @@
                                  </div>
                                   <hr class="border-border-color">
                              </div>
-
                               <div id="video-preview-container" class="hidden space-y-3">
                                  <h4 class="text-md font-semibold">Preview Gambar Referensi Video</h4>
                                   <div class="relative w-full">
@@ -673,12 +638,10 @@
                                   </div>
                                  <hr class="border-border-color">
                              </div>
-                             
                              <div>
                                 <label for="aspect-ratio-button" class="block mb-2 text-sm font-medium text-secondary">Pilih Aspek Rasio</label>
                                 <div class="relative" id="aspect-ratio-dropdown">
                                     <button type="button" id="aspect-ratio-button" class="form-select w-full p-2.5 flex items-center justify-between text-left">
-                                        <!-- Selected value will be injected here by JS -->
                                     </button>
                                     <div id="aspect-ratio-menu" class="hidden absolute z-10 w-full mt-1 bg-primary-solid border border-border-color rounded-md shadow-lg">
                                         <ul class="max-h-60 overflow-auto rounded-md py-1 text-base">
@@ -714,7 +677,6 @@
                                     </div>
                                 </div>
                              </div>
-
                               <div>
                                  <div class="flex justify-between items-center mb-2">
                                      <h3 class="text-lg font-semibold">Hasil Prompt Anda:</h3>
@@ -739,7 +701,6 @@
         </footer>
     </div>
 
-    <!-- PERBAIKAN: Posisi Tombol Asisten dinaikkan dan gaya 3D diterapkan -->
     <button id="assistant-button" class="text-accent-text fixed bottom-8 right-8 rounded-full shadow-lg z-50 flex items-center justify-center w-14 h-14">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
           <path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.51c1.136-1.01 2.894-1.01 4.03 0 1.135 1.01.99 2.768-.336 3.878-1.325 1.11-2.438 2.388-2.438 3.96v.152" />
@@ -747,13 +708,12 @@
         </svg>
     </button>
 
-    <!-- PERBAIKAN: Posisi Modal Asisten disesuaikan dengan tombolnya -->
-    <div id="assistant-modal" class="hidden fixed bottom-28 right-8 w-full max-w-sm h-[60vh] bg-secondary rounded-lg shadow-2xl z-50 flex-col transition-all duration-300 ease-out transform opacity-0 translate-y-4">
+    <div id="assistant-modal" class="hidden fixed bottom-28 right-8 w-full max-w-sm h-[60vh] rounded-lg shadow-2xl z-50 flex flex-col transition-all duration-300 ease-out transform opacity-0 translate-y-4">
         <div class="flex justify-between items-center p-4 border-b border-border-color bg-tertiary rounded-t-lg">
             <h3 class="font-bold text-base">Asisten Ahli Prompt</h3>
             <button id="close-assistant-modal" class="text-secondary text-2xl font-bold leading-none hover:text-primary">&times;</button>
         </div>
-        <div id="assistant-chat-body" class="flex-1 p-4 overflow-y-auto space-y-4">
+        <div id="assistant-chat-body" class="flex-1 p-4 space-y-4">
             <!-- Messages will be appended here -->
         </div>
         <div class="p-4 border-t border-border-color">
@@ -767,7 +727,6 @@
             </div>
         </div>
     </div>
-
 
     <script>
         // --- State Management ---
@@ -854,12 +813,9 @@
         const designerTabVideo = document.getElementById('designer-tab-video');
         const imageForm = document.getElementById('image-designer-form');
         const videoForm = document.getElementById('video-designer-form');
-        
         const outputPromptEl = document.getElementById('output-prompt');
         const copyButton = document.getElementById('copy-button');
-        
         let selectedAspectRatio = '1:1';
-        
         const tujuanGambarContainer = document.getElementById('tujuan-gambar-container');
         const tujuanGambarEl = document.getElementById('tujuan-gambar');
         const kemasanContainerEl = document.getElementById('kemasan-container');
@@ -870,18 +826,14 @@
         const produkGambarLabelText = document.getElementById('produk-gambar-label-text');
         const gayaGambarLabelText = document.getElementById('gaya-gambar-label-text');
         const detailGambarLabelText = document.getElementById('detail-gambar-label-text');
-        
         const subjekVideoEl = document.getElementById('subjek-video');
         const gayaVideoEl = document.getElementById('gaya-video');
         const audioVideoEl = document.getElementById('audio-video');
         const negatifVideoEl = document.getElementById('negatif-video');
-
         const allFormInputs = document.querySelectorAll('.form-input, .form-select');
-        
         const enhanceButton = document.getElementById('enhance-prompt-button');
         const enhanceButtonText = document.getElementById('enhance-prompt-text');
         const enhanceButtonIcon = document.getElementById('enhance-prompt-icon');
-
         const imageUploadEl = document.getElementById('image-upload');
         const dropZone = document.getElementById('drop-zone');
         const imagePreviewContainer = document.getElementById('image-preview-container');
@@ -892,20 +844,16 @@
         const imageAnalysisResult = document.getElementById('image-analysis-result');
         const removeImageButton = document.getElementById('remove-image-button');
         let uploadedImageBase64 = null;
-
         const imageUploadVideoEl = document.getElementById('image-upload-video');
         const dropZoneVideo = document.getElementById('drop-zone-video');
         const videoPreviewContainer = document.getElementById('video-preview-container');
         const uploadedVideoPreview = document.getElementById('uploaded-video-preview');
         const removeVideoButton = document.getElementById('remove-video-button');
         let uploadedVideoFile = null;
-
-        // --- Custom Dropdown Elements ---
         const aspectRatioDropdown = document.getElementById('aspect-ratio-dropdown');
         const aspectRatioButton = document.getElementById('aspect-ratio-button');
         const aspectRatioMenu = document.getElementById('aspect-ratio-menu');
         const aspectRatioOptions = document.querySelectorAll('.aspect-ratio-option');
-
 
         function switchDesignerTab(tab) {
             if (tab === 'image') {
@@ -933,15 +881,12 @@
             const gaya = gayaGambarEl.value.trim();
             const detail = detailGambarEl.value.trim();
             const jenisKemasan = jenisKemasanEl.value;
-            
             let prompt = "";
-
             if (uploadedImageBase64) {
                 prompt = `${detail || `Sempurnakan foto dari "${produk}" ini menjadi lebih profesional`}`;
                 if(gaya) {
                     prompt += `, dengan gaya visual ${gaya}`;
                 }
-
             } else {
                 let promptPrefix = "";
                 switch (tujuan) {
@@ -965,7 +910,6 @@
             const gaya = gayaVideoEl.value.trim() || "[Gaya, kamera, dan suasana]";
             const audio = audioVideoEl.value.trim();
             const negativo = negatifVideoEl.value.trim();
-
             let prompt = "";
             if (uploadedVideoFile) {
                 prompt += "[Gambar Input] ";
@@ -978,7 +922,6 @@
             if (negativo) {
                 prompt += ` -negative_prompt "${negativo}"`;
             }
-
             outputPromptEl.value = prompt;
         }
 
@@ -995,25 +938,19 @@
                  tujuanGambarContainer.classList.add('hidden'); 
                  tujuanGambarEl.disabled = true;
                  produkGambarLabelText.parentElement.classList.remove('hidden'); 
-                 
                  produkGambarLabelText.textContent = "1. Objek Utama pada Gambar";
                  produkGambarEl.placeholder = "Contoh: Laptop ASUS di atas meja kayu";
-                 
                  gayaGambarLabelText.textContent = "2. Gaya Visual Baru (Opsional)";
                  gayaGambarEl.placeholder = "Contoh: cat air, sinematik, minimalis";
-                 
                  detailGambarLabelText.textContent = "3. Jelaskan Perubahan yang Diinginkan";
                  detailGambarEl.placeholder = "Contoh: Hapus latar belakang, ganti dengan pemandangan kantor modern.";
              } else {
                  tujuanGambarContainer.classList.remove('hidden');
                  tujuanGambarEl.disabled = false;
-                 
                  produkGambarLabelText.textContent = "Apa Objek atau Produk Utamanya?";
                  produkGambarEl.placeholder = "Contoh: sebotol madu hutan, sepatu lari";
-                 
                  gayaGambarLabelText.textContent = "Apa Gaya Visual yang Diinginkan?";
                  gayaGambarEl.placeholder = "Contoh: minimalis & bersih, mewah & elegan";
-                 
                  detailGambarLabelText.textContent = "Detail Tambahan (Opsional)";
                  detailGambarEl.placeholder = "Contoh: latar belakang marmer putih, percikan air";
              }
@@ -1023,7 +960,6 @@
         
         function handleTujuanGambarChange() {
             const isEditing = uploadedImageBase64 !== null;
-            
             const isLogo = tujuanGambarEl.value === 'Logo Brand' && !isEditing;
              if(isLogo) {
                  produkGambarLabelText.textContent = "Apa Nama Brand & Teks Logonya?";
@@ -1036,15 +972,12 @@
                  gayaGambarLabelText.textContent = "Apa Gaya Visual yang Diinginkan?";
                  gayaGambarEl.placeholder = "Contoh: minimalis & bersih, mewah & elegan";
              }
-
             const isKemasan = tujuanGambarEl.value === 'Kemasan' && !isEditing;
             kemasanContainerEl.classList.toggle('hidden', !isKemasan);
-
             let num = isEditing ? 1 : 2;
             document.querySelector('label[for="produk-gambar"] .form-num').textContent = `${isEditing ? '1.' : (isKemasan ? '3.' : '2.')}`;
             document.querySelector('label[for="gaya-gambar"] .form-num').textContent = `${isEditing ? '2.' : (isKemasan ? '4.' : '3.')}`;
             document.querySelector('label[for="detail-gambar"] .form-num').textContent = `${isEditing ? '3.' : (isKemasan ? '5.' : '4.')}`;
-            
             updateGeneratedPrompt();
         }
 
@@ -1068,13 +1001,11 @@
             if (apiMode === 'user' && !apiKey) {
                  throw new Error("API Key pengguna tidak valid atau tidak tersedia.");
             }
-            
             const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
             const payload = {
                 contents: [{ parts: [{ text: userQuery }] }],
                 systemInstruction: { parts: [{ text: systemPrompt }] },
             };
-
             for (let i = 0; i < retries; i++) {
                 try {
                     const response = await fetch(apiUrl, {
@@ -1100,18 +1031,14 @@
                 alert("Harap lengkapi detail pada form terlebih dahulu.");
                 return;
             }
-
             enhanceButton.disabled = true;
             enhanceButtonText.textContent = 'MENINGKATKAN...';
             enhanceButtonIcon.innerHTML = `<span class="loader"></span>`;
-
             const isVideo = designerTabVideo.classList.contains('active');
             const systemPrompt = isVideo 
                 ? "Anda adalah seorang sutradara film dan ahli rekayasa prompt video. Ambil prompt dasar berikut dan buatlah menjadi jauh lebih deskriptif, sinematik, dan profesional. Tambahkan detail spesifik tentang gerakan kamera, sinematografi, pencahayaan, tempo, dan desain suara. Pertahankan subjek inti dan rasio aspek. Balas HANYA dengan teks prompt yang disempurnakan tanpa tambahan atau awalan apapun. Selalu berikan jawaban dalam Bahasa Indonesia."
                 : "Anda adalah seorang direktur kreatif dan ahli rekayasa prompt. Ambil prompt dasar berikut untuk model pembuatan gambar dan buatlah menjadi jauh lebih deskriptif, menggugah, dan profesional. Tambahkan detail spesifik tentang pencahayaan, komposisi, tekstur, dan suasana hati. Pertahankan subjek inti dan rasio aspek yang sama. Balas HANYA dengan teks prompt yang disempurnakan tanpa tambahan atau awalan apapun. Selalu berikan jawaban dalam Bahasa Indonesia.";
-            
             const userQuery = `Berikut adalah prompt dasarnya: "${basePrompt}"`;
-            
             try {
                 const enhancedPrompt = await makeApiCallWithRetry(systemPrompt, userQuery);
                 if(enhancedPrompt) {
@@ -1169,15 +1096,12 @@
                 alert("Mohon upload gambar terlebih dahulu.");
                 return;
             }
-
             analyzeImageButton.disabled = true;
             analyzeImageText.textContent = 'MENGANALISA...';
             analyzeImageIcon.innerHTML = `<span class="loader"></span>`;
             imageAnalysisResult.value = "AI sedang menganalisa gambar Anda, mohon tunggu...";
-
             const systemPrompt = "Anda adalah seorang ahli art director. Analisa gambar yang diberikan. Balas HANYA dengan format ini: '### Analisis Gambar\n**Subjek Utama:** [Sebutkan subjek utama secara singkat]\n**Deskripsi:** [Jelaskan gambar secara detail dalam satu paragraf]'. Jangan tambahkan apapun di luar format ini.";
             const userPrompt = "Analisa gambar ini sesuai format yang diperintahkan.";
-            
             const apiKey = apiMode === 'user' ? userApiKey : ""; 
             if (apiMode === 'user' && !apiKey) {
                  imageAnalysisResult.value = "Error: API Key pengguna tidak valid atau tidak tersedia.";
@@ -1187,7 +1111,6 @@
                  return;
             }
             const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
-
             const payload = {
                 contents: [{
                     parts: [
@@ -1197,7 +1120,6 @@
                 }],
                 systemInstruction: { parts: [{ text: systemPrompt }] },
             };
-
             try {
                 const response = await fetch(apiUrl, {
                     method: 'POST',
@@ -1209,7 +1131,6 @@
                 if (result.candidates && result.candidates[0].content && result.candidates[0].content.parts[0].text) {
                     const analysisText = result.candidates[0].content.parts[0].text;
                     imageAnalysisResult.value = analysisText;
-
                     const subjectMatch = analysisText.match(/\*\*Subjek Utama:\*\*\s*([^\n]+)/i);
                     if (subjectMatch && subjectMatch[1]) {
                         const extractedSubject = subjectMatch[1].trim();
@@ -1219,7 +1140,6 @@
                         detailGambarEl.value = "Sempurnakan gambar ini berdasarkan hasil analisa.";
                     }
                     updateGeneratedPrompt();
-
                 } else { throw new Error("Struktur respons API tidak valid."); }
             } catch (error) {
                 console.error("Error calling Gemini Vision API:", error);
@@ -1289,13 +1209,19 @@
         assistantButton.addEventListener('click', toggleAssistant);
         closeAssistantModal.addEventListener('click', toggleAssistant);
         
+        function parseSimpleMarkdown(text) {
+            // Escape HTML to prevent XSS, then apply markdown
+            let safeText = text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+            return safeText.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
+        }
+
         function addMessageToChat(message, sender, isTyping = false) {
             const messageWrapper = document.createElement('div');
             const messageBubble = document.createElement('div');
             
-            messageWrapper.classList.add('flex', 'w-full');
-            messageBubble.classList.add('p-3', 'rounded-lg', 'max-w-[80%]');
-
+            messageWrapper.classList.add('flex', 'w-full', 'min-w-0');
+            messageBubble.classList.add('p-3', 'rounded-lg', 'max-w-[85%]', 'chat-bubble');
+            
             if (sender === 'user') {
                 messageWrapper.classList.add('justify-end');
                 messageBubble.classList.add('bg-accent-color', 'text-accent-text');
@@ -1303,24 +1229,21 @@
                 messageWrapper.classList.add('justify-start');
                 messageBubble.classList.add('bg-tertiary', 'text-primary');
             }
-
             if (isTyping) {
                 messageBubble.innerHTML = '<div class="typing-indicator"><span>.</span><span>.</span><span>.</span></div>';
                 messageBubble.id = 'typing-bubble';
             } else {
-                 messageBubble.textContent = message;
+                 messageBubble.innerHTML = parseSimpleMarkdown(message);
             }
-
             messageWrapper.appendChild(messageBubble);
             assistantChatBody.appendChild(messageWrapper);
-            assistantChatBody.scrollTop = assistantChatBody.scrollHeight; // Auto-scroll to bottom
+            assistantChatBody.scrollTop = assistantChatBody.scrollHeight;
         }
 
         function updateLastAssistantMessage(newMessage) {
             const typingBubble = document.getElementById('typing-bubble');
             if (typingBubble) {
-                typingBubble.innerHTML = ''; 
-                typingBubble.textContent = newMessage;
+                typingBubble.innerHTML = parseSimpleMarkdown(newMessage);
                 typingBubble.removeAttribute('id');
             }
              assistantChatBody.scrollTop = assistantChatBody.scrollHeight;
@@ -1329,16 +1252,12 @@
         async function handleSendMessage() {
             const message = assistantInput.value.trim();
             if (!message) return;
-
             addMessageToChat(message, 'user');
             assistantInput.value = '';
             assistantInput.disabled = true;
             sendAssistantMessage.disabled = true;
-            
             addMessageToChat('', 'assistant', true);
-
             const systemPrompt = "Anda adalah seorang ahli rekayasa prompt (prompt engineering) dengan pengalaman puluhan tahun, khususnya untuk model AI generatif gambar seperti Nano Banana dan model video seperti Veo3. Anda memberikan jawaban yang praktis, mendalam, dan profesional atas pertanyaan pengguna mengenai cara membuat prompt yang efektif. Selalu jawab dalam Bahasa Indonesia.";
-            
             try {
                 const response = await makeApiCallWithRetry(systemPrompt, message);
                 updateLastAssistantMessage(response);
@@ -1382,22 +1301,16 @@
             }
         });
 
-
        // --- Initial Setup ---
        document.addEventListener('DOMContentLoaded', () => {
            const savedTheme = localStorage.getItem('theme') || 'dark';
            applyTheme(savedTheme);
-           
-           // Initialize dropdown
            const initialOption = aspectRatioMenu.querySelector('.aspect-ratio-option');
            updateDropdownButton(initialOption);
-
            updateGeneratedPrompt();
            handleTujuanGambarChange();
            switchDesignerTab('image');
            showTab('belajar');
-           
-           // Initial Assistant message
            addMessageToChat("Halo! Saya Asisten Ahli Prompt. Apa yang bisa saya bantu hari ini?", "assistant");
        });
     </script>
