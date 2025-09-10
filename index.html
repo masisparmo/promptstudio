@@ -367,10 +367,10 @@
         </header>
 
         <div class="flex justify-center mb-8 bg-secondary rounded-lg p-1.5 shadow-md max-w-md mx-auto">
-            <button id="tab-belajar" class="tab-button active w-1/2 py-2 px-4 rounded-md" onclick="showTab('belajar')">
-                PANDUAN PROMPT
+            <button id="tab-belajar" class="tab-button active w-1/2 py-2 px-4 rounded-md">
+                PUSAT PEMBELAJARAN
             </button>
-            <button id="tab-desainer" class="tab-button w-1/2 py-2 px-4 rounded-md" onclick="showTab('desainer')">
+            <button id="tab-desainer" class="tab-button w-1/2 py-2 px-4 rounded-md">
                 DESAINER PROMPT
             </button>
         </div>
@@ -508,6 +508,30 @@
                         </div>
                     </div>
                 </article>
+                 <article class="card p-6 md:p-8">
+                    <h2 class="text-3xl font-bold mb-4">Materi 3: Menciptakan Karakter yang Konsisten</h2>
+                    <p class="mb-6 text-secondary">Salah satu tantangan terbesar dalam AI generatif adalah menjaga agar karakter yang sama muncul secara konsisten di berbagai gambar. Kuncinya adalah membuat **"Character Sheet"**, sebuah prompt dasar super detail yang menjadi fondasi karakter Anda.</p>
+                    <div class="space-y-8">
+                        <div>
+                            <h3 class="text-2xl font-bold">Konsep "Character Sheet"</h3>
+                            <p class="mt-2 text-secondary">Anggap "Character Sheet" sebagai resep atau DNA dari karakter Anda. Semakin spesifik resep awalnya, semakin mudah bagi AI untuk 'mengingat' dan mereplikasi karakter tersebut di berbagai skenario. Prompt ini selalu digunakan sebagai bagian awal dari setiap prompt baru yang melibatkan karakter tersebut.</p>
+                            
+                            <div class="mt-4 space-y-6">
+                                <div class="prompt-card p-4">
+                                    <h4 class="font-semibold">Contoh "Character Sheet" yang Efektif</h4>
+                                    <p class="text-sm mb-2 text-secondary">Gunakan format `(character sheet: ...)` untuk membantu AI mengenali fondasi karakter Anda. Berikan detail sebanyak mungkin.</p>
+                                    <p class="font-mono p-3 rounded-md text-sm">(character sheet: seorang wanita bernama "Aria", 25 tahun, ras asia, rambut hitam panjang lurus dengan highlight ungu, mata coklat tajam, postur atletis. Pakaian khasnya adalah jaket kulit hitam di atas kaos band metal, celana kargo, dan sepatu boots tempur. Gaya visual: ilustrasi anime modern, pencahayaan sinematik, detail tinggi)</p>
+                                </div>
+                                <div class="prompt-card p-4">
+                                    <h4 class="font-semibold">Contoh Penggunaan dalam Skenario</h4>
+                                    <p class="text-sm mb-2 text-secondary">Setelah Anda memiliki "Character Sheet", Anda hanya perlu menambah deskripsi adegan atau aksi. Selalu sertakan "Character Sheet" lengkap di awal.</p>
+                                    <p class="font-mono p-3 rounded-md text-sm">**(character sheet: ...detail lengkap Aria...)** sedang berdiri di atap gedung pencakar langit saat hujan di malam hari, memandang ke bawah ke jalanan kota neon.</p>
+                                    <p class="font-mono p-3 rounded-md text-sm mt-2">**(character sheet: ...detail lengkap Aria...)** sedang duduk di kafe yang remang-remang, melihat laptopnya dengan ekspresi fokus.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </article>
             </section>
             <section id="content-desainer" class="content-section">
                 <div class="card p-6 md:p-8">
@@ -536,6 +560,7 @@
                                             <option value="Cetak">Materi Cetak (Brosur, Pamflet)</option>
                                             <option value="Kemasan">Desain Kemasan (Packaging)</option>
                                             <option value="Gabungkan Foto">Gabungkan Foto & Transfer Gaya</option>
+                                            <option value="Karakter Konsisten">Buat Karakter Konsisten</option>
                                         </select>
                                     </div>
                                     <div id="single-upload-container" class="space-y-3 mt-5">
@@ -593,6 +618,47 @@
                                      <div>
                                          <label for="composition-details" class="block mb-2 text-sm font-medium text-secondary">3. Jelaskan Cara Menggabungkannya</label>
                                          <textarea id="composition-details" rows="4" class="form-input w-full p-2.5" placeholder="Contoh: Ambil orang dari foto 1 dan letakkan di pantai dari foto 2."></textarea>
+                                     </div>
+                                 </div>
+
+                                 <div id="character-creator-form" class="hidden space-y-5">
+                                     <button id="back-to-tujuan-button-char" class="text-sm text-indigo-400 hover:underline mb-4 flex items-center gap-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                          <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+                                        </svg>
+                                        Kembali ke Pilihan Tujuan
+                                     </button>
+                                     <div>
+                                         <label class="block text-sm font-medium text-secondary">Opsional: Upload Gambar Referensi Karakter</label>
+                                         <div id="drop-zone-char" class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-dashed rounded-md cursor-pointer transition-colors border-border-color hover:border-accent-color">
+                                             <div class="space-y-1 text-center"><svg class="mx-auto h-12 w-12 text-secondary" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true"><path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg><div class="flex text-sm text-secondary"><label for="image-upload-char" class="relative cursor-pointer rounded-md font-medium text-indigo-400 hover:text-indigo-500"><span>UPLOAD FOTO REFERENSI</span><input id="image-upload-char" name="image-upload-char" type="file" class="sr-only" accept="image/*"></label><p class="pl-1">atau tarik & lepas</p></div></div>
+                                         </div>
+                                         <div id="character-preview-container" class="hidden mt-4 space-y-3">
+                                            <div class="relative w-full md:w-2/3 mx-auto">
+                                                <img id="uploaded-char-preview" src="" alt="Character Reference Preview" class="rounded-lg shadow-md object-contain">
+                                                <button id="remove-char-image-button" class="absolute -top-2 -right-2 bg-red-600 hover:bg-red-700 text-white rounded-full h-6 w-6 flex items-center justify-center font-bold text-sm leading-none">×</button>
+                                            </div>
+                                            <button id="analyze-char-button" class="btn btn-secondary w-full px-3 py-1.5 text-sm">
+                                                <span id="analyze-char-icon">🤖</span>
+                                                <span id="analyze-char-text">ANALISA KARAKTER & ISI FORM</span>
+                                            </button>
+                                        </div>
+                                     </div>
+                                     <div>
+                                        <label for="char-name" class="block mb-2 text-sm font-medium text-secondary">1. Nama/ID Karakter</label>
+                                        <input type="text" id="char-name" class="form-input w-full p-2.5" placeholder="Contoh: Aria, Detektif Cyberpunk">
+                                     </div>
+                                     <div>
+                                        <label for="char-physic" class="block mb-2 text-sm font-medium text-secondary">2. Ciri-Ciri Fisik Utama</label>
+                                        <textarea id="char-physic" rows="3" class="form-input w-full p-2.5" placeholder="Contoh: Wanita Asia 25 tahun, rambut hitam panjang lurus dengan highlight ungu, mata tajam"></textarea>
+                                     </div>
+                                      <div>
+                                        <label for="char-attire" class="block mb-2 text-sm font-medium text-secondary">3. Pakaian Khas</label>
+                                        <textarea id="char-attire" rows="3" class="form-input w-full p-2.5" placeholder="Contoh: Jaket kulit hitam, kaos band, celana kargo, boots tempur"></textarea>
+                                     </div>
+                                     <div>
+                                        <label for="char-style" class="block mb-2 text-sm font-medium text-secondary">4. Gaya Artistik</label>
+                                        <input type="text" id="char-style" class="form-input w-full p-2.5" placeholder="Contoh: Ilustrasi anime sinematik, fotorealistis">
                                      </div>
                                  </div>
                              </div>
@@ -655,6 +721,17 @@
                                 <hr class="border-border-color">
                              </div>
 
+                             <div id="character-output-section" class="hidden space-y-4">
+                                <div>
+                                    <label for="character-sheet-output" class="block mb-2 text-sm font-medium text-secondary">Character Sheet (Untuk Disimpan)</label>
+                                    <textarea id="character-sheet-output" rows="5" class="form-input w-full p-2.5 text-xs" readonly></textarea>
+                                </div>
+                                <div>
+                                    <label for="character-scenario-input" class="block mb-2 text-sm font-medium text-secondary">Masukkan Skenario atau Aksi</label>
+                                    <input type="text" id="character-scenario-input" class="form-input w-full p-2.5" placeholder="Contoh: berdiri di atap gedung saat hujan">
+                                </div>
+                             </div>
+
                               <div id="video-preview-container" class="hidden space-y-3">
                                  <h4 class="text-md font-semibold">Preview Gambar Referensi Video</h4>
                                   <div class="relative w-full">
@@ -702,7 +779,7 @@
                                     </div>
                                 </div>
                              </div>
-                              <div>
+                              <div id="final-prompt-container">
                                  <div class="flex justify-between items-center mb-2">
                                      <h3 class="text-lg font-semibold">Hasil Prompt:</h3>
                                      <button id="enhance-prompt-button" class="btn btn-primary px-3 py-1.5 text-xs">
@@ -710,7 +787,7 @@
                                      </button>
                                  </div>
                                  <div class="relative">
-                                     <textarea id="output-prompt" rows="8" class="form-input w-full p-2.5 pr-24" readonly></textarea>
+                                     <textarea id="output-prompt" rows="8" class="form-input w-full p-2.5 pr-24"></textarea>
                                      <button id="copy-button" class="absolute top-2 right-2 btn btn-secondary px-3 py-1.5 text-xs">SALIN</button>
                                  </div>
                              </div>
@@ -753,227 +830,229 @@
     </div>
 
     <script>
+    document.addEventListener('DOMContentLoaded', () => {
         // --- State Management ---
         let userApiKey = null;
-        let apiMode = 'shared'; // 'shared' or 'user'
+        let apiMode = 'shared';
         let uploadedImageBase64 = null;
         let composeImage1Base64 = null;
         let composeImage2Base64 = null;
+        let characterRefImageBase64 = null;
         let uploadedVideoFile = null;
+        let selectedAspectRatio = '1:1';
 
-        // --- DOM Elements ---
-        const welcomeScreen = document.getElementById('welcome-screen');
-        const mainApp = document.getElementById('main-app');
-        const useSharedEnvBtn = document.getElementById('use-shared-env');
-        const useUserApiKeyBtn = document.getElementById('use-user-api-key');
-        const apiKeySection = document.getElementById('api-key-section');
-        const apiKeyInput = document.getElementById('api-key-input');
-        const startWithApiKeyBtn = document.getElementById('start-with-api-key');
-        const assistantButton = document.getElementById('assistant-button');
-        
-        // --- Welcome Screen Logic ---
-        useSharedEnvBtn.addEventListener('click', () => {
-            window.open('https://g.co/gemini/share/ec7fc3fd066b', '_blank');
-        });
-        useUserApiKeyBtn.addEventListener('click', () => {
-            apiKeySection.classList.toggle('active');
-        });
-        startWithApiKeyBtn.addEventListener('click', () => {
-            const key = apiKeyInput.value.trim();
-            if (key) {
-                userApiKey = key;
-                apiMode = 'user';
-                welcomeScreen.style.display = 'none';
-                mainApp.classList.add('active');
-                assistantButton.classList.remove('hidden');
-            } else {
-                apiKeyInput.focus();
-                apiKeyInput.classList.add('border-red-500', 'animate-pulse');
-                setTimeout(() => apiKeyInput.classList.remove('border-red-500', 'animate-pulse'), 2000);
-            }
-        });
+        // --- DOM Element Definitions ---
+        const elements = {
+            welcomeScreen: document.getElementById('welcome-screen'),
+            mainApp: document.getElementById('main-app'),
+            useSharedEnvBtn: document.getElementById('use-shared-env'),
+            useUserApiKeyBtn: document.getElementById('use-user-api-key'),
+            apiKeySection: document.getElementById('api-key-section'),
+            apiKeyInput: document.getElementById('api-key-input'),
+            startWithApiKeyBtn: document.getElementById('start-with-api-key'),
+            assistantButton: document.getElementById('assistant-button'),
+            themeToggle: document.getElementById('theme-toggle'),
+            lightIcon: document.getElementById('theme-icon-light'),
+            darkIcon: document.getElementById('theme-icon-dark'),
+            mainTabButtons: {
+                belajar: document.getElementById('tab-belajar'),
+                desainer: document.getElementById('tab-desainer')
+            },
+            contentSections: {
+                belajar: document.getElementById('content-belajar'),
+                desainer: document.getElementById('content-desainer')
+            },
+            designerTabImage: document.getElementById('designer-tab-image'),
+            designerTabVideo: document.getElementById('designer-tab-video'),
+            imageForm: document.getElementById('image-designer-form'),
+            videoForm: document.getElementById('video-designer-form'),
+            outputPromptEl: document.getElementById('output-prompt'),
+            copyButton: document.getElementById('copy-button'),
+            standardImageForm: document.getElementById('standard-image-form'),
+            tujuanGambarContainer: document.getElementById('tujuan-gambar-container'),
+            tujuanGambarEl: document.getElementById('tujuan-gambar'),
+            kemasanContainerEl: document.getElementById('kemasan-container'),
+            jenisKemasanEl: document.getElementById('jenis-kemasan'),
+            produkGambarEl: document.getElementById('produk-gambar'),
+            gayaGambarEl: document.getElementById('gaya-gambar'),
+            detailGambarEl: document.getElementById('detail-gambar'),
+            produkGambarLabelText: document.getElementById('produk-gambar-label-text'),
+            gayaGambarLabelText: document.getElementById('gaya-gambar-label-text'),
+            detailGambarLabelText: document.getElementById('detail-gambar-label-text'),
+            singleUploadContainer: document.getElementById('single-upload-container'),
+            imageCompositionForm: document.getElementById('image-composition-form'),
+            compositionDetailsEl: document.getElementById('composition-details'),
+            compositionPreviewContainer: document.getElementById('composition-preview-container'),
+            backToTujuanButton: document.getElementById('back-to-tujuan-button'),
+            characterCreatorForm: document.getElementById('character-creator-form'),
+            backToTujuanButtonChar: document.getElementById('back-to-tujuan-button-char'),
+            charNameEl: document.getElementById('char-name'),
+            charPhysicEl: document.getElementById('char-physic'),
+            charAttireEl: document.getElementById('char-attire'),
+            charStyleEl: document.getElementById('char-style'),
+            characterOutputSection: document.getElementById('character-output-section'),
+            characterSheetOutputEl: document.getElementById('character-sheet-output'),
+            characterScenarioInputEl: document.getElementById('character-scenario-input'),
+            subjekVideoEl: document.getElementById('subjek-video'),
+            gayaVideoEl: document.getElementById('gaya-video'),
+            audioVideoEl: document.getElementById('audio-video'),
+            negatifVideoEl: document.getElementById('negatif-video'),
+            allFormInputs: document.querySelectorAll('.form-input, .form-select'),
+            enhanceButton: document.getElementById('enhance-prompt-button'),
+            finalPromptContainer: document.getElementById('final-prompt-container'),
+            imageUploadEl: document.getElementById('image-upload'),
+            dropZone: document.getElementById('drop-zone'),
+            imagePreviewContainer: document.getElementById('image-preview-container'),
+            uploadedImagePreview: document.getElementById('uploaded-image-preview'),
+            analyzeImageButton: document.getElementById('analyze-image-button'),
+            analyzeImageText: document.getElementById('analyze-image-text'),
+            analyzeImageIcon: document.getElementById('analyze-image-icon'),
+            imageAnalysisResult: document.getElementById('image-analysis-result'),
+            removeImageButton: document.getElementById('remove-image-button'),
+            imageUploadCompose1: document.getElementById('image-upload-compose-1'),
+            dropZoneCompose1: document.getElementById('drop-zone-compose-1'),
+            uploadedComposePreview1: document.getElementById('uploaded-compose-preview-1'),
+            removeCompose1: document.getElementById('remove-compose-1'),
+            imageUploadCompose2: document.getElementById('image-upload-compose-2'),
+            dropZoneCompose2: document.getElementById('drop-zone-compose-2'),
+            uploadedComposePreview2: document.getElementById('uploaded-compose-preview-2'),
+            removeCompose2: document.getElementById('remove-compose-2'),
+            imageUploadChar: document.getElementById('image-upload-char'),
+            dropZoneChar: document.getElementById('drop-zone-char'),
+            characterPreviewContainer: document.getElementById('character-preview-container'),
+            uploadedCharPreview: document.getElementById('uploaded-char-preview'),
+            removeCharImageButton: document.getElementById('remove-char-image-button'),
+            analyzeCharButton: document.getElementById('analyze-char-button'),
+            analyzeCharText: document.getElementById('analyze-char-text'),
+            analyzeCharIcon: document.getElementById('analyze-char-icon'),
+            imageUploadVideoEl: document.getElementById('image-upload-video'),
+            dropZoneVideo: document.getElementById('drop-zone-video'),
+            videoPreviewContainer: document.getElementById('video-preview-container'),
+            uploadedVideoPreview: document.getElementById('uploaded-video-preview'),
+            removeVideoButton: document.getElementById('remove-video-button'),
+            aspectRatioDropdown: document.getElementById('aspect-ratio-dropdown'),
+            aspectRatioButton: document.getElementById('aspect-ratio-button'),
+            aspectRatioMenu: document.getElementById('aspect-ratio-menu'),
+            aspectRatioOptions: document.querySelectorAll('.aspect-ratio-option'),
+            assistantModal: document.getElementById('assistant-modal'),
+            closeAssistantModal: document.getElementById('close-assistant-modal'),
+            assistantChatBody: document.getElementById('assistant-chat-body'),
+            assistantInput: document.getElementById('assistant-input'),
+            sendAssistantMessage: document.getElementById('send-assistant-message'),
+        };
 
-        // --- Theme Toggle Logic ---
-        const themeToggle = document.getElementById('theme-toggle');
-        const lightIcon = document.getElementById('theme-icon-light');
-        const darkIcon = document.getElementById('theme-icon-dark');
         const applyTheme = (theme) => {
             if (theme === 'dark') {
                 document.documentElement.classList.add('dark');
-                lightIcon.classList.add('hidden');
-                darkIcon.classList.remove('hidden');
+                elements.lightIcon.classList.add('hidden');
+                elements.darkIcon.classList.remove('hidden');
             } else {
                 document.documentElement.classList.remove('dark');
-                lightIcon.classList.remove('hidden');
-                darkIcon.classList.add('hidden');
+                elements.lightIcon.classList.remove('hidden');
+                elements.darkIcon.classList.add('hidden');
             }
         };
-        themeToggle.addEventListener('click', () => {
-            const isDark = document.documentElement.classList.contains('dark');
-            const newTheme = isDark ? 'light' : 'dark';
-            localStorage.setItem('theme', newTheme);
-            applyTheme(newTheme);
-        });
-        
-        // --- Main Tab Logic ---
-        const mainTabButtons = {
-            belajar: document.getElementById('tab-belajar'),
-            desainer: document.getElementById('tab-desainer')
-        };
-        const contentSections = {
-            belajar: document.getElementById('content-belajar'),
-            desainer: document.getElementById('content-desainer')
-        };
+
         function showTab(tabName) {
-            Object.values(mainTabButtons).forEach(button => button.classList.remove('active'));
-            mainTabButtons[tabName].classList.add('active');
-            Object.values(contentSections).forEach(section => section.classList.remove('active'));
-            contentSections[tabName].classList.add('active');
+            Object.values(elements.mainTabButtons).forEach(button => button.classList.remove('active'));
+            elements.mainTabButtons[tabName].classList.add('active');
+            Object.values(elements.contentSections).forEach(section => section.classList.remove('active'));
+            elements.contentSections[tabName].classList.add('active');
         }
-
-        // --- Prompt Designer Logic ---
-        const designerTabImage = document.getElementById('designer-tab-image');
-        const designerTabVideo = document.getElementById('designer-tab-video');
-        const imageForm = document.getElementById('image-designer-form');
-        const videoForm = document.getElementById('video-designer-form');
-        const outputPromptEl = document.getElementById('output-prompt');
-        const copyButton = document.getElementById('copy-button');
-        let selectedAspectRatio = '1:1';
         
-        // Standard Form Elements
-        const standardImageForm = document.getElementById('standard-image-form');
-        const tujuanGambarContainer = document.getElementById('tujuan-gambar-container');
-        const tujuanGambarEl = document.getElementById('tujuan-gambar');
-        const kemasanContainerEl = document.getElementById('kemasan-container');
-        const jenisKemasanEl = document.getElementById('jenis-kemasan');
-        const produkGambarEl = document.getElementById('produk-gambar');
-        const gayaGambarEl = document.getElementById('gaya-gambar');
-        const detailGambarEl = document.getElementById('detail-gambar');
-        const produkGambarLabelText = document.getElementById('produk-gambar-label-text');
-        const gayaGambarLabelText = document.getElementById('gaya-gambar-label-text');
-        const detailGambarLabelText = document.getElementById('detail-gambar-label-text');
-        const singleUploadContainer = document.getElementById('single-upload-container');
-        
-        // Composition Form Elements
-        const imageCompositionForm = document.getElementById('image-composition-form');
-        const compositionDetailsEl = document.getElementById('composition-details');
-        const compositionPreviewContainer = document.getElementById('composition-preview-container');
-        const backToTujuanButton = document.getElementById('back-to-tujuan-button');
-
-        // Video Form Elements
-        const subjekVideoEl = document.getElementById('subjek-video');
-        const gayaVideoEl = document.getElementById('gaya-video');
-        const audioVideoEl = document.getElementById('audio-video');
-        const negatifVideoEl = document.getElementById('negatif-video');
-        
-        const allFormInputs = document.querySelectorAll('.form-input, .form-select');
-        const enhanceButton = document.getElementById('enhance-prompt-button');
-        
-        // Single Image Upload Elements
-        const imageUploadEl = document.getElementById('image-upload');
-        const dropZone = document.getElementById('drop-zone');
-        const imagePreviewContainer = document.getElementById('image-preview-container');
-        const uploadedImagePreview = document.getElementById('uploaded-image-preview');
-        const analyzeImageButton = document.getElementById('analyze-image-button');
-        const analyzeImageText = document.getElementById('analyze-image-text');
-        const analyzeImageIcon = document.getElementById('analyze-image-icon');
-        const imageAnalysisResult = document.getElementById('image-analysis-result');
-        const removeImageButton = document.getElementById('remove-image-button');
-        
-        // Composition Image Upload Elements
-        const imageUploadCompose1 = document.getElementById('image-upload-compose-1');
-        const dropZoneCompose1 = document.getElementById('drop-zone-compose-1');
-        const uploadedComposePreview1 = document.getElementById('uploaded-compose-preview-1');
-        const removeCompose1 = document.getElementById('remove-compose-1');
-        const imageUploadCompose2 = document.getElementById('image-upload-compose-2');
-        const dropZoneCompose2 = document.getElementById('drop-zone-compose-2');
-        const uploadedComposePreview2 = document.getElementById('uploaded-compose-preview-2');
-        const removeCompose2 = document.getElementById('remove-compose-2');
-
-        // Video Upload Elements
-        const imageUploadVideoEl = document.getElementById('image-upload-video');
-        const dropZoneVideo = document.getElementById('drop-zone-video');
-        const videoPreviewContainer = document.getElementById('video-preview-container');
-        const uploadedVideoPreview = document.getElementById('uploaded-video-preview');
-        const removeVideoButton = document.getElementById('remove-video-button');
-        
-        const aspectRatioDropdown = document.getElementById('aspect-ratio-dropdown');
-        const aspectRatioButton = document.getElementById('aspect-ratio-button');
-        const aspectRatioMenu = document.getElementById('aspect-ratio-menu');
-        const aspectRatioOptions = document.querySelectorAll('.aspect-ratio-option');
-
         function switchDesignerTab(tab) {
             if (tab === 'image') {
-                designerTabImage.classList.add('active');
-                designerTabVideo.classList.remove('active');
-                imageForm.classList.add('active');
-                videoForm.classList.remove('active');
+                elements.designerTabImage.classList.add('active');
+                elements.designerTabVideo.classList.remove('active');
+                elements.imageForm.classList.add('active');
+                elements.videoForm.classList.remove('active');
             } else {
-                designerTabImage.classList.remove('active');
-                designerTabVideo.classList.add('active');
-                imageForm.classList.remove('active');
-                videoForm.classList.add('active');
+                elements.designerTabImage.classList.remove('active');
+                elements.designerTabVideo.classList.add('active');
+                elements.imageForm.classList.remove('active');
+                elements.videoForm.classList.add('active');
             }
-            imagePreviewContainer.classList.toggle('hidden', tab !== 'image' || !uploadedImageBase64);
-            videoPreviewContainer.classList.toggle('hidden', tab !== 'video' || !uploadedVideoFile);
+            elements.imagePreviewContainer.classList.toggle('hidden', tab !== 'image' || !uploadedImageBase64);
+            elements.videoPreviewContainer.classList.toggle('hidden', tab !== 'video' || !uploadedVideoFile);
             updateGeneratedPrompt();
         }
-        
-        designerTabImage.addEventListener('click', () => switchDesignerTab('image'));
-        designerTabVideo.addEventListener('click', () => switchDesignerTab('video'));
 
-        function generateImagePrompt() {
-            const tujuan = tujuanGambarEl.value;
-            const isEditing = uploadedImageBase64 !== null;
-            const produk = produkGambarEl.value.trim();
-            const gaya = gayaGambarEl.value.trim();
-            const detail = detailGambarEl.value.trim();
-            const jenisKemasan = jenisKemasanEl.value;
-            let prompt = "";
+        function generateCharacterPrompt() {
+            const name = elements.charNameEl.value.trim();
+            const physic = elements.charPhysicEl.value.trim();
+            const attire = elements.charAttireEl.value.trim();
+            const style = elements.charStyleEl.value.trim();
+            const scenario = elements.characterScenarioInputEl.value.trim();
 
-            if (tujuan === 'Gabungkan Foto') {
-                const details = compositionDetailsEl.value.trim();
-                prompt = "Buat gambar baru dengan menggabungkan elemen dari gambar yang disediakan. ";
-                prompt += details || "[Jelaskan cara menggabungkan foto 1 dan 2]";
-            } else {
-                switch (tujuan) {
-                    case 'Foto Produk':
-                        prompt = isEditing
-                            ? (detail || `Sempurnakan foto produk "${produk}" ini, terapkan gaya visual ${gaya || 'profesional'}.`)
-                            : `Sebuah foto produk profesional dari ${produk || '[Produk Anda]'}, bergaya ${gaya || '[Gaya Visual Anda]'}. ${detail}`;
-                        break;
-                    case 'Logo Brand':
-                        prompt = isEditing
-                            ? (detail || `Sempurnakan draf logo untuk brand "${produk}" ini. Terapkan gaya visual ${gaya || 'yang lebih modern'}.`)
-                            : `Buat desain logo untuk brand bernama "${produk || '[Nama Brand Anda]'}" dengan teks "${produk || '[Teks Logo Anda]'}". Desainnya harus bergaya ${gaya || '[Gaya Visual Anda]'}. ${detail}`;
-                        break;
-                    case 'Promosi':
-                        prompt = isEditing
-                            ? `Gunakan gambar dari "${produk}" ini sebagai dasar untuk membuat poster promosi. ${detail || ''}`
-                            : `Poster promosi untuk media sosial, menampilkan ${produk || '[Produk Anda]'}, bergaya ${gaya || '[Gaya Visual Anda]'}. ${detail}`;
-                        break;
-                    case 'Cetak':
-                        prompt = isEditing
-                            ? `Gunakan gambar dari "${produk}" ini sebagai aset utama untuk desain brosur. ${detail || ''}`
-                            : `Desain brosur atau pamflet yang menarik untuk ${produk || '[Produk Anda]'}, bergaya ${gaya || '[Gaya Visual Anda]'}. ${detail}`;
-                        break;
-                    case 'Kemasan':
-                        prompt = isEditing
-                            ? `Gunakan gambar dari "${produk}" ini sebagai elemen desain pada kemasan ${jenisKemasan}. ${detail || ''}`
-                            : `Desain packaging untuk ${produk || '[Produk Anda]'} dalam bentuk ${jenisKemasan}, bergaya ${gaya || '[Gaya Visual Anda]'}. ${detail}`;
-                        break;
-                }
-            }
-            
-            outputPromptEl.value = (prompt + ` Aspek rasio ${selectedAspectRatio}.`).trim();
+            let sheet = `(character sheet: ${name || '[Nama Karakter]'}.`;
+            if (physic) sheet += ` Ciri fisik: ${physic}.`;
+            if (attire) sheet += ` Pakaian khas: ${attire}.`;
+            if (style) sheet += ` Gaya visual: ${style}.`;
+            sheet += ')';
+
+            elements.characterSheetOutputEl.value = sheet;
+            elements.outputPromptEl.value = `${sheet} ${scenario || '[Skenario/Aksi]'}. Aspek rasio ${selectedAspectRatio}.`.trim();
         }
 
+        function generateImagePrompt() {
+            const tujuan = elements.tujuanGambarEl.value;
+            
+            if (tujuan === 'Gabungkan Foto') {
+                const details = elements.compositionDetailsEl.value.trim();
+                let prompt = "Buat gambar baru dengan menggabungkan elemen dari gambar yang disediakan. ";
+                prompt += details || "[Jelaskan cara menggabungkan foto 1 dan 2]";
+                elements.outputPromptEl.value = (prompt + ` Aspek rasio ${selectedAspectRatio}.`).trim();
+                return;
+            }
+
+            if (tujuan === 'Karakter Konsisten') {
+                generateCharacterPrompt();
+                return;
+            }
+
+            const isEditing = uploadedImageBase64 !== null;
+            const produk = elements.produkGambarEl.value.trim();
+            const gaya = elements.gayaGambarEl.value.trim();
+            const detail = elements.detailGambarEl.value.trim();
+            const jenisKemasan = elements.jenisKemasanEl.value;
+            let prompt = "";
+
+            switch (tujuan) {
+                case 'Foto Produk':
+                    prompt = isEditing
+                        ? (detail || `Sempurnakan foto produk "${produk}" ini, terapkan gaya visual ${gaya || 'profesional'}.`)
+                        : `Sebuah foto produk profesional dari ${produk || '[Produk Anda]'}, bergaya ${gaya || '[Gaya Visual Anda]'}. ${detail}`;
+                    break;
+                case 'Logo Brand':
+                    prompt = isEditing
+                        ? (detail || `Sempurnakan draf logo untuk brand "${produk}" ini. Terapkan gaya visual ${gaya || 'yang lebih modern'}.`)
+                        : `Buat desain logo untuk brand bernama "${produk || '[Nama Brand Anda]'}" dengan teks "${produk || '[Teks Logo Anda]'}". Desainnya harus bergaya ${gaya || '[Gaya Visual Anda]'}. ${detail}`;
+                    break;
+                case 'Promosi':
+                    prompt = isEditing
+                        ? `Gunakan gambar dari "${produk}" ini sebagai dasar untuk membuat poster promosi. ${detail || ''}`
+                        : `Poster promosi untuk media sosial, menampilkan ${produk || '[Produk Anda]'}, bergaya ${gaya || '[Gaya Visual Anda]'}. ${detail}`;
+                    break;
+                case 'Cetak':
+                    prompt = isEditing
+                        ? `Gunakan gambar dari "${produk}" ini sebagai aset utama untuk desain brosur. ${detail || ''}`
+                        : `Desain brosur atau pamflet yang menarik untuk ${produk || '[Produk Anda]'}, bergaya ${gaya || '[Gaya Visual Anda]'}. ${detail}`;
+                    break;
+                case 'Kemasan':
+                    prompt = isEditing
+                        ? `Gunakan gambar dari "${produk}" ini sebagai elemen desain pada kemasan ${jenisKemasan}. ${detail || ''}`
+                        : `Desain packaging untuk ${produk || '[Produk Anda]'} dalam bentuk ${jenisKemasan}, bergaya ${gaya || '[Gaya Visual Anda]'}. ${detail}`;
+                    break;
+            }
+            
+            elements.outputPromptEl.value = (prompt + ` Aspek rasio ${selectedAspectRatio}.`).trim();
+        }
 
         function generateVideoPrompt() {
-            const subjek = subjekVideoEl.value.trim() || "[Subjek dan aksi]";
-            const gaya = gayaVideoEl.value.trim() || "[Gaya, kamera, dan suasana]";
-            const audio = audioVideoEl.value.trim();
-            const negativo = negatifVideoEl.value.trim();
+            const subjek = elements.subjekVideoEl.value.trim() || "[Subjek dan aksi]";
+            const gaya = elements.gayaVideoEl.value.trim() || "[Gaya, kamera, dan suasana]";
+            const audio = elements.audioVideoEl.value.trim();
+            const negativo = elements.negatifVideoEl.value.trim();
             let prompt = "";
             if (uploadedVideoFile) {
                 prompt += "[Gambar Input] ";
@@ -986,11 +1065,11 @@
             if (negativo) {
                 prompt += ` -negative_prompt "${negativo}"`;
             }
-            outputPromptEl.value = prompt;
+            elements.outputPromptEl.value = prompt;
         }
 
         function updateGeneratedPrompt() {
-            if (designerTabImage.classList.contains('active')) {
+            if (elements.designerTabImage.classList.contains('active')) {
                 generateImagePrompt();
             } else {
                 generateVideoPrompt();
@@ -998,87 +1077,72 @@
         }
         
         function handleTujuanGambarChange() {
-            const tujuan = tujuanGambarEl.value;
+            const tujuan = elements.tujuanGambarEl.value;
             const isEditing = uploadedImageBase64 !== null;
 
-            // Show/hide main forms
+            elements.standardImageForm.classList.add('hidden');
+            elements.imageCompositionForm.classList.add('hidden');
+            elements.characterCreatorForm.classList.add('hidden');
+            elements.imagePreviewContainer.classList.add('hidden');
+            elements.compositionPreviewContainer.classList.add('hidden');
+            elements.characterOutputSection.classList.add('hidden');
+            elements.finalPromptContainer.classList.remove('hidden');
+
             if (tujuan === 'Gabungkan Foto') {
-                standardImageForm.classList.add('hidden');
-                imageCompositionForm.classList.remove('hidden');
-                imagePreviewContainer.classList.add('hidden');
-                compositionPreviewContainer.classList.remove('hidden');
+                elements.imageCompositionForm.classList.remove('hidden');
+                elements.compositionPreviewContainer.classList.remove('hidden');
+            } else if (tujuan === 'Karakter Konsisten') {
+                elements.characterCreatorForm.classList.remove('hidden');
+                elements.characterOutputSection.classList.remove('hidden');
             } else {
-                standardImageForm.classList.remove('hidden');
-                imageCompositionForm.classList.add('hidden');
-                compositionPreviewContainer.classList.add('hidden');
-                imagePreviewContainer.classList.toggle('hidden', !isEditing);
+                elements.standardImageForm.classList.remove('hidden');
+                elements.imagePreviewContainer.classList.toggle('hidden', !isEditing);
+                
+                let produkLabel = "Apa Objek atau Produk Utamanya?";
+                let gayaLabel = "Apa Gaya Visual yang Diinginkan?";
+                let detailLabel = "Detail Tambahan (Opsional)";
+                let produkPlaceholder = "Contoh: sebotol madu hutan";
+                let gayaPlaceholder = "Contoh: minimalis & bersih";
+                let detailPlaceholder = "Contoh: latar belakang marmer putih";
+
+                if (isEditing) {
+                    produkLabel = "Objek Utama pada Gambar";
+                    gayaLabel = "Gaya Visual Baru (jika ingin diubah)";
+                    detailLabel = "Jelaskan Perubahan/Penyempurnaan";
+                    detailPlaceholder = "Contoh: Ganti latar belakang menjadi pemandangan pantai.";
+                }
+
+                switch (tujuan) {
+                    case 'Logo Brand':
+                        produkLabel = isEditing ? "Nama Brand pada Draft" : "Apa Nama Brand & Teks Logonya?";
+                        produkPlaceholder = "Contoh: Aroma Pagi";
+                        gayaLabel = isEditing ? "Gaya Visual Baru (jika ingin diubah)" : "Deskripsikan Gaya Visual & Font";
+                        gayaPlaceholder = "Contoh: minimalis line-art, font sans-serif modern";
+                        detailLabel = isEditing ? "Jelaskan Perubahan pada Draft Logo" : "Detail Tambahan (Opsional)";
+                        detailPlaceholder = isEditing ? "Contoh: Buat garisnya lebih tebal dan warnanya emas." : "Contoh: ada ikon biji kopi di atasnya.";
+                        break;
+                    case 'Promosi':
+                    case 'Cetak':
+                        if (isEditing) {
+                            detailLabel = `Jelaskan bagaimana gambar ini akan digunakan untuk ${tujuan}`;
+                            detailPlaceholder = `Contoh: Jadikan ini sebagai poster utama, tambahkan teks...`;
+                        }
+                        break;
+                }
+
+                elements.produkGambarLabelText.textContent = produkLabel;
+                elements.gayaGambarLabelText.textContent = gayaLabel;
+                elements.detailGambarLabelText.textContent = detailLabel;
+                elements.produkGambarEl.placeholder = produkPlaceholder;
+                elements.gayaGambarEl.placeholder = gayaPlaceholder;
+                elements.detailGambarEl.placeholder = detailPlaceholder;
+
+                const isKemasan = tujuan === 'Kemasan' && !isEditing;
+                elements.kemasanContainerEl.classList.toggle('hidden', !isKemasan);
             }
-
-            // Update labels and placeholders based on context
-            let produkLabel = "Apa Objek atau Produk Utamanya?";
-            let gayaLabel = "Apa Gaya Visual yang Diinginkan?";
-            let detailLabel = "Detail Tambahan (Opsional)";
-            let produkPlaceholder = "Contoh: sebotol madu hutan";
-            let gayaPlaceholder = "Contoh: minimalis & bersih";
-            let detailPlaceholder = "Contoh: latar belakang marmer putih";
-
-            if (isEditing) {
-                produkLabel = "Objek Utama pada Gambar";
-                gayaLabel = "Gaya Visual Baru (jika ingin diubah)";
-                detailLabel = "Jelaskan Perubahan/Penyempurnaan";
-                detailPlaceholder = "Contoh: Ganti latar belakang menjadi pemandangan pantai.";
-            }
-
-            switch (tujuan) {
-                case 'Logo Brand':
-                    produkLabel = isEditing ? "Nama Brand pada Draft" : "Apa Nama Brand & Teks Logonya?";
-                    produkPlaceholder = "Contoh: Aroma Pagi";
-                    gayaLabel = isEditing ? "Gaya Visual Baru (jika ingin diubah)" : "Deskripsikan Gaya Visual & Font";
-                    gayaPlaceholder = "Contoh: minimalis line-art, font sans-serif modern";
-                    detailLabel = isEditing ? "Jelaskan Perubahan pada Draft Logo" : "Detail Tambahan (Opsional)";
-                    detailPlaceholder = isEditing ? "Contoh: Buat garisnya lebih tebal dan warnanya emas." : "Contoh: ada ikon biji kopi di atasnya.";
-                    break;
-                case 'Promosi':
-                case 'Cetak':
-                    if (isEditing) {
-                        detailLabel = `Jelaskan bagaimana gambar ini akan digunakan untuk ${tujuan}`;
-                        detailPlaceholder = `Contoh: Jadikan ini sebagai poster utama, tambahkan teks...`;
-                    }
-                    break;
-            }
-
-            produkGambarLabelText.textContent = produkLabel;
-            gayaGambarLabelText.textContent = gayaLabel;
-            detailGambarLabelText.textContent = detailLabel;
-            produkGambarEl.placeholder = produkPlaceholder;
-            gayaGambarEl.placeholder = gayaPlaceholder;
-            detailGambarEl.placeholder = detailPlaceholder;
-
-            const isKemasan = tujuan === 'Kemasan' && !isEditing;
-            kemasanContainerEl.classList.toggle('hidden', !isKemasan);
             
             updateGeneratedPrompt();
         }
-
-        backToTujuanButton.addEventListener('click', () => {
-            tujuanGambarEl.value = 'Foto Produk'; // Reset to default
-            handleTujuanGambarChange();
-        });
-
-        allFormInputs.forEach(el => el.addEventListener('input', updateGeneratedPrompt));
-        tujuanGambarEl.addEventListener('change', handleTujuanGambarChange);
-        
-        copyButton.addEventListener('click', () => {
-            outputPromptEl.select();
-            try {
-                document.execCommand('copy');
-                copyButton.textContent = 'DISALIN!';
-                setTimeout(() => { copyButton.textContent = 'SALIN'; }, 2000);
-            } catch (err) {
-                copyButton.textContent = 'GAGAL';
-                setTimeout(() => { copyButton.textContent = 'SALIN'; }, 2000);
-            }
-        });
         
         async function makeApiCallWithRetry(systemPrompt, userQuery, retries = 3, delay = 1000) {
             const apiKey = apiMode === 'user' ? userApiKey : ""; 
@@ -1110,24 +1174,26 @@
         }
         
         async function enhancePromptWithGemini() {
-            const basePrompt = outputPromptEl.value;
+            const basePrompt = elements.outputPromptEl.value;
             if (!basePrompt || (basePrompt.includes("[") && !basePrompt.startsWith("["))) {
                 alert("Harap lengkapi detail pada form terlebih dahulu.");
                 return;
             }
-            enhanceButton.disabled = true;
-            enhanceButton.innerHTML = `<span class="loader"></span> MENINGKATKAN...`;
+            elements.enhanceButton.disabled = true;
+            elements.enhanceButton.innerHTML = `<span class="loader"></span> MENINGKATKAN...`;
             
-            const isVideo = designerTabVideo.classList.contains('active');
-            const isComposition = tujuanGambarEl.value === 'Gabungkan Foto';
+            const isVideo = elements.designerTabVideo.classList.contains('active');
+            const tujuan = elements.tujuanGambarEl.value;
             
             let systemPrompt = "";
-            if (isVideo) {
-                systemPrompt = "Anda adalah seorang sutradara film dan ahli rekayasa prompt video. Ambil prompt dasar berikut dan buatlah menjadi jauh lebih deskriptif, sinematik, dan profesional. Tambahkan detail spesifik tentang gerakan kamera, sinematografi, pencahayaan, tempo, dan desain suara. Pertahankan subjek inti dan rasio aspek. Balas HANYA dengan teks prompt yang disempurnakan tanpa tambahan atau awalan apapun. Selalu berikan jawaban dalam Bahasa Indonesia.";
-            } else if (isComposition) {
-                systemPrompt = "Anda adalah ahli rekayasa prompt untuk image composition. Ubah instruksi dasar pengguna menjadi prompt yang detail dan profesional. Fokus pada cara mengintegrasikan elemen dari foto 1 ke foto 2 secara mulus (pencahayaan, bayangan, skala). Balas HANYA dengan teks prompt yang disempurnakan tanpa tambahan atau awalan apapun. Selalu berikan jawaban dalam Bahasa Indonesia.";
+             if (isVideo) {
+                systemPrompt = "PENTING: Jawaban Anda HARUS dalam Bahasa Indonesia. Anda adalah seorang sutradara film dan ahli rekayasa prompt video. Ambil prompt dasar berikut dan buatlah menjadi jauh lebih deskriptif, sinematik, dan profesional. Tambahkan detail spesifik tentang gerakan kamera, sinematografi, pencahayaan, tempo, dan desain suara. Pertahankan subjek inti dan rasio aspek. Balas HANYA dengan teks prompt yang disempurnakan tanpa tambahan atau awalan apapun.";
+            } else if (tujuan === 'Gabungkan Foto') {
+                systemPrompt = "PENTING: Jawaban Anda HARUS dalam Bahasa Indonesia. Anda adalah ahli rekayasa prompt untuk image composition. Ubah instruksi dasar pengguna menjadi prompt yang detail dan profesional. Fokus pada cara mengintegrasikan elemen dari foto 1 ke foto 2 secara mulus (pencahayaan, bayangan, skala). Balas HANYA dengan teks prompt yang disempurnakan tanpa tambahan atau awalan apapun.";
+            } else if (tujuan === 'Karakter Konsisten') {
+                systemPrompt = "PENTING: Jawaban Anda HARUS dalam Bahasa Indonesia. Anda adalah ahli penulis karakter dan rekayasa prompt. Ambil 'character sheet' dan skenario dasar pengguna, lalu kembangkan menjadi prompt yang sangat deskriptif dan kaya detail untuk menghasilkan gambar yang konsisten dan sinematik. Fokus pada pengayaan detail karakter di dalam sheet. Balas HANYA dengan teks prompt yang disempurnakan tanpa tambahan atau awalan apapun.";
             } else {
-                systemPrompt = "Anda adalah seorang direktur kreatif dan ahli rekayasa prompt. Ambil prompt dasar berikut untuk model pembuatan gambar dan buatlah menjadi jauh lebih deskriptif, menggugah, dan profesional. Tambahkan detail spesifik tentang pencahayaan, komposisi, tekstur, dan suasana hati. Pertahankan subjek inti dan rasio aspek yang sama. Balas HANYA dengan teks prompt yang disempurnakan tanpa tambahan atau awalan apapun. Selalu berikan jawaban dalam Bahasa Indonesia.";
+                systemPrompt = "PENTING: Jawaban Anda HARUS dalam Bahasa Indonesia. Anda adalah seorang direktur kreatif dan ahli rekayasa prompt. Ambil prompt dasar berikut untuk model pembuatan gambar dan buatlah menjadi jauh lebih deskriptif, menggugah, dan profesional. Tambahkan detail spesifik tentang pencahayaan, komposisi, tekstur, dan suasana hati. Pertahankan subjek inti dan rasio aspek yang sama. Balas HANYA dengan teks prompt yang disempurnakan tanpa tambahan atau awalan apapun.";
             }
 
             const userQuery = `Berikut adalah prompt dasarnya: "${basePrompt}"`;
@@ -1135,18 +1201,20 @@
                 const enhancedPrompt = await makeApiCallWithRetry(systemPrompt, userQuery);
                 if(enhancedPrompt) {
                     let cleanedPrompt = enhancedPrompt.trim().replace(/^"|"$/g, '').replace(/\[Gambar Input\]\s*/i, '');
-                    outputPromptEl.value = cleanedPrompt;
+                    elements.outputPromptEl.value = cleanedPrompt;
+                    if (tujuan === 'Karakter Konsisten') {
+                         const match = cleanedPrompt.match(/\(character sheet:.*?\)/);
+                         if (match) elements.characterSheetOutputEl.value = match[0];
+                    }
                 }
             } catch (error) {
-                outputPromptEl.value = "Maaf, terjadi kesalahan saat menyempurnakan prompt: " + error.message;
+                elements.outputPromptEl.value = "Maaf, terjadi kesalahan saat menyempurnakan prompt: " + error.message;
             } finally {
-                enhanceButton.disabled = false;
-                enhanceButton.innerHTML = '<span id="enhance-prompt-text">SEMPURNAKAN PROMPT</span>';
+                elements.enhanceButton.disabled = false;
+                elements.enhanceButton.innerHTML = '<span id="enhance-prompt-text">SEMPURNAKAN PROMPT</span>';
             }
         }
         
-        enhanceButton.addEventListener('click', enhancePromptWithGemini);
-
         function handleFileSelect(file, type) {
             if (!file || !file.type.startsWith('image/')) return;
             const reader = new FileReader();
@@ -1156,82 +1224,40 @@
 
                 if (type === 'single') {
                     uploadedImageBase64 = base64;
-                    uploadedImagePreview.src = src;
-                    imagePreviewContainer.classList.remove('hidden');
-                    imageAnalysisResult.value = ''; 
+                    elements.uploadedImagePreview.src = src;
                     handleTujuanGambarChange();
                 } else if (type === 'compose1') {
                     composeImage1Base64 = base64;
-                    uploadedComposePreview1.src = src;
-                    uploadedComposePreview1.parentElement.classList.remove('hidden');
+                    elements.uploadedComposePreview1.src = src;
+                    elements.uploadedComposePreview1.parentElement.classList.remove('hidden');
                 } else if (type === 'compose2') {
                     composeImage2Base64 = base64;
-                    uploadedComposePreview2.src = src;
-                    uploadedComposePreview2.parentElement.classList.remove('hidden');
+                    elements.uploadedComposePreview2.src = src;
+                    elements.uploadedComposePreview2.parentElement.classList.remove('hidden');
+                } else if (type === 'character') {
+                    characterRefImageBase64 = base64;
+                    elements.uploadedCharPreview.src = src;
+                    elements.characterPreviewContainer.classList.remove('hidden');
                 }
                 updateGeneratedPrompt();
             };
             reader.readAsDataURL(file);
         }
-
-        imageUploadEl.addEventListener('change', (event) => handleFileSelect(event.target.files[0], 'single'));
-        dropZone.addEventListener('drop', (e) => { e.preventDefault(); handleFileSelect(e.dataTransfer.files[0], 'single'); });
         
-        imageUploadCompose1.addEventListener('change', (event) => handleFileSelect(event.target.files[0], 'compose1'));
-        dropZoneCompose1.addEventListener('drop', (e) => { e.preventDefault(); handleFileSelect(e.dataTransfer.files[0], 'compose1'); });
-        
-        imageUploadCompose2.addEventListener('change', (event) => handleFileSelect(event.target.files[0], 'compose2'));
-        dropZoneCompose2.addEventListener('drop', (e) => { e.preventDefault(); handleFileSelect(e.dataTransfer.files[0], 'compose2'); });
-
-
-        ['dragover', 'dragleave'].forEach(eventName => {
-            [dropZone, dropZoneCompose1, dropZoneCompose2, dropZoneVideo].forEach(zone => {
-                zone.addEventListener(eventName, (e) => e.preventDefault());
-                if (eventName === 'dragover') zone.classList.add('border-accent-color', 'bg-tertiary');
-                else zone.classList.remove('border-accent-color', 'bg-tertiary');
-            });
-        });
-        
-        removeImageButton.addEventListener('click', () => {
-            uploadedImageBase64 = null;
-            imageUploadEl.value = '';
-            imagePreviewContainer.classList.add('hidden');
-            produkGambarEl.value = '';
-            gayaGambarEl.value = '';
-            detailGambarEl.value = '';
-            handleTujuanGambarChange();
-        });
-
-        removeCompose1.addEventListener('click', () => {
-            composeImage1Base64 = null;
-            imageUploadCompose1.value = '';
-            uploadedComposePreview1.src = '';
-            uploadedComposePreview1.parentElement.classList.add('hidden');
-            updateGeneratedPrompt();
-        });
-        removeCompose2.addEventListener('click', () => {
-            composeImage2Base64 = null;
-            imageUploadCompose2.value = '';
-            uploadedComposePreview2.src = '';
-            uploadedComposePreview2.parentElement.classList.add('hidden');
-            updateGeneratedPrompt();
-        });
-
-
         async function analyzeImageWithGemini() {
             if (!uploadedImageBase64) {
                 alert("Mohon upload gambar terlebih dahulu.");
                 return;
             }
-            analyzeImageButton.disabled = true;
-            analyzeImageText.textContent = 'MENGANALISA...';
-            analyzeImageIcon.innerHTML = `<span class="loader"></span>`;
-            imageAnalysisResult.value = "AI sedang menganalisa gambar Anda, mohon tunggu...";
-            const systemPrompt = "Anda adalah seorang ahli art director...";
-            const userPrompt = "Analisa gambar ini...";
+            elements.analyzeImageButton.disabled = true;
+            elements.analyzeImageText.textContent = 'MENGANALISA...';
+            elements.analyzeImageIcon.innerHTML = `<span class="loader"></span>`;
+            elements.imageAnalysisResult.value = "AI sedang menganalisa gambar Anda, mohon tunggu...";
+            const systemPrompt = "PENTING: Jawaban Anda HARUS dalam Bahasa Indonesia. Anda adalah seorang ahli art director. Analisa gambar yang diberikan. Balas HANYA dengan format ini: '### Analisis Gambar\\n**Subjek Utama:** [Sebutkan subjek utama secara singkat]\\n**Deskripsi:** [Jelaskan gambar secara detail dalam satu paragraf]'. Jangan tambahkan apapun di luar format ini.";
+            const userPrompt = "Analisa gambar ini sesuai format yang diperintahkan.";
             const apiKey = apiMode === 'user' ? userApiKey : ""; 
             if (apiMode === 'user' && !apiKey) {
-                 imageAnalysisResult.value = "Error: API Key pengguna tidak valid...";
+                 elements.imageAnalysisResult.value = "Error: API Key pengguna tidak valid...";
                  return;
             }
             const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
@@ -1245,69 +1271,127 @@
                 const result = await response.json();
                 if (result.candidates && result.candidates[0].content && result.candidates[0].content.parts[0].text) {
                     const analysisText = result.candidates[0].content.parts[0].text;
-                    imageAnalysisResult.value = analysisText;
+                    elements.imageAnalysisResult.value = analysisText;
                     const subjectMatch = analysisText.match(/\*\*Subjek Utama:\*\*\s*([^\n]+)/i);
                     if (subjectMatch && subjectMatch[1]) {
-                        produkGambarEl.value = subjectMatch[1].trim();
-                        detailGambarEl.value = `Sempurnakan foto dari "${subjectMatch[1].trim()}" ini...`;
+                        elements.produkGambarEl.value = subjectMatch[1].trim();
+                        elements.detailGambarEl.value = `Sempurnakan foto dari "${subjectMatch[1].trim()}" ini...`;
                     } else {
-                        detailGambarEl.value = "Sempurnakan gambar ini berdasarkan hasil analisa.";
+                        elements.detailGambarEl.value = "Sempurnakan gambar ini berdasarkan hasil analisa.";
                     }
                     updateGeneratedPrompt();
                 } else { throw new Error("Struktur respons API tidak valid."); }
             } catch (error) {
-                imageAnalysisResult.value = "Maaf, terjadi kesalahan saat menganalisa gambar. " + error.message;
+                elements.imageAnalysisResult.value = "Maaf, terjadi kesalahan saat menganalisa gambar. " + error.message;
             } finally {
-                analyzeImageButton.disabled = false;
-                analyzeImageText.textContent = 'ANALISA GAMBAR';
-                analyzeImageIcon.innerHTML = `🔍`;
+                elements.analyzeImageButton.disabled = false;
+                elements.analyzeImageText.textContent = 'ANALISA GAMBAR';
+                elements.analyzeImageIcon.innerHTML = `🔍`;
             }
         }
-        analyzeImageButton.addEventListener('click', analyzeImageWithGemini);
+       
+       async function analyzeCharacterWithGemini() {
+            if (!characterRefImageBase64) {
+                alert("Mohon upload gambar referensi karakter terlebih dahulu.");
+                return;
+            }
+
+            elements.analyzeCharButton.disabled = true;
+            elements.analyzeCharText.textContent = 'MENGANALISA...';
+            elements.analyzeCharIcon.innerHTML = `<span class="loader"></span>`;
+
+            const systemPrompt = `PENTING: Jawaban Anda HARUS dalam Bahasa Indonesia. Anda adalah seorang analis karakter dan art director yang sangat detail. Diberikan sebuah gambar, tugas Anda adalah menganalisanya dan mengembalikan deskripsi karakter dalam format JSON yang ketat. Jangan menambahkan teks atau penjelasan lain di luar JSON. JSON harus memiliki properti berikut: "name" (saran nama atau deskripsi singkat, misal: "prajurit wanita futuristik"), "physic" (deskripsi detail tentang wajah, rambut, mata, dan postur tubuh), "attire" (deskripsi detail tentang pakaian dan aksesoris yang dikenakan), dan "style" (deskripsi gaya artistik gambar, misal: "fotorealistis, pencahayaan dramatis" atau "ilustrasi anime 2D").`;
+            const userPrompt = "Analisa karakter dalam gambar ini dan berikan hasilnya dalam format JSON sesuai instruksi.";
+            
+            const apiKey = apiMode === 'user' ? userApiKey : "";
+            if (apiMode === 'user' && !apiKey) {
+                alert("API Key tidak valid.");
+                 elements.analyzeCharButton.disabled = false;
+                elements.analyzeCharText.textContent = 'ANALISA KARAKTER & ISI FORM';
+                elements.analyzeCharIcon.innerHTML = `🤖`;
+                return;
+            }
+
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+
+            const payload = {
+                contents: [{
+                    parts: [
+                        { text: userPrompt },
+                        { inlineData: { mimeType: "image/jpeg", data: characterRefImageBase64 } }
+                    ]
+                }],
+                generationConfig: {
+                    responseMimeType: "application/json",
+                    responseSchema: {
+                        type: "OBJECT",
+                        properties: {
+                            "name": { "type": "STRING" },
+                            "physic": { "type": "STRING" },
+                            "attire": { "type": "STRING" },
+                            "style": { "type": "STRING" }
+                        },
+                        required: ["name", "physic", "attire", "style"]
+                    }
+                },
+                systemInstruction: { parts: [{ text: systemPrompt }] },
+            };
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                
+                const result = await response.json();
+                const jsonText = result.candidates[0].content.parts[0].text;
+                const parsedJson = JSON.parse(jsonText);
+
+                if (parsedJson) {
+                    elements.charNameEl.value = parsedJson.name || '';
+                    elements.charPhysicEl.value = parsedJson.physic || '';
+                    elements.charAttireEl.value = parsedJson.attire || '';
+                    elements.charStyleEl.value = parsedJson.style || '';
+                    updateGeneratedPrompt(); 
+                } else {
+                    throw new Error("Respons JSON tidak valid.");
+                }
+
+            } catch (error) {
+                console.error("Error calling Gemini Vision API for character analysis:", error);
+                alert("Maaf, terjadi kesalahan saat menganalisa karakter: " + error.message);
+            } finally {
+                elements.analyzeCharButton.disabled = false;
+                elements.analyzeCharText.textContent = 'ANALISA KARAKTER & ISI FORM';
+                elements.analyzeCharIcon.innerHTML = `🤖`;
+            }
+        }
 
        function handleVideoFileSelect(file) {
            if (file && file.type.startsWith('image/')) {
                uploadedVideoFile = file;
                const reader = new FileReader();
                reader.onload = (e) => {
-                   uploadedVideoPreview.src = e.target.result;
-                   videoPreviewContainer.classList.remove('hidden');
+                   elements.uploadedVideoPreview.src = e.target.result;
+                   elements.videoPreviewContainer.classList.remove('hidden');
                    updateGeneratedPrompt();
                };
                reader.readAsDataURL(file);
            }
        }
        
-       imageUploadVideoEl.addEventListener('change', (event) => { handleVideoFileSelect(event.target.files[0]); });
-       dropZoneVideo.addEventListener('drop', (e) => { e.preventDefault(); handleVideoFileSelect(e.dataTransfer.files[0]); });
-
-       removeVideoButton.addEventListener('click', () => {
-           uploadedVideoFile = null;
-           imageUploadVideoEl.value = '';
-           videoPreviewContainer.classList.add('hidden');
-           updateGeneratedPrompt();
-       });
-
-        // --- Floating Assistant Logic ---
-        const assistantModal = document.getElementById('assistant-modal');
-        const closeAssistantModal = document.getElementById('close-assistant-modal');
-        const assistantChatBody = document.getElementById('assistant-chat-body');
-        const assistantInput = document.getElementById('assistant-input');
-        const sendAssistantMessage = document.getElementById('send-assistant-message');
-
-        function toggleAssistant() {
-            const isHidden = assistantModal.classList.contains('hidden');
+       function toggleAssistant() {
+            const isHidden = elements.assistantModal.classList.contains('hidden');
             if (isHidden) {
-                assistantModal.classList.remove('hidden');
-                setTimeout(() => { assistantModal.classList.remove('opacity-0', 'translate-y-4'); }, 10);
+                elements.assistantModal.classList.remove('hidden');
+                setTimeout(() => { elements.assistantModal.classList.remove('opacity-0', 'translate-y-4'); }, 10);
             } else {
-                assistantModal.classList.add('opacity-0', 'translate-y-4');
-                setTimeout(() => { assistantModal.classList.add('hidden'); }, 300);
+                elements.assistantModal.classList.add('opacity-0', 'translate-y-4');
+                setTimeout(() => { elements.assistantModal.classList.add('hidden'); }, 300);
             }
         }
-
-        assistantButton.addEventListener('click', toggleAssistant);
-        closeAssistantModal.addEventListener('click', toggleAssistant);
         
         function parseSimpleMarkdown(text) {
             let safeText = text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
@@ -1333,8 +1417,8 @@
                  messageBubble.innerHTML = parseSimpleMarkdown(message);
             }
             messageWrapper.appendChild(messageBubble);
-            assistantChatBody.appendChild(messageWrapper);
-            assistantChatBody.scrollTop = assistantChatBody.scrollHeight;
+            elements.assistantChatBody.appendChild(messageWrapper);
+            elements.assistantChatBody.scrollTop = elements.assistantChatBody.scrollHeight;
         }
 
         function updateLastAssistantMessage(newMessage) {
@@ -1343,16 +1427,16 @@
                 typingBubble.innerHTML = parseSimpleMarkdown(newMessage);
                 typingBubble.removeAttribute('id');
             }
-             assistantChatBody.scrollTop = assistantChatBody.scrollHeight;
+             elements.assistantChatBody.scrollTop = elements.assistantChatBody.scrollHeight;
         }
 
         async function handleSendMessage() {
-            const message = assistantInput.value.trim();
+            const message = elements.assistantInput.value.trim();
             if (!message) return;
             addMessageToChat(message, 'user');
-            assistantInput.value = '';
-            assistantInput.disabled = true;
-            sendAssistantMessage.disabled = true;
+            elements.assistantInput.value = '';
+            elements.assistantInput.disabled = true;
+            elements.sendAssistantMessage.disabled = true;
             addMessageToChat('', 'assistant', true);
             const systemPrompt = "Anda adalah seorang ahli rekayasa prompt...";
             try {
@@ -1361,54 +1445,187 @@
             } catch (error) {
                 updateLastAssistantMessage("Maaf, saya sedang mengalami gangguan... " + error.message);
             } finally {
-                assistantInput.disabled = false;
-                sendAssistantMessage.disabled = false;
-                assistantInput.focus();
+                elements.assistantInput.disabled = false;
+                elements.sendAssistantMessage.disabled = false;
+                elements.assistantInput.focus();
+            }
+        }
+        
+        function updateDropdownButton(selectedOption) {
+            if (selectedOption) {
+                elements.aspectRatioButton.innerHTML = selectedOption.innerHTML;
             }
         }
 
-        sendAssistantMessage.addEventListener('click', handleSendMessage);
-        assistantInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') handleSendMessage();
-        });
+        // --- Event Listeners ---
+        function setupEventListeners() {
+            elements.useSharedEnvBtn.addEventListener('click', () => {
+                window.open('https://g.co/gemini/share/ec7fc3fd066b', '_blank');
+            });
+            elements.useUserApiKeyBtn.addEventListener('click', () => {
+                elements.apiKeySection.classList.toggle('active');
+            });
+            elements.startWithApiKeyBtn.addEventListener('click', () => {
+                const key = elements.apiKeyInput.value.trim();
+                if (key) {
+                    userApiKey = key;
+                    apiMode = 'user';
+                    elements.welcomeScreen.style.display = 'none';
+                    elements.mainApp.classList.add('active');
+                    elements.assistantButton.classList.remove('hidden');
+                } else {
+                    elements.apiKeyInput.focus();
+                    elements.apiKeyInput.classList.add('border-red-500', 'animate-pulse');
+                    setTimeout(() => elements.apiKeyInput.classList.remove('border-red-500', 'animate-pulse'), 2000);
+                }
+            });
 
-        // --- Custom Dropdown Logic ---
-        function updateDropdownButton(selectedOption) {
-            aspectRatioButton.innerHTML = selectedOption.innerHTML;
-        }
-        aspectRatioButton.addEventListener('click', () => {
-            aspectRatioMenu.classList.toggle('hidden');
-        });
-        aspectRatioOptions.forEach(option => {
-            option.addEventListener('click', () => {
-                selectedAspectRatio = option.dataset.ratio;
-                updateDropdownButton(option);
-                aspectRatioMenu.classList.add('hidden');
+            elements.themeToggle.addEventListener('click', () => {
+                const isDark = document.documentElement.classList.contains('dark');
+                const newTheme = isDark ? 'light' : 'dark';
+                localStorage.setItem('theme', newTheme);
+                applyTheme(newTheme);
+            });
+
+            elements.mainTabButtons.belajar.addEventListener('click', () => showTab('belajar'));
+            elements.mainTabButtons.desainer.addEventListener('click', () => showTab('desainer'));
+            
+            elements.designerTabImage.addEventListener('click', () => switchDesignerTab('image'));
+            elements.designerTabVideo.addEventListener('click', () => switchDesignerTab('video'));
+            
+            elements.allFormInputs.forEach(el => el.addEventListener('input', updateGeneratedPrompt));
+            elements.tujuanGambarEl.addEventListener('change', handleTujuanGambarChange);
+            elements.backToTujuanButton.addEventListener('click', () => {
+                elements.tujuanGambarEl.value = 'Foto Produk';
+                handleTujuanGambarChange();
+            });
+            elements.backToTujuanButtonChar.addEventListener('click', () => {
+                elements.tujuanGambarEl.value = 'Foto Produk';
+                handleTujuanGambarChange();
+            });
+
+            elements.copyButton.addEventListener('click', () => {
+                elements.outputPromptEl.select();
+                try {
+                    document.execCommand('copy');
+                    elements.copyButton.textContent = 'DISALIN!';
+                    setTimeout(() => { elements.copyButton.textContent = 'SALIN'; }, 2000);
+                } catch (err) {
+                    elements.copyButton.textContent = 'GAGAL';
+                }
+            });
+
+            elements.enhanceButton.addEventListener('click', enhancePromptWithGemini);
+
+            // File Upload Listeners
+            elements.imageUploadEl.addEventListener('change', (event) => handleFileSelect(event.target.files[0], 'single'));
+            elements.dropZone.addEventListener('drop', (e) => { e.preventDefault(); handleFileSelect(e.dataTransfer.files[0], 'single'); });
+            
+            elements.imageUploadCompose1.addEventListener('change', (event) => handleFileSelect(event.target.files[0], 'compose1'));
+            elements.dropZoneCompose1.addEventListener('drop', (e) => { e.preventDefault(); handleFileSelect(e.dataTransfer.files[0], 'compose1'); });
+            
+            elements.imageUploadCompose2.addEventListener('change', (event) => handleFileSelect(event.target.files[0], 'compose2'));
+            elements.dropZoneCompose2.addEventListener('drop', (e) => { e.preventDefault(); handleFileSelect(e.dataTransfer.files[0], 'compose2'); });
+            
+            elements.imageUploadChar.addEventListener('change', (event) => handleFileSelect(event.target.files[0], 'character'));
+            elements.dropZoneChar.addEventListener('drop', (e) => { e.preventDefault(); handleFileSelect(e.dataTransfer.files[0], 'character'); });
+
+            ['dragover', 'dragleave'].forEach(eventName => {
+                [elements.dropZone, elements.dropZoneCompose1, elements.dropZoneCompose2, elements.dropZoneVideo, elements.dropZoneChar].forEach(zone => {
+                    zone.addEventListener(eventName, (e) => {
+                        e.preventDefault();
+                        if (eventName === 'dragover') zone.classList.add('border-accent-color', 'bg-tertiary');
+                        else zone.classList.remove('border-accent-color', 'bg-tertiary');
+                    });
+                });
+            });
+
+            elements.removeImageButton.addEventListener('click', () => {
+                uploadedImageBase64 = null;
+                elements.imageUploadEl.value = '';
+                elements.imagePreviewContainer.classList.add('hidden');
+                elements.produkGambarEl.value = '';
+                elements.gayaGambarEl.value = '';
+                elements.detailGambarEl.value = '';
+                handleTujuanGambarChange();
+            });
+            elements.removeCompose1.addEventListener('click', () => {
+                composeImage1Base64 = null;
+                elements.imageUploadCompose1.value = '';
+                elements.uploadedComposePreview1.src = '';
+                elements.uploadedComposePreview1.parentElement.classList.add('hidden');
                 updateGeneratedPrompt();
             });
-        });
-        document.addEventListener('click', (e) => {
-            if (!aspectRatioDropdown.contains(e.target)) {
-                aspectRatioMenu.classList.add('hidden');
-            }
-        });
+            elements.removeCompose2.addEventListener('click', () => {
+                composeImage2Base64 = null;
+                elements.imageUploadCompose2.value = '';
+                elements.uploadedComposePreview2.src = '';
+                elements.uploadedComposePreview2.parentElement.classList.add('hidden');
+                updateGeneratedPrompt();
+            });
+            elements.removeCharImageButton.addEventListener('click', () => {
+                characterRefImageBase64 = null;
+                elements.imageUploadChar.value = '';
+                elements.characterPreviewContainer.classList.add('hidden');
+                elements.uploadedCharPreview.src = '';
+            });
 
+            elements.analyzeImageButton.addEventListener('click', analyzeImageWithGemini);
+            elements.analyzeCharButton.addEventListener('click', analyzeCharacterWithGemini);
+
+            elements.imageUploadVideoEl.addEventListener('change', (event) => { handleVideoFileSelect(event.target.files[0]); });
+            elements.dropZoneVideo.addEventListener('drop', (e) => { e.preventDefault(); handleVideoFileSelect(e.dataTransfer.files[0]); });
+            elements.removeVideoButton.addEventListener('click', () => {
+                uploadedVideoFile = null;
+                elements.imageUploadVideoEl.value = '';
+                elements.videoPreviewContainer.classList.add('hidden');
+                updateGeneratedPrompt();
+            });
+            
+            elements.assistantButton.addEventListener('click', toggleAssistant);
+            elements.closeAssistantModal.addEventListener('click', toggleAssistant);
+            elements.sendAssistantMessage.addEventListener('click', handleSendMessage);
+            elements.assistantInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleSendMessage(); });
+
+            elements.aspectRatioButton.addEventListener('click', () => elements.aspectRatioMenu.classList.toggle('hidden'));
+            elements.aspectRatioOptions.forEach(option => {
+                option.addEventListener('click', () => {
+                    selectedAspectRatio = option.dataset.ratio;
+                    updateDropdownButton(option);
+                    elements.aspectRatioMenu.classList.add('hidden');
+                    updateGeneratedPrompt();
+                });
+            });
+            document.addEventListener('click', (e) => {
+                if (!elements.aspectRatioDropdown.contains(e.target)) {
+                    elements.aspectRatioMenu.classList.add('hidden');
+                }
+            });
+        }
+       
        // --- Initial Setup ---
-       document.addEventListener('DOMContentLoaded', () => {
+       function init() {
            const savedTheme = localStorage.getItem('theme') || 'dark';
            applyTheme(savedTheme);
-           const initialOption = aspectRatioMenu.querySelector('.aspect-ratio-option');
+           
+           const initialOption = elements.aspectRatioMenu.querySelector('.aspect-ratio-option');
            updateDropdownButton(initialOption);
-           updateGeneratedPrompt();
+           
            handleTujuanGambarChange();
            switchDesignerTab('image');
            showTab('belajar');
+           
            addMessageToChat("Halo! Saya Asisten Ahli Prompt. Apa yang bisa saya bantu hari ini?", "assistant");
            
-           // Initially hide composition previews
-           uploadedComposePreview1.parentElement.classList.add('hidden');
-           uploadedComposePreview2.parentElement.classList.add('hidden');
-       });
+           elements.uploadedComposePreview1.parentElement.classList.add('hidden');
+           elements.uploadedComposePreview2.parentElement.classList.add('hidden');
+           
+           setupEventListeners();
+       }
+       
+       init();
+    });
     </script>
 </body>
 </html>
+
