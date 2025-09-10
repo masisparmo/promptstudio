@@ -553,18 +553,24 @@
                                 <div id="standard-image-form">
                                     <div id="tujuan-gambar-container">
                                         <label for="tujuan-gambar" class="block mb-2 text-sm font-medium text-secondary">1. Apa Tujuan Utama Anda?</label>
+                                        <!-- === PERUBAHAN UTAMA DIMULAI DI SINI === -->
                                         <select id="tujuan-gambar" class="form-select w-full p-2.5">
-                                            <option value="Foto Produk">Editing Foto Produk Profesional</option>
-                                            <option value="Logo Brand">Desain Logo Brand</option>
-                                            <option value="Promosi">Promosi (YouTube, Sosial Media)</option>
-                                            <option value="Cetak">Materi Cetak (Brosur, Pamflet)</option>
-                                            <option value="Kemasan">Desain Kemasan (Packaging)</option>
-                                            <option value="Gabungkan Foto">Gabungkan Foto & Transfer Gaya</option>
-                                            <option value="Karakter Konsisten">Buat Karakter Konsisten</option>
+                                            <optgroup label="Buat Gambar Baru (Text-to-Image)">
+                                                <option value="produk" selected>Fotografi Produk & Mockup</option>
+                                                <option value="pemasaran">Aset Pemasaran & Media Sosial</option>
+                                                <option value="logo">Desain Logo & Ikon</option>
+                                                <option value="ilustrasi">Ilustrasi & Seni Konsep</option>
+                                            </optgroup>
+                                            <optgroup label="Edit & Kreasi Lanjutan">
+                                                <option value="edit">Edit & Sempurnakan Foto</option>
+                                                <option value="gabungkan">Gabungkan Beberapa Foto</option>
+                                                <option value="karakter">Buat Karakter Konsisten</option>
+                                            </optgroup>
                                         </select>
+                                        <!-- === PERUBAHAN UTAMA SELESAI DI SINI === -->
                                     </div>
                                     <div id="single-upload-container" class="space-y-3 mt-5">
-                                        <label class="block text-sm font-medium text-secondary">Opsional: Upload Gambar untuk Diedit/Dianalisa</label>
+                                        <label id="upload-label" class="block text-sm font-medium text-secondary">Opsional: Upload Gambar untuk Diedit/Dianalisa</label>
                                         <div id="drop-zone" class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-dashed rounded-md cursor-pointer transition-colors border-border-color hover:border-accent-color">
                                             <div class="space-y-1 text-center">
                                                 <svg class="mx-auto h-12 w-12 text-secondary" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true"><path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
@@ -575,12 +581,6 @@
                                                 <p class="text-xs text-secondary">PNG, JPG, GIF</p>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div id="kemasan-container" class="hidden mt-5">
-                                        <label for="jenis-kemasan" class="block mb-2 text-sm font-medium text-secondary">2. Pilih Jenis Kemasan</label>
-                                        <select id="jenis-kemasan" class="form-select w-full p-2.5">
-                                            <option>Kotak Karton</option><option>Standing Pouch</option><option>Botol Kaca / Plastik</option><option>Paper Bowl / Cup</option><option>Kaleng</option><option>Sachet</option><option>Blister Pack</option><option>Vacuum Pack</option><option>Besek Bambu</option><option>Kotak Kayu</option><option>Tube / Tabung</option><option>Jar (Toples)</option><option>Tray</option><option>Wrap Pembungkus Kertas / Aluminium</option><option>Drum / Pail</option><option>Envelope Pack</option>
-                                        </select>
                                     </div>
                                     <div class="mt-5">
                                         <label for="produk-gambar" class="block mb-2 text-sm font-medium text-secondary"><span class="form-num">2.</span> <span id="produk-gambar-label-text">Apa Objek atau Produk Utamanya?</span></label>
@@ -870,8 +870,6 @@
             standardImageForm: document.getElementById('standard-image-form'),
             tujuanGambarContainer: document.getElementById('tujuan-gambar-container'),
             tujuanGambarEl: document.getElementById('tujuan-gambar'),
-            kemasanContainerEl: document.getElementById('kemasan-container'),
-            jenisKemasanEl: document.getElementById('jenis-kemasan'),
             produkGambarEl: document.getElementById('produk-gambar'),
             gayaGambarEl: document.getElementById('gaya-gambar'),
             detailGambarEl: document.getElementById('detail-gambar'),
@@ -879,6 +877,7 @@
             gayaGambarLabelText: document.getElementById('gaya-gambar-label-text'),
             detailGambarLabelText: document.getElementById('detail-gambar-label-text'),
             singleUploadContainer: document.getElementById('single-upload-container'),
+            uploadLabel: document.getElementById('upload-label'),
             imageCompositionForm: document.getElementById('image-composition-form'),
             compositionDetailsEl: document.getElementById('composition-details'),
             compositionPreviewContainer: document.getElementById('composition-preview-container'),
@@ -997,7 +996,7 @@
         function generateImagePrompt() {
             const tujuan = elements.tujuanGambarEl.value;
             
-            if (tujuan === 'Gabungkan Foto') {
+            if (tujuan === 'gabungkan') {
                 const details = elements.compositionDetailsEl.value.trim();
                 let prompt = "Buat gambar baru dengan menggabungkan elemen dari gambar yang disediakan. ";
                 prompt += details || "[Jelaskan cara menggabungkan foto 1 dan 2]";
@@ -1005,44 +1004,35 @@
                 return;
             }
 
-            if (tujuan === 'Karakter Konsisten') {
+            if (tujuan === 'karakter') {
                 generateCharacterPrompt();
                 return;
             }
 
-            const isEditing = uploadedImageBase64 !== null;
+            const isEditing = uploadedImageBase64 !== null || tujuan === 'edit';
             const produk = elements.produkGambarEl.value.trim();
             const gaya = elements.gayaGambarEl.value.trim();
             const detail = elements.detailGambarEl.value.trim();
-            const jenisKemasan = elements.jenisKemasanEl.value;
             let prompt = "";
 
-            switch (tujuan) {
-                case 'Foto Produk':
-                    prompt = isEditing
-                        ? (detail || `Sempurnakan foto produk "${produk}" ini, terapkan gaya visual ${gaya || 'profesional'}.`)
-                        : `Sebuah foto produk profesional dari ${produk || '[Produk Anda]'}, bergaya ${gaya || '[Gaya Visual Anda]'}. ${detail}`;
-                    break;
-                case 'Logo Brand':
-                    prompt = isEditing
-                        ? (detail || `Sempurnakan draf logo untuk brand "${produk}" ini. Terapkan gaya visual ${gaya || 'yang lebih modern'}.`)
-                        : `Buat desain logo untuk brand bernama "${produk || '[Nama Brand Anda]'}" dengan teks "${produk || '[Teks Logo Anda]'}". Desainnya harus bergaya ${gaya || '[Gaya Visual Anda]'}. ${detail}`;
-                    break;
-                case 'Promosi':
-                    prompt = isEditing
-                        ? `Gunakan gambar dari "${produk}" ini sebagai dasar untuk membuat poster promosi. ${detail || ''}`
-                        : `Poster promosi untuk media sosial, menampilkan ${produk || '[Produk Anda]'}, bergaya ${gaya || '[Gaya Visual Anda]'}. ${detail}`;
-                    break;
-                case 'Cetak':
-                    prompt = isEditing
-                        ? `Gunakan gambar dari "${produk}" ini sebagai aset utama untuk desain brosur. ${detail || ''}`
-                        : `Desain brosur atau pamflet yang menarik untuk ${produk || '[Produk Anda]'}, bergaya ${gaya || '[Gaya Visual Anda]'}. ${detail}`;
-                    break;
-                case 'Kemasan':
-                    prompt = isEditing
-                        ? `Gunakan gambar dari "${produk}" ini sebagai elemen desain pada kemasan ${jenisKemasan}. ${detail || ''}`
-                        : `Desain packaging untuk ${produk || '[Produk Anda]'} dalam bentuk ${jenisKemasan}, bergaya ${gaya || '[Gaya Visual Anda]'}. ${detail}`;
-                    break;
+            // The prompt templates are now simpler as the labels guide the user better
+            if (isEditing) {
+                prompt = detail || `Sempurnakan foto dari "${produk || 'gambar ini'}", terapkan gaya visual ${gaya || 'profesional'}.`;
+            } else {
+                 switch (tujuan) {
+                    case 'produk':
+                        prompt = `Sebuah foto produk profesional dari ${produk || '[Produk Anda]'}, bergaya ${gaya || '[Gaya Visual Anda]'}. ${detail}`;
+                        break;
+                    case 'pemasaran':
+                         prompt = `Aset pemasaran visual untuk ${produk || '[Tujuan Pemasaran Anda]'}, bergaya ${gaya || '[Gaya Visual Anda]'}. ${detail}`;
+                        break;
+                    case 'logo':
+                        prompt = `Desain logo untuk brand bernama "${produk || '[Nama Brand Anda]'}" dengan teks "${produk || '[Teks Logo Anda]'}". Desainnya harus bergaya ${gaya || '[Gaya Visual Anda]'}. ${detail}`;
+                        break;
+                    case 'ilustrasi':
+                        prompt = `Sebuah ilustrasi dari ${produk || '[Subjek Ilustrasi Anda]'}, dengan gaya seni ${gaya || '[Gaya Artistik Anda]'}. ${detail}`;
+                        break;
+                }
             }
             
             elements.outputPromptEl.value = (prompt + ` Aspek rasio ${selectedAspectRatio}.`).trim();
@@ -1078,68 +1068,116 @@
         
         function handleTujuanGambarChange() {
             const tujuan = elements.tujuanGambarEl.value;
-            const isEditing = uploadedImageBase64 !== null;
+            const isImageUploaded = uploadedImageBase64 !== null;
 
+            // 1. Reset all form visibilities
             elements.standardImageForm.classList.add('hidden');
             elements.imageCompositionForm.classList.add('hidden');
             elements.characterCreatorForm.classList.add('hidden');
+            elements.finalPromptContainer.classList.add('hidden');
             elements.imagePreviewContainer.classList.add('hidden');
             elements.compositionPreviewContainer.classList.add('hidden');
             elements.characterOutputSection.classList.add('hidden');
-            elements.finalPromptContainer.classList.remove('hidden');
 
-            if (tujuan === 'Gabungkan Foto') {
+            // 2. Handle special cases first
+            if (tujuan === 'gabungkan') {
                 elements.imageCompositionForm.classList.remove('hidden');
                 elements.compositionPreviewContainer.classList.remove('hidden');
-            } else if (tujuan === 'Karakter Konsisten') {
+                elements.finalPromptContainer.classList.remove('hidden');
+                updateGeneratedPrompt();
+                return;
+            }
+
+            if (tujuan === 'karakter') {
                 elements.characterCreatorForm.classList.remove('hidden');
                 elements.characterOutputSection.classList.remove('hidden');
-            } else {
-                elements.standardImageForm.classList.remove('hidden');
-                elements.imagePreviewContainer.classList.toggle('hidden', !isEditing);
-                
-                let produkLabel = "Apa Objek atau Produk Utamanya?";
-                let gayaLabel = "Apa Gaya Visual yang Diinginkan?";
-                let detailLabel = "Detail Tambahan (Opsional)";
-                let produkPlaceholder = "Contoh: sebotol madu hutan";
-                let gayaPlaceholder = "Contoh: minimalis & bersih";
-                let detailPlaceholder = "Contoh: latar belakang marmer putih";
-
-                if (isEditing) {
-                    produkLabel = "Objek Utama pada Gambar";
-                    gayaLabel = "Gaya Visual Baru (jika ingin diubah)";
-                    detailLabel = "Jelaskan Perubahan/Penyempurnaan";
-                    detailPlaceholder = "Contoh: Ganti latar belakang menjadi pemandangan pantai.";
-                }
-
-                switch (tujuan) {
-                    case 'Logo Brand':
-                        produkLabel = isEditing ? "Nama Brand pada Draft" : "Apa Nama Brand & Teks Logonya?";
-                        produkPlaceholder = "Contoh: Aroma Pagi";
-                        gayaLabel = isEditing ? "Gaya Visual Baru (jika ingin diubah)" : "Deskripsikan Gaya Visual & Font";
-                        gayaPlaceholder = "Contoh: minimalis line-art, font sans-serif modern";
-                        detailLabel = isEditing ? "Jelaskan Perubahan pada Draft Logo" : "Detail Tambahan (Opsional)";
-                        detailPlaceholder = isEditing ? "Contoh: Buat garisnya lebih tebal dan warnanya emas." : "Contoh: ada ikon biji kopi di atasnya.";
-                        break;
-                    case 'Promosi':
-                    case 'Cetak':
-                        if (isEditing) {
-                            detailLabel = `Jelaskan bagaimana gambar ini akan digunakan untuk ${tujuan}`;
-                            detailPlaceholder = `Contoh: Jadikan ini sebagai poster utama, tambahkan teks...`;
-                        }
-                        break;
-                }
-
-                elements.produkGambarLabelText.textContent = produkLabel;
-                elements.gayaGambarLabelText.textContent = gayaLabel;
-                elements.detailGambarLabelText.textContent = detailLabel;
-                elements.produkGambarEl.placeholder = produkPlaceholder;
-                elements.gayaGambarEl.placeholder = gayaPlaceholder;
-                elements.detailGambarEl.placeholder = detailPlaceholder;
-
-                const isKemasan = tujuan === 'Kemasan' && !isEditing;
-                elements.kemasanContainerEl.classList.toggle('hidden', !isKemasan);
+                elements.finalPromptContainer.classList.remove('hidden');
+                updateGeneratedPrompt();
+                return;
             }
+
+            // 3. Handle all other cases (which use the standard form)
+            elements.standardImageForm.classList.remove('hidden');
+            elements.finalPromptContainer.classList.remove('hidden');
+            if(isImageUploaded) elements.imagePreviewContainer.classList.remove('hidden');
+
+
+            // 4. Define all possible labels and placeholders
+            const labelSets = {
+                create: {
+                    produk: {
+                        upload: "Opsional: Upload foto produk untuk disempurnakan",
+                        label1: "1. Deskripsikan Produk & Kemasan",
+                        placeholder1: "Contoh: sebotol madu dalam jar kaca dengan tutup kayu",
+                        label2: "2. Deskripsikan Gaya Fotografi",
+                        placeholder2: "Contoh: pencahayaan studio yang bersih, minimalis",
+                        label3: "3. Detail Latar & Suasana",
+                        placeholder3: "Contoh: di atas meja marmer putih dengan properti sarang lebah",
+                    },
+                    pemasaran: {
+                        upload: "Opsional: Upload gambar aset untuk diedit",
+                        label1: "1. Apa Tujuan Aset Pemasaran?",
+                        placeholder1: "Contoh: thumbnail YouTube, post Instagram, brosur",
+                        label2: "2. Deskripsikan Gaya Visual",
+                        placeholder2: "Contoh: cerah dan menarik, корпоративный dan profesional",
+                        label3: "3. Teks atau Elemen Penting Lainnya",
+                        placeholder3: "Contoh: teks 'Diskon 50%', logo di pojok kanan atas",
+                    },
+                    logo: {
+                        upload: "Opsional: Upload sketsa atau referensi logo",
+                        label1: "1. Nama Brand & Teks pada Logo",
+                        placeholder1: "Contoh: Aroma Pagi",
+                        label2: "2. Deskripsikan Gaya Logo & Font",
+                        placeholder2: "Contoh: minimalis line-art, font sans-serif modern",
+                        label3: "3. Detail Ikon atau Simbol (Opsional)",
+                        placeholder3: "Contoh: ada ikon biji kopi sederhana di atasnya",
+                    },
+                    ilustrasi: {
+                        upload: "Opsional: Upload sketsa atau gambar referensi",
+                        label1: "1. Deskripsikan Subjek & Adegan",
+                        placeholder1: "Contoh: seorang ksatria naga di puncak gunung",
+                        label2: "2. Deskripsikan Gaya Artistik",
+                        placeholder2: "Contoh: gaya anime fantasi, cat air digital, pixel art",
+                        label3: "3. Detail Suasana & Palet Warna",
+                        placeholder3: "Contoh: suasana senja, warna dominan ungu dan oranye",
+                    }
+                },
+                edit: {
+                    upload: "Wajib: Upload foto yang ingin diedit",
+                    label1: "1. Apa Objek Utama pada Gambar?",
+                    placeholder1: "Contoh: sebuah mobil merah, potret seorang wanita",
+                    label2: "2. Gaya Visual Baru (jika ingin diubah)",
+                    placeholder2: "Contoh: ubah menjadi gaya sinematik, buat lebih cerah",
+                    label3: "3. Jelaskan Perubahan/Penyempurnaan",
+                    placeholder3: "Contoh: Ganti latar belakang menjadi pemandangan pantai, hilangkan orang di sebelah kiri",
+                }
+            };
+
+            // 5. Select the correct set of labels
+            let currentLabels;
+            if (tujuan === 'edit') {
+                currentLabels = labelSets.edit;
+            } else if (isImageUploaded) {
+                // If an image is uploaded in a 'create' flow, switch to edit labels
+                currentLabels = labelSets.edit;
+            } else {
+                // Otherwise, use the labels for the selected 'create' purpose
+                currentLabels = labelSets.create[tujuan];
+            }
+
+            // 6. Apply the labels and placeholders to the form elements
+            elements.uploadLabel.textContent = currentLabels.upload;
+            elements.produkGambarLabelText.textContent = currentLabels.label1;
+            elements.produkGambarEl.placeholder = currentLabels.placeholder1;
+            elements.gayaGambarLabelText.textContent = currentLabels.label2;
+            elements.gayaGambarEl.placeholder = currentLabels.placeholder2;
+            elements.detailGambarLabelText.textContent = currentLabels.label3;
+            elements.detailGambarEl.placeholder = currentLabels.placeholder3;
+
+            // Re-number the form fields
+            document.querySelectorAll('.form-num').forEach((el, index) => {
+                el.textContent = `${index + 2}.`;
+            });
             
             updateGeneratedPrompt();
         }
@@ -1206,9 +1244,9 @@
             let systemPrompt = "";
              if (isVideo) {
                 systemPrompt = "PENTING: Jawaban Anda HARUS dalam Bahasa Indonesia. Anda adalah seorang sutradara film dan ahli rekayasa prompt video. Ambil prompt dasar berikut dan buatlah menjadi jauh lebih deskriptif, sinematik, dan profesional. Tambahkan detail spesifik tentang gerakan kamera, sinematografi, pencahayaan, tempo, dan desain suara. Pertahankan subjek inti dan rasio aspek. Balas HANYA dengan teks prompt yang disempurnakan tanpa tambahan atau awalan apapun.";
-            } else if (tujuan === 'Gabungkan Foto') {
+            } else if (tujuan === 'gabungkan') {
                 systemPrompt = "PENTING: Jawaban Anda HARUS dalam Bahasa Indonesia. Anda adalah ahli rekayasa prompt untuk image composition. Ubah instruksi dasar pengguna menjadi prompt yang detail dan profesional. Fokus pada cara mengintegrasikan elemen dari foto 1 ke foto 2 secara mulus (pencahayaan, bayangan, skala). Balas HANYA dengan teks prompt yang disempurnakan tanpa tambahan atau awalan apapun.";
-            } else if (tujuan === 'Karakter Konsisten') {
+            } else if (tujuan === 'karakter') {
                 systemPrompt = "PENTING: Jawaban Anda HARUS dalam Bahasa Indonesia. Anda adalah ahli penulis karakter dan rekayasa prompt. Ambil 'character sheet' dan skenario dasar pengguna, lalu kembangkan menjadi prompt yang sangat deskriptif dan kaya detail untuk menghasilkan gambar yang konsisten dan sinematik. Fokus pada pengayaan detail karakter di dalam sheet. Balas HANYA dengan teks prompt yang disempurnakan tanpa tambahan atau awalan apapun.";
             } else {
                 systemPrompt = "PENTING: Jawaban Anda HARUS dalam Bahasa Indonesia. Anda adalah seorang direktur kreatif dan ahli rekayasa prompt. Ambil prompt dasar berikut untuk model pembuatan gambar dan buatlah menjadi jauh lebih deskriptif, menggugah, dan profesional. Tambahkan detail spesifik tentang pencahayaan, komposisi, tekstur, dan suasana hati. Pertahankan subjek inti dan rasio aspek yang sama. Balas HANYA dengan teks prompt yang disempurnakan tanpa tambahan atau awalan apapun.";
@@ -1220,7 +1258,7 @@
                 if(enhancedPrompt) {
                     let cleanedPrompt = enhancedPrompt.trim().replace(/^"|"$/g, '').replace(/\[Gambar Input\]\s*/i, '');
                     elements.outputPromptEl.value = cleanedPrompt;
-                    if (tujuan === 'Karakter Konsisten') {
+                    if (tujuan === 'karakter') {
                          const match = cleanedPrompt.match(/\(character sheet:.*?\)/);
                          if (match) elements.characterSheetOutputEl.value = match[0];
                     }
@@ -1519,14 +1557,15 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
             
             elements.allFormInputs.forEach(el => el.addEventListener('input', updateGeneratedPrompt));
             elements.tujuanGambarEl.addEventListener('change', handleTujuanGambarChange);
-            elements.backToTujuanButton.addEventListener('click', () => {
-                elements.tujuanGambarEl.value = 'Foto Produk';
+            
+            const backToDefault = () => {
+                elements.tujuanGambarEl.value = 'produk'; // Default value
                 handleTujuanGambarChange();
-            });
-            elements.backToTujuanButtonChar.addEventListener('click', () => {
-                elements.tujuanGambarEl.value = 'Foto Produk';
-                handleTujuanGambarChange();
-            });
+            };
+
+            elements.backToTujuanButton.addEventListener('click', backToDefault);
+            elements.backToTujuanButtonChar.addEventListener('click', backToDefault);
+
 
             elements.copyButton.addEventListener('click', () => {
                 elements.outputPromptEl.select();
