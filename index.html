@@ -368,7 +368,7 @@
 
         <div class="flex justify-center mb-8 bg-secondary rounded-lg p-1.5 shadow-md max-w-md mx-auto">
             <button id="tab-belajar" class="tab-button active w-1/2 py-2 px-4 rounded-md">
-                PANDUAN PROMPT
+                PUSAT PEMBELAJARAN
             </button>
             <button id="tab-desainer" class="tab-button w-1/2 py-2 px-4 rounded-md">
                 DESAINER PROMPT
@@ -831,7 +831,7 @@
 
     <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // --- State Management ---
+        
         let userApiKey = null;
         let apiMode = 'shared';
         let uploadedImageBase64 = null;
@@ -840,8 +840,7 @@
         let characterRefImageBase64 = null;
         let uploadedVideoFile = null;
         let selectedAspectRatio = '1:1';
-
-        // --- DOM Element Definitions ---
+        
         const elements = {
             welcomeScreen: document.getElementById('welcome-screen'),
             mainApp: document.getElementById('main-app'),
@@ -941,6 +940,7 @@
             sendAssistantMessage: document.getElementById('send-assistant-message'),
         };
 
+        // --- Functions ---
         const applyTheme = (theme) => {
             if (theme === 'dark') {
                 document.documentElement.classList.add('dark');
@@ -1144,7 +1144,7 @@
             updateGeneratedPrompt();
         }
         
-        async function makeApiCallWithRetry(systemPrompt, userQuery, retries = 3, delay = 1000) {
+        async function makeApiCallWithRetry(systemPrompt, userQuery, isJson = false) {
             const apiKey = apiMode === 'user' ? userApiKey : ""; 
             if (apiMode === 'user' && !apiKey) {
                  throw new Error("API Key pengguna tidak valid atau tidak tersedia.");
@@ -1154,7 +1154,25 @@
                 contents: [{ parts: [{ text: userQuery }] }],
                 systemInstruction: { parts: [{ text: systemPrompt }] },
             };
-            for (let i = 0; i < retries; i++) {
+
+            if (isJson) {
+                 payload.generationConfig = {
+                    responseMimeType: "application/json",
+                    responseSchema: {
+                        type: "OBJECT",
+                        properties: {
+                            "name": { "type": "STRING" },
+                            "physic": { "type": "STRING" },
+                            "attire": { "type": "STRING" },
+                            "style": { "type": "STRING" }
+                        },
+                        required: ["name", "physic", "attire", "style"]
+                    }
+                }
+            }
+
+
+            for (let i = 0; i < 3; i++) {
                 try {
                     const response = await fetch(apiUrl, {
                         method: 'POST',
@@ -1167,8 +1185,8 @@
                         return result.candidates[0].content.parts[0].text;
                     } else { throw new Error("Invalid API response structure"); }
                 } catch (error) {
-                    if (i === retries - 1) throw error;
-                    await new Promise(res => setTimeout(res, delay * Math.pow(2, i)));
+                    if (i === 2) throw error;
+                    await new Promise(res => setTimeout(res, 1000 * Math.pow(2, i)));
                 }
             }
         }
@@ -1438,7 +1456,13 @@
             elements.assistantInput.disabled = true;
             elements.sendAssistantMessage.disabled = true;
             addMessageToChat('', 'assistant', true);
-            const systemPrompt = "Anda adalah seorang ahli rekayasa prompt...";
+            const systemPrompt = `PENTING: Jawaban Anda HARUS dalam Bahasa Indonesia. Anda adalah seorang ahli rekayasa prompt (prompt engineering) dengan pengalaman puluhan tahun. Pengetahuan Anda telah diperbarui dengan dokumentasi resmi terbaru. Spesialisasi Anda adalah pada model-model Google berikut:
+
+1.  **Model Gambar (dikenal sebagai Nano Banana atau gemini-2.5-flash-image-preview):** Anda tahu bahwa model ini sangat kuat dalam pemahaman bahasa alami dan bekerja paling baik dengan deskripsi naratif, bukan hanya kata kunci. Anda paham kemampuannya meliputi: Text-to-Image, Image+Text-to-Image (editing seperti menambah/menghapus elemen), Multi-Image to Image (komposisi & transfer gaya), dan rendering teks yang akurat untuk logo/poster. Anda juga tahu semua gambar yang dihasilkan memiliki watermark SynthID.
+
+2.  **Model Video (Veo3):** Anda tahu model ini menghasilkan video high-fidelity hingga 1080p dengan durasi 8 detik, lengkap dengan audio yang dihasilkan secara alami (dialog, SFX, ambient). Anda paham cara mem-prompt-nya dengan subjek, aksi, gaya, kontrol kamera, dan juga prompt negatif. Anda tahu Veo3 bisa di-inisiasi dengan sebuah gambar (Image-to-Video).
+
+Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan profesional berdasarkan pengetahuan ini.`;
             try {
                 const response = await makeApiCallWithRetry(systemPrompt, message);
                 updateLastAssistantMessage(response);
@@ -1628,4 +1652,3 @@
     </script>
 </body>
 </html>
-
