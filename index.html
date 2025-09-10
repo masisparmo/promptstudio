@@ -553,10 +553,10 @@
                                 <div id="standard-image-form">
                                     <div id="tujuan-gambar-container">
                                         <label for="tujuan-gambar" class="block mb-2 text-sm font-medium text-secondary">1. Apa Tujuan Utama Anda?</label>
-                                        <!-- === PERUBAHAN UTAMA DIMULAI DI SINI === -->
                                         <select id="tujuan-gambar" class="form-select w-full p-2.5">
                                             <optgroup label="Buat Gambar Baru (Text-to-Image)">
                                                 <option value="produk" selected>Fotografi Produk & Mockup</option>
+                                                <option value="packaging">Desain Kemasan (Packaging)</option>
                                                 <option value="pemasaran">Aset Pemasaran & Media Sosial</option>
                                                 <option value="logo">Desain Logo & Ikon</option>
                                                 <option value="ilustrasi">Ilustrasi & Seni Konsep</option>
@@ -567,7 +567,6 @@
                                                 <option value="karakter">Buat Karakter Konsisten</option>
                                             </optgroup>
                                         </select>
-                                        <!-- === PERUBAHAN UTAMA SELESAI DI SINI === -->
                                     </div>
                                     <div id="single-upload-container" class="space-y-3 mt-5">
                                         <label id="upload-label" class="block text-sm font-medium text-secondary">Opsional: Upload Gambar untuk Diedit/Dianalisa</label>
@@ -581,6 +580,12 @@
                                                 <p class="text-xs text-secondary">PNG, JPG, GIF</p>
                                             </div>
                                         </div>
+                                    </div>
+                                     <div id="kemasan-container" class="hidden mt-5">
+                                        <label for="jenis-kemasan" class="block mb-2 text-sm font-medium text-secondary"><span class="form-num">2.</span> Pilih Jenis Kemasan</label>
+                                        <select id="jenis-kemasan" class="form-select w-full p-2.5">
+                                            <option>Kotak Karton</option><option>Standing Pouch</option><option>Botol Kaca / Plastik</option><option>Paper Bowl / Cup</option><option>Kaleng</option><option>Sachet</option><option>Blister Pack</option><option>Vacuum Pack</option><option>Besek Bambu</option><option>Kotak Kayu</option><option>Tube / Tabung</option><option>Jar (Toples)</option><option>Tray</option><option>Wrap Pembungkus Kertas / Aluminium</option><option>Drum / Pail</option><option>Envelope Pack</option>
+                                        </select>
                                     </div>
                                     <div class="mt-5">
                                         <label for="produk-gambar" class="block mb-2 text-sm font-medium text-secondary"><span class="form-num">2.</span> <span id="produk-gambar-label-text">Apa Objek atau Produk Utamanya?</span></label>
@@ -870,6 +875,8 @@
             standardImageForm: document.getElementById('standard-image-form'),
             tujuanGambarContainer: document.getElementById('tujuan-gambar-container'),
             tujuanGambarEl: document.getElementById('tujuan-gambar'),
+            kemasanContainerEl: document.getElementById('kemasan-container'),
+            jenisKemasanEl: document.getElementById('jenis-kemasan'),
             produkGambarEl: document.getElementById('produk-gambar'),
             gayaGambarEl: document.getElementById('gaya-gambar'),
             detailGambarEl: document.getElementById('detail-gambar'),
@@ -1009,19 +1016,22 @@
                 return;
             }
 
-            const isEditing = uploadedImageBase64 !== null || tujuan === 'edit';
+            const isEditing = tujuan === 'edit';
             const produk = elements.produkGambarEl.value.trim();
             const gaya = elements.gayaGambarEl.value.trim();
             const detail = elements.detailGambarEl.value.trim();
+            const jenisKemasan = elements.jenisKemasanEl.value;
             let prompt = "";
 
-            // The prompt templates are now simpler as the labels guide the user better
             if (isEditing) {
                 prompt = detail || `Sempurnakan foto dari "${produk || 'gambar ini'}", terapkan gaya visual ${gaya || 'profesional'}.`;
             } else {
                  switch (tujuan) {
                     case 'produk':
                         prompt = `Sebuah foto produk profesional dari ${produk || '[Produk Anda]'}, bergaya ${gaya || '[Gaya Visual Anda]'}. ${detail}`;
+                        break;
+                    case 'packaging':
+                        prompt = `Desain kemasan (${jenisKemasan}) untuk ${produk || '[Produk Anda]'}, bergaya ${gaya || '[Gaya Visual Anda]'}. ${detail}`;
                         break;
                     case 'pemasaran':
                          prompt = `Aset pemasaran visual untuk ${produk || '[Tujuan Pemasaran Anda]'}, bergaya ${gaya || '[Gaya Visual Anda]'}. ${detail}`;
@@ -1070,16 +1080,17 @@
             const tujuan = elements.tujuanGambarEl.value;
             const isImageUploaded = uploadedImageBase64 !== null;
 
-            // 1. Reset all form visibilities
+            // 1. Reset all form visibilities for a clean slate
             elements.standardImageForm.classList.add('hidden');
             elements.imageCompositionForm.classList.add('hidden');
             elements.characterCreatorForm.classList.add('hidden');
-            elements.finalPromptContainer.classList.add('hidden');
             elements.imagePreviewContainer.classList.add('hidden');
             elements.compositionPreviewContainer.classList.add('hidden');
             elements.characterOutputSection.classList.add('hidden');
+            elements.kemasanContainerEl.classList.add('hidden');
+            elements.finalPromptContainer.classList.add('hidden');
 
-            // 2. Handle special cases first
+            // 2. Handle special forms that don't use the standard layout
             if (tujuan === 'gabungkan') {
                 elements.imageCompositionForm.classList.remove('hidden');
                 elements.compositionPreviewContainer.classList.remove('hidden');
@@ -1096,30 +1107,40 @@
                 return;
             }
 
-            // 3. Handle all other cases (which use the standard form)
+            // 3. For all other cases, show the standard form and final prompt area
             elements.standardImageForm.classList.remove('hidden');
             elements.finalPromptContainer.classList.remove('hidden');
-            if(isImageUploaded) elements.imagePreviewContainer.classList.remove('hidden');
-
+            if (isImageUploaded) {
+                elements.imagePreviewContainer.classList.remove('hidden');
+            }
 
             // 4. Define all possible labels and placeholders
             const labelSets = {
                 create: {
                     produk: {
-                        upload: "Opsional: Upload foto produk untuk disempurnakan",
-                        label1: "Deskripsikan Produk & Kemasan",
+                        upload: "Opsional: Upload foto produk sebagai referensi",
+                        label1: "Deskripsikan Produk",
                         placeholder1: "Contoh: sebotol madu dalam jar kaca dengan tutup kayu",
                         label2: "Deskripsikan Gaya Fotografi",
                         placeholder2: "Contoh: pencahayaan studio yang bersih, minimalis",
                         label3: "Detail Latar & Suasana",
                         placeholder3: "Contoh: di atas meja marmer putih dengan properti sarang lebah",
                     },
+                    packaging: {
+                        upload: "Opsional: Upload gambar referensi untuk kemasan",
+                        label1: "Deskripsikan Produk di Dalam Kemasan",
+                        placeholder1: "Contoh: Keripik kentang pedas, sabun organik",
+                        label2: "Deskripsikan Gaya Desain Kemasan",
+                        placeholder2: "Contoh: playful dan berwarna, mewah dengan nuansa emas",
+                        label3: "Detail Tambahan (Teks, Logo, Material)",
+                        placeholder3: "Contoh: Teks 'Rasa Original', logo di tengah, material kraft paper",
+                    },
                     pemasaran: {
-                        upload: "Opsional: Upload gambar aset untuk diedit",
+                        upload: "Opsional: Upload gambar aset sebagai referensi",
                         label1: "Apa Tujuan Aset Pemasaran?",
                         placeholder1: "Contoh: thumbnail YouTube, post Instagram, brosur",
                         label2: "Deskripsikan Gaya Visual",
-                        placeholder2: "Contoh: cerah dan menarik, корпоративный dan profesional",
+                        placeholder2: "Contoh: cerah dan menarik, korporat dan profesional",
                         label3: "Teks atau Elemen Penting Lainnya",
                         placeholder3: "Contoh: teks 'Diskon 50%', logo di pojok kanan atas",
                     },
@@ -1149,23 +1170,18 @@
                     label2: "Gaya Visual Baru (jika ingin diubah)",
                     placeholder2: "Contoh: ubah menjadi gaya sinematik, buat lebih cerah",
                     label3: "Jelaskan Perubahan/Penyempurnaan",
-                    placeholder3: "Contoh: Ganti latar belakang menjadi pemandangan pantai, hilangkan orang di sebelah kiri",
+                    placeholder3: "Contoh: Ganti latar belakang menjadi pemandangan pantai",
                 }
             };
 
             // 5. Select the correct set of labels
-            let currentLabels;
-            if (tujuan === 'edit') {
-                currentLabels = labelSets.edit;
-            } else if (isImageUploaded) {
-                // If an image is uploaded in a 'create' flow, switch to edit labels
-                currentLabels = labelSets.edit;
-            } else {
-                // Otherwise, use the labels for the selected 'create' purpose
-                currentLabels = labelSets.create[tujuan];
-            }
+            const currentLabels = (tujuan === 'edit')
+                ? labelSets.edit
+                : labelSets.create[tujuan];
 
-            // 6. Apply the labels and placeholders to the form elements
+            if (!currentLabels) return; // Exit if the purpose is not found
+
+            // 6. Apply the labels and placeholders
             elements.uploadLabel.textContent = currentLabels.upload;
             elements.produkGambarLabelText.textContent = currentLabels.label1;
             elements.produkGambarEl.placeholder = currentLabels.placeholder1;
@@ -1174,9 +1190,24 @@
             elements.detailGambarLabelText.textContent = currentLabels.label3;
             elements.detailGambarEl.placeholder = currentLabels.placeholder3;
 
-            // Re-number the form fields
-            document.querySelectorAll('.form-num').forEach((el, index) => {
-                el.textContent = `${index + 2}.`;
+            // 7. Show packaging-specific dropdown only when needed
+            if (tujuan === 'packaging') {
+                elements.kemasanContainerEl.classList.remove('hidden');
+            }
+
+            // Renumber the form fields
+            const formFields = elements.standardImageForm.querySelectorAll('.mt-5');
+            let visibleFieldIndex = 1;
+            formFields.forEach(field => {
+                const formNum = field.querySelector('.form-num');
+                if (formNum && !field.classList.contains('hidden')) {
+                     // Check if the parent of formNum has a direct child label (not nested)
+                    const label = field.querySelector(':scope > label');
+                    if (label && label.contains(formNum)) {
+                         visibleFieldIndex++;
+                         formNum.textContent = `${visibleFieldIndex}.`;
+                    }
+                }
             });
             
             updateGeneratedPrompt();
@@ -1281,6 +1312,9 @@
                 if (type === 'single') {
                     uploadedImageBase64 = base64;
                     elements.uploadedImagePreview.src = src;
+                    if(elements.tujuanGambarEl.value !== 'edit') {
+                        elements.tujuanGambarEl.value = 'edit';
+                    }
                     handleTujuanGambarChange();
                 } else if (type === 'compose1') {
                     composeImage1Base64 = base64;
@@ -1691,3 +1725,4 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
     </script>
 </body>
 </html>
+
