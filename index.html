@@ -675,19 +675,23 @@
                                      </div>
                                  </div>
                                  <div>
-                                     <label for="subjek-video" class="block mb-2 text-sm font-medium text-secondary">1. Subjek & Aksi Utama</label>
-                                     <textarea id="subjek-video" rows="3" class="form-input w-full p-2.5" placeholder="Contoh: Seorang wanita berjalan di pantai saat matahari terbenam."></textarea>
+                                     <label for="subjek-video-subject" class="block mb-2 text-sm font-medium text-secondary">1. Subjek</label>
+                                     <input type="text" id="subjek-video-subject" class="form-input w-full p-2.5" placeholder="Contoh: Seorang wanita, seekor naga api">
+                                 </div>
+                                  <div>
+                                     <label for="subjek-video-action" class="block mb-2 text-sm font-medium text-secondary">2. Aksi Utama</label>
+                                     <textarea id="subjek-video-action" rows="2" class="form-input w-full p-2.5" placeholder="Contoh: berjalan di pantai saat matahari terbenam."></textarea>
                                  </div>
                                  <div>
-                                     <label for="gaya-video" class="block mb-2 text-sm font-medium text-secondary">2. Gaya, Kamera & Suasana</label>
+                                     <label for="gaya-video" class="block mb-2 text-sm font-medium text-secondary">3. Gaya, Kamera & Suasana</label>
                                      <input type="text" id="gaya-video" class="form-input w-full p-2.5" placeholder="Contoh: Gaya film noir, wide shot, dolly in, nada biru dingin">
                                  </div>
                                  <div>
-                                     <label for="audio-video" class="block mb-2 text-sm font-medium text-secondary">3. Detail Audio (Dialog, Musik, SFX)</label>
+                                     <label for="audio-video" class="block mb-2 text-sm font-medium text-secondary">4. Detail Audio (Dialog, Musik, SFX)</label>
                                      <textarea id="audio-video" rows="3" class="form-input w-full p-2.5" placeholder="Contoh: Dia berkata, “Aku menemukannya.” Musik: lo-fi. SFX: deburan ombak."></textarea>
                                  </div>
                                  <div>
-                                     <label for="negatif-video" class="block mb-2 text-sm font-medium text-secondary">4. Prompt Negatif (Elemen yang Dihindari)</label>
+                                     <label for="negatif-video" class="block mb-2 text-sm font-medium text-secondary">5. Prompt Negatif (Elemen yang Dihindari)</label>
                                      <input type="text" id="negatif-video" class="form-input w-full p-2.5" placeholder="Contoh: bangunan, orang lain, tulisan">
                                  </div>
                              </div>
@@ -705,7 +709,7 @@
                                              <span id="analyze-image-icon">🔍</span>
                                              <span id="analyze-image-text">ANALISA GAMBAR</span>
                                          </button>
-                                         <textarea id="image-analysis-result" rows="6" class="form-input w-full p-2.5 text-xs" readonly placeholder="Hasil analisa gambar oleh AI akan muncul di sini..."></textarea>
+                                         <textarea id="image-analysis-result" rows="6" class="form-input w-full p-2.5 text-xs" placeholder="Hasil analisa gambar oleh AI akan muncul di sini..."></textarea>
                                      </div>
                                  </div>
                                   <hr class="border-border-color">
@@ -729,7 +733,7 @@
                              <div id="character-output-section" class="hidden space-y-4">
                                 <div>
                                     <label for="character-sheet-output" class="block mb-2 text-sm font-medium text-secondary">Character Sheet (Untuk Disimpan)</label>
-                                    <textarea id="character-sheet-output" rows="5" class="form-input w-full p-2.5 text-xs" readonly></textarea>
+                                    <textarea id="character-sheet-output" rows="5" class="form-input w-full p-2.5 text-xs"></textarea>
                                 </div>
                                 <div>
                                     <label for="character-scenario-input" class="block mb-2 text-sm font-medium text-secondary">Masukkan Skenario atau Aksi</label>
@@ -743,6 +747,13 @@
                                      <img id="uploaded-video-preview" src="" alt="Uploaded Video Reference Preview" class="w-full rounded-lg shadow-md object-contain max-h-48 mx-auto">
                                      <button id="remove-video-button" class="absolute -top-2 -right-2 bg-red-600 hover:bg-red-700 text-white rounded-full h-6 w-6 flex items-center justify-center font-bold text-sm leading-none">&times;</button>
                                   </div>
+                                  <div class="w-full mt-4">
+                                        <button id="analyze-video-image-button" class="btn btn-secondary w-full px-3 py-1.5 text-sm mb-2">
+                                            <span id="analyze-video-image-icon">🤖</span>
+                                            <span id="analyze-video-image-text">ANALISA GAMBAR & ISI FORM</span>
+                                        </button>
+                                        <textarea id="video-image-analysis-result" rows="4" class="form-input w-full p-2.5 text-xs hidden" placeholder="Hasil analisa gambar oleh AI akan muncul di sini..."></textarea>
+                                    </div>
                                  <hr class="border-border-color">
                              </div>
                              <div>
@@ -817,7 +828,7 @@
     <div id="assistant-modal" class="hidden fixed bottom-28 right-8 w-full max-w-sm h-[60vh] rounded-lg shadow-2xl z-50 flex flex-col transition-all duration-300 ease-out transform opacity-0 translate-y-4">
         <div class="flex justify-between items-center p-4 border-b border-border-color bg-tertiary rounded-t-lg">
             <h3 class="font-bold text-base">Asisten Ahli Prompt</h3>
-            <button id="close-assistant-modal" class="text-secondary text-2xl font-bold leading-none hover:text-primary">&times;</button>
+            <button id="close-assistant-modal" class="text-2xl font-bold leading-none hover:text-primary">&times;</button>
         </div>
         <div id="assistant-chat-body" class="flex-1 p-4 space-y-4">
             <!-- Messages will be appended here -->
@@ -843,7 +854,8 @@
         let composeImage1Base64 = null;
         let composeImage2Base64 = null;
         let characterRefImageBase64 = null;
-        let uploadedVideoFile = null;
+        let videoRefImageFile = null;
+        let videoRefImageBase64 = null;
         let selectedAspectRatio = '1:1';
         
         const elements = {
@@ -898,7 +910,8 @@
             characterOutputSection: document.getElementById('character-output-section'),
             characterSheetOutputEl: document.getElementById('character-sheet-output'),
             characterScenarioInputEl: document.getElementById('character-scenario-input'),
-            subjekVideoEl: document.getElementById('subjek-video'),
+            subjekVideoSubjectEl: document.getElementById('subjek-video-subject'),
+            subjekVideoActionEl: document.getElementById('subjek-video-action'),
             gayaVideoEl: document.getElementById('gaya-video'),
             audioVideoEl: document.getElementById('audio-video'),
             negatifVideoEl: document.getElementById('negatif-video'),
@@ -935,6 +948,10 @@
             videoPreviewContainer: document.getElementById('video-preview-container'),
             uploadedVideoPreview: document.getElementById('uploaded-video-preview'),
             removeVideoButton: document.getElementById('remove-video-button'),
+            analyzeVideoImageButton: document.getElementById('analyze-video-image-button'),
+            analyzeVideoImageText: document.getElementById('analyze-video-image-text'),
+            analyzeVideoImageIcon: document.getElementById('analyze-video-image-icon'),
+            videoImageAnalysisResult: document.getElementById('video-image-analysis-result'),
             aspectRatioDropdown: document.getElementById('aspect-ratio-dropdown'),
             aspectRatioButton: document.getElementById('aspect-ratio-button'),
             aspectRatioMenu: document.getElementById('aspect-ratio-menu'),
@@ -979,7 +996,7 @@
                 elements.videoForm.classList.add('active');
             }
             elements.imagePreviewContainer.classList.toggle('hidden', tab !== 'image' || !uploadedImageBase64);
-            elements.videoPreviewContainer.classList.toggle('hidden', tab !== 'video' || !uploadedVideoFile);
+            elements.videoPreviewContainer.classList.toggle('hidden', tab !== 'video' || !videoRefImageFile);
             updateGeneratedPrompt();
         }
 
@@ -1049,15 +1066,18 @@
         }
 
         function generateVideoPrompt() {
-            const subjek = elements.subjekVideoEl.value.trim() || "[Subjek dan aksi]";
+            const subject = elements.subjekVideoSubjectEl.value.trim() || "[Subjek]";
+            const action = elements.subjekVideoActionEl.value.trim() || "[Aksi]";
+            const subjekDanAksi = `${subject} ${action}`.trim();
+
             const gaya = elements.gayaVideoEl.value.trim() || "[Gaya, kamera, dan suasana]";
             const audio = elements.audioVideoEl.value.trim();
             const negativo = elements.negatifVideoEl.value.trim();
             let prompt = "";
-            if (uploadedVideoFile) {
+            if (videoRefImageFile) {
                 prompt += "[Gambar Input] ";
             }
-            prompt += `${subjek}. ${gaya}.`;
+            prompt += `${subjekDanAksi}. ${gaya}.`;
             if (audio) {
                 prompt += ` Detail audio: ${audio}.`;
             }
@@ -1458,12 +1478,94 @@
                 elements.analyzeCharIcon.innerHTML = `🤖`;
             }
         }
+        
+        async function analyzeVideoImageWithGemini() {
+            if (!videoRefImageBase64) {
+                alert("Mohon upload gambar referensi untuk video terlebih dahulu.");
+                return;
+            }
+
+            elements.analyzeVideoImageButton.disabled = true;
+            elements.analyzeVideoImageText.textContent = 'MENGANALISA...';
+            elements.analyzeVideoImageIcon.innerHTML = `<span class="loader"></span>`;
+            elements.videoImageAnalysisResult.classList.remove('hidden');
+            elements.videoImageAnalysisResult.value = "AI sedang menganalisa gambar Anda untuk diubah menjadi ide prompt video...";
+            
+            const systemPrompt = `PENTING: Jawaban Anda HARUS dalam Bahasa Indonesia. Anda adalah seorang sutradara film dan analis visual. Diberikan sebuah gambar, tugas Anda adalah mengekstrak esensinya untuk diubah menjadi prompt video. Balas HANYA dengan format JSON yang ketat. JSON harus memiliki properti: "subject" (deskripsi subjek utama dalam 2-5 kata), "action" (deskripsi aksi atau suasana yang tersirat dalam gambar), dan "style" (deskripsi gaya visual, potensi gerakan kamera, sinematografi, dan pencahayaan).`;
+            const userPrompt = "Analisa gambar ini dan berikan hasilnya dalam format JSON sesuai instruksi sistem.";
+            
+            const apiKey = apiMode === 'user' ? userApiKey : "";
+            if (apiMode === 'user' && !apiKey) {
+                alert("API Key tidak valid.");
+                elements.analyzeVideoImageButton.disabled = false;
+                elements.analyzeVideoImageText.textContent = 'ANALISA GAMBAR & ISI FORM';
+                elements.analyzeVideoImageIcon.innerHTML = `🤖`;
+                return;
+            }
+
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+
+            const payload = {
+                contents: [{
+                    parts: [
+                        { text: userPrompt },
+                        { inlineData: { mimeType: "image/jpeg", data: videoRefImageBase64 } }
+                    ]
+                }],
+                generationConfig: {
+                    responseMimeType: "application/json",
+                    responseSchema: {
+                        type: "OBJECT",
+                        properties: {
+                            "subject": { "type": "STRING" },
+                            "action": { "type": "STRING" },
+                            "style": { "type": "STRING" }
+                        },
+                        required: ["subject", "action", "style"]
+                    }
+                },
+                systemInstruction: { parts: [{ text: systemPrompt }] },
+            };
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                
+                const result = await response.json();
+                const jsonText = result.candidates[0].content.parts[0].text;
+                const parsedJson = JSON.parse(jsonText);
+
+                if (parsedJson) {
+                    elements.subjekVideoSubjectEl.value = parsedJson.subject || '';
+                    elements.subjekVideoActionEl.value = parsedJson.action || '';
+                    elements.gayaVideoEl.value = parsedJson.style || '';
+                    elements.videoImageAnalysisResult.value = `Analisa Selesai:\nSubjek: ${parsedJson.subject}\nAksi: ${parsedJson.action}\nGaya: ${parsedJson.style}`;
+                    updateGeneratedPrompt(); 
+                } else {
+                    throw new Error("Respons JSON tidak valid.");
+                }
+
+            } catch (error) {
+                console.error("Error calling Gemini Vision API for video analysis:", error);
+                elements.videoImageAnalysisResult.value = "Maaf, terjadi kesalahan saat menganalisa gambar: " + error.message;
+            } finally {
+                elements.analyzeVideoImageButton.disabled = false;
+                elements.analyzeVideoImageText.textContent = 'ANALISA GAMBAR & ISI FORM';
+                elements.analyzeVideoImageIcon.innerHTML = `🤖`;
+            }
+        }
+
 
        function handleVideoFileSelect(file) {
            if (file && file.type.startsWith('image/')) {
-               uploadedVideoFile = file;
+               videoRefImageFile = file;
                const reader = new FileReader();
                reader.onload = (e) => {
+                   videoRefImageBase64 = e.target.result.split(',')[1];
                    elements.uploadedVideoPreview.src = e.target.result;
                    elements.videoPreviewContainer.classList.remove('hidden');
                    updateGeneratedPrompt();
@@ -1669,13 +1771,18 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
 
             elements.analyzeImageButton.addEventListener('click', analyzeImageWithGemini);
             elements.analyzeCharButton.addEventListener('click', analyzeCharacterWithGemini);
+            elements.analyzeVideoImageButton.addEventListener('click', analyzeVideoImageWithGemini);
+
 
             elements.imageUploadVideoEl.addEventListener('change', (event) => { handleVideoFileSelect(event.target.files[0]); });
             elements.dropZoneVideo.addEventListener('drop', (e) => { e.preventDefault(); handleVideoFileSelect(e.dataTransfer.files[0]); });
             elements.removeVideoButton.addEventListener('click', () => {
-                uploadedVideoFile = null;
+                videoRefImageFile = null;
+                videoRefImageBase64 = null;
                 elements.imageUploadVideoEl.value = '';
                 elements.videoPreviewContainer.classList.add('hidden');
+                elements.videoImageAnalysisResult.classList.add('hidden');
+                elements.videoImageAnalysisResult.value = '';
                 updateGeneratedPrompt();
             });
             
@@ -1725,4 +1832,3 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
     </script>
 </body>
 </html>
-
