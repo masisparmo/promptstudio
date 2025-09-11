@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panduan Penggunaan Prompt Studio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f3f4f6;
+            --text-primary: #111827;
+            --text-secondary: #4b5563;
+            --border-color: #d1d5db;
+            --accent-color: #4f46e5;
+        }
+
+        html.dark {
+            --bg-primary: #030712;
+            --bg-secondary: #111827;
+            --text-primary: #f9fafb;
+            --text-secondary: #9ca3af;
+            --border-color: #374151;
+            --accent-color: #6366f1;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .card {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        h1, h2, h3 {
+            color: var(--text-primary);
+            font-weight: 700;
+        }
+
+        h1 { font-size: 2.5rem; line-height: 1.2; }
+        h2 { font-size: 1.75rem; margin-top: 2.5rem; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-color); }
+        h3 { font-size: 1.25rem; margin-top: 2rem; margin-bottom: 0.75rem; color: var(--accent-color); }
+
+        p, li {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 1rem;
+        }
+
+        ul {
+            list-style-type: disc;
+            list-style-position: inside;
+            padding-left: 1.5rem;
+        }
+        
+        strong {
+          color: var(--text-primary);
+          font-weight: 600;
+        }
+
+        .header-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            stroke-width: 1.5;
+        }
+        
+        details {
+            margin-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 1rem;
+        }
+        summary {
+            font-weight: 600;
+            cursor: pointer;
+            color: var(--text-primary);
+            list-style: none; /* Remove default marker */
+            position: relative;
+            padding-left: 1.75rem;
+        }
+        summary::-webkit-details-marker {
+            display: none; /* Hide default marker for Chrome/Safari */
+        }
+        summary::before {
+            content: '+';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 1.25rem;
+            height: 1.25rem;
+            line-height: 1.25rem;
+            text-align: center;
+            font-size: 1.25rem;
+            color: var(--accent-color);
+            transition: transform 0.2s ease;
+        }
+        details[open] > summary::before {
+            transform: translateY(-50%) rotate(45deg);
+        }
+        details > p {
+            padding-left: 1.75rem;
+            margin-top: 0.5rem;
+        }
+
+
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="container mx-auto p-4 md:p-8 max-w-4xl">
+        <header class="flex justify-between items-center mb-10">
+             <div class="w-24"></div> <!-- Spacer -->
+            <div class="text-center">
+                <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight">Panduan Prompt Studio</h1>
+                <p class="mt-2 text-lg">Cara mudah membuat perintah (prompt) untuk AI Gambar & Video</p>
+            </div>
+            <div class="flex items-center gap-2 w-24 justify-end">
+                <a href="https://promptstudio.isparmo.com/" title="Kembali ke Aplikasi" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">
+                     <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                    </svg>
+                </a>
+                <button id="theme-toggle" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">
+                    <svg id="theme-icon-light" xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                    <svg id="theme-icon-dark" xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-secondary hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
+                </button>
+            </div>
+        </header>
+
+        <main>
+            <div class="card">
+                <h2>Selamat Datang!</h2>
+                <p>Prompt Studio adalah alat bantu untuk "berbicara" dengan AI (kecerdasan buatan) agar ia bisa membuatkan gambar atau video persis seperti yang Anda mau. Anggap saja Anda seorang sutradara, dan aplikasi ini adalah asisten yang membantu Anda menulis skenario agar para "aktor AI" paham apa yang harus mereka lakukan.</p>
+                <p>Panduan ini akan menjelaskan cara pakainya dengan bahasa sederhana, langkah demi langkah.</p>
+            </div>
+
+            <div class="card">
+                <h2>Langkah 1: Memulai & Pengaturan Awal</h2>
+                <h3>Pilih Lingkungan</h3>
+                <p>Saat pertama kali membuka aplikasi, Anda akan diberi 2 pilihan:</p>
+                <ul>
+                    <li><strong>Lingkungan Gemini:</strong> Pilihan ini menggunakan API Key (semacam kunci akses) yang sudah disediakan. Anda tidak perlu pusing soal teknis, tinggal klik "LANJUTKAN" dan langsung pakai. Sangat disarankan untuk pengguna baru.</li>
+                    <li><strong>Gunakan Kode API Sendiri:</strong> Jika Anda sudah punya kunci API dari Google AI Studio, Anda bisa memasukkannya di sini. Pilihan ini untuk pengguna tingkat lanjut.</li>
+                </ul>
+                <h3>Mode Gelap & Terang</h3>
+                <p>Di pojok kanan atas, ada ikon matahari/bulan. Klik ikon itu untuk mengubah tampilan aplikasi menjadi terang (mode siang) atau gelap (mode malam) sesuai selera Anda.</p>
+            </div>
+            
+            <div class="card">
+                <h2>Langkah 2: Memahami Dua Bagian Utama</h2>
+                <p>Aplikasi ini punya dua bagian utama yang bisa Anda pilih di bagian atas:</p>
+                <ul>
+                    <li><strong>PANDUAN PROMPT:</strong> Ini adalah "buku contekan" Anda. Di sini, ada penjelasan dan contoh-contoh cara membuat perintah yang bagus untuk gambar, video, dan bahkan cara membuat karakter yang sama berulang kali. Baca bagian ini dulu agar Anda punya gambaran.</li>
+                    <li><strong>DESAINER PROMPT:</strong> Ini adalah "area kerja" Anda. Di sinilah Anda akan merancang perintah (prompt) dengan mengisi formulir yang sudah disediakan.</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h2>Langkah 3: Menggunakan Desainer Prompt</h2>
+                <p>Ini adalah fitur inti dari aplikasi. Setelah mengklik tab <strong>"DESAINER PROMPT"</strong>, Anda akan melihat dua pilihan lagi: <strong>Gambar (Nano Banana)</strong> dan <strong>Video (Veo3)</strong>.</p>
+                
+                <h3>A. Membuat Prompt Gambar</h3>
+                <p>Pilih tab <strong>Gambar (Nano Banana)</strong>.</p>
+                <ol class="list-decimal list-inside space-y-4 pl-4">
+                    <li>
+                        <strong>Pilih Tujuan:</strong> Apa yang mau Anda buat? Foto produk, logo, atau cuma mau edit foto yang sudah ada? Pilih tujuan yang paling sesuai. Formulir di bawahnya akan otomatis menyesuaikan.
+                    </li>
+                    <li>
+                        <strong>Isi Formulirnya:</strong> Jawab pertanyaan-pertanyaan yang muncul. Semakin detail Anda mengisi, semakin bagus hasilnya. 
+                        <ul>
+                            <li><strong>Objek Utama:</strong> Apa benda atau orang utama dalam gambar? (Contoh: sebotol parfum mewah).</li>
+                            <li><strong>Gaya Visual:</strong> Gambar ini mau terlihat seperti apa? (Contoh: minimalis dan bersih, elegan dengan nuansa emas).</li>
+                            <li><strong>Latar Belakang:</strong> Di mana objek itu berada? (Contoh: di atas meja marmer hitam).</li>
+                            <li><strong>Detail Tambahan:</strong> Ada hal kecil lain yang penting? (Contoh: ada percikan air di sekitarnya).</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <strong>Upload Gambar (Opsional):</strong> Jika Anda ingin mengedit foto yang sudah ada, atau ingin AI menjadikan foto Anda sebagai referensi, unggah fotonya di area yang tersedia. Setelah diunggah, Anda bisa klik tombol <strong>"ANALISA GAMBAR"</strong> agar AI mencoba menebak isi gambar dan mengisikan formulir untuk Anda!
+                    </li>
+                    <li>
+                        <strong>Lihat Hasil Prompt:</strong> Di sebelah kanan, Anda akan melihat sebuah kotak teks bernama "Hasil Prompt". Perintah yang Anda rancang akan otomatis muncul di sana. Anda bisa langsung menyalin (copy) atau bahkan <strong>mengeditnya langsung di kotak itu</strong> jika ada yang ingin diubah.
+                    </li>
+                    <li>
+                        <strong>Sempurnakan Prompt (Fitur Canggih):</strong> Merasa perintah Anda kurang "wow"? Klik tombol <strong>"SEMPURNAKAN PROMPT"</strong>. AI akan membaca perintah Anda dan membuatnya jadi lebih detail dan profesional.
+                    </li>
+                </ol>
+
+                <h3 class="mt-8">B. Membuat Prompt Video</h3>
+                <p>Pilih tab <strong>Video (Veo3)</strong>.</p>
+                 <ol class="list-decimal list-inside space-y-4 pl-4">
+                    <li>
+                        <strong>Upload Gambar Referensi (Opsional):</strong> Ingin membuat video dari sebuah gambar? Unggah gambarnya di sini. AI akan menjadikan gambar itu sebagai awal dari video Anda. Sama seperti pada gambar, Anda bisa klik <strong>"ANALISA GAMBAR & ISI FORM"</strong> agar AI membantu Anda mengisi detail-detailnya.
+                    </li>
+                    <li>
+                        <strong>Isi Formulir Video:</strong>
+                         <ul>
+                            <li><strong>Subjek & Aksi Utama:</strong> Siapa atau apa yang ada di video, dan sedang apa? (Contoh: Subjek: seekor elang, Aksi: terbang menukik ke arah danau).</li>
+                             <li><strong>Latar Belakang:</strong> Di mana kejadiannya? (Contoh: pegunungan alpen yang tertutup salju).</li>
+                            <li><strong>Gaya, Kamera & Suasana:</strong> Mau seperti film apa? Bagaimana gerakan kameranya? (Contoh: sinematik, bidikan dari atas (aerial shot), suasana dramatis).</li>
+                            <li><strong>Detail Audio:</strong> Ada suara apa di video itu? (Contoh: suara angin kencang dan teriakan elang).</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <strong>Lihat Hasil Prompt:</strong> Sama seperti gambar, prompt video Anda akan muncul di kotak "Hasil Prompt" di sebelah kanan dan siap untuk disalin atau disempurnakan.
+                    </li>
+                </ol>
+            </div>
+            <div class="card">
+                <h2>Fitur Tambahan</h2>
+                <h3>Asisten AI</h3>
+                <p>Lihat ikon tanda tanya (?) di pojok kanan bawah aplikasi utama? Itu adalah asisten AI pribadi Anda. Klik ikon tersebut, dan Anda bisa bertanya apa saja seputar cara membuat prompt. Misalnya, "bagaimana cara membuat gambar dengan gaya cat air?" dan asisten akan memberi Anda tips dan contoh.</p>
+                <h3>Salin & Gunakan</h3>
+                <p>Setelah puas dengan hasil prompt Anda, klik tombol <strong>"SALIN"</strong>. Sekarang, Anda tinggal menempelkan (paste) teks tersebut ke platform AI generator pilihan Anda (seperti Gemini, Midjourney, dll.) untuk membuat mahakarya Anda!</p>
+            </div>
+            
+            <div class="card">
+                <h2>Frequently Asked Questions (F.A.Q)</h2>
+                <details>
+                    <summary>1. Apa itu "prompt"?</summary>
+                    <p>Prompt adalah serangkaian instruksi atau perintah yang Anda berikan kepada AI. Semakin jelas dan detail perintah Anda, semakin akurat hasil yang diberikan AI.</p>
+                </details>
+                <details>
+                    <summary>2. Apakah aplikasi ini gratis?</summary>
+                    <p>Ya, Prompt Studio gratis digunakan. Jika Anda memilih "Lingkungan Gemini", Anda tidak memerlukan biaya apapun. Jika Anda memilih menggunakan API Key sendiri, Anda akan mengikuti skema harga dari Google.</p>
+                </details>
+                <details>
+                    <summary>3. Mengapa hasil prompt saya masih kurang bagus?</summary>
+                    <p>Coba berikan detail yang lebih spesifik di setiap kolom. Jangan ragu menggunakan kata-kata sifat (contoh: "indah", "megah", "mencekam"). Coba juga klik tombol "SEMPURNAKAN PROMPT" untuk mendapatkan ide dari AI.</p>
+                </details>
+                <details>
+                    <summary>4. Apa bedanya Nano Banana dan Veo3?</summary>
+                    <p>Nano Banana (nama kode untuk model gambar Gemini) adalah AI untuk membuat <strong>gambar statis</strong>. Veo3 adalah AI untuk membuat <strong>video pendek</strong> lengkap dengan suara.</p>
+                </details>
+                <details>
+                    <summary>5. Bagaimana cara membuat karakter yang sama di beberapa gambar?</summary>
+                    <p>Gunakan fitur "Buat Karakter Konsisten" di desainer prompt gambar. Buat "Character Sheet" yang sangat detail (ciri fisik, pakaian, gaya), lalu gunakan sheet tersebut sebagai awal dari setiap prompt baru untuk karakter itu.</p>
+                </details>
+                 <details>
+                    <summary>6. Fitur "Analisa Gambar" tidak mengisi formulir dengan benar. Apa yang harus saya lakukan?</summary>
+                    <p>Analisa AI adalah alat bantu, terkadang bisa salah. Jika hasilnya kurang pas, Anda bisa mengeditnya secara manual di setiap kolom untuk memperbaikinya. Pastikan gambar yang diunggah cukup jelas.</p>
+                </details>
+                 <details>
+                    <summary>7. Bisakah saya mengedit hasil prompt yang sudah jadi?</summary>
+                    <p>Tentu saja! Kotak "Hasil Prompt" di sebelah kanan sepenuhnya bisa Anda edit. Anda bisa menambah, mengurangi, atau mengubah teksnya sebelum disalin.</p>
+                </details>
+                 <details>
+                    <summary>8. Apa gunanya "Prompt Negatif" di form Video?</summary>
+                    <p>Prompt negatif berfungsi untuk memberitahu AI elemen apa yang <strong>TIDAK BOLEH</strong> ada di dalam video. Contoh: jika Anda ingin video pemandangan alam, Anda bisa memasukkan "bangunan, mobil, orang" di prompt negatif.</p>
+                </details>
+                 <details>
+                    <summary>9. Di mana saya bisa menggunakan prompt yang sudah saya salin?</summary>
+                    <p>Anda bisa menempelkannya (paste) di platform AI generator seperti Google Gemini, Midjourney, Leonardo, atau platform lainnya yang mendukung pembuatan gambar/video dari teks.</p>
+                </details>
+                 <details>
+                    <summary>10. Mengapa saya perlu API Key jika memilih opsi kedua?</summary>
+                    <p>API Key adalah kunci pribadi Anda untuk mengakses layanan AI dari Google. Dengan kunci sendiri, Anda bisa memiliki kontrol lebih dan mungkin kuota penggunaan yang lebih besar, terpisah dari yang disediakan secara umum.</p>
+                </details>
+            </div>
+        </main>
+        
+        <footer class="text-center mt-12 text-secondary text-sm">
+            <p>&copy; 2025 Prompt Engineering Studio. Dibuat oleh ISPARMO.</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const themeToggle = document.getElementById('theme-toggle');
+            const lightIcon = document.getElementById('theme-icon-light');
+            const darkIcon = document.getElementById('theme-icon-dark');
+
+            const applyTheme = (theme) => {
+                if (theme === 'dark') {
+                    document.documentElement.classList.add('dark');
+                    lightIcon.classList.add('hidden');
+                    darkIcon.classList.remove('hidden');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                    lightIcon.classList.remove('hidden');
+                    darkIcon.classList.add('hidden');
+                }
+            };
+
+            themeToggle.addEventListener('click', () => {
+                const isDark = document.documentElement.classList.contains('dark');
+                const newTheme = isDark ? 'light' : 'dark';
+                localStorage.setItem('theme', newTheme);
+                applyTheme(newTheme);
+            });
+
+            // Set initial theme
+            const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            applyTheme(savedTheme);
+        });
+    </script>
+</body>
+</html>
