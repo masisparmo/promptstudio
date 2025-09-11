@@ -595,9 +595,13 @@
                                         <label for="gaya-gambar" class="block mb-2 text-sm font-medium text-secondary"><span class="form-num">3.</span> <span id="gaya-gambar-label-text">Apa Gaya Visual yang Diinginkan?</span></label>
                                         <input type="text" id="gaya-gambar" class="form-input w-full p-2.5" placeholder="Contoh: minimalis & bersih, mewah & elegan">
                                     </div>
+                                    <div class="mt-5">
+                                        <label for="latar-belakang-gambar" class="block mb-2 text-sm font-medium text-secondary"><span class="form-num">4.</span> <span id="latar-belakang-gambar-label-text">Bagaimana Latar Belakangnya?</span></label>
+                                        <input type="text" id="latar-belakang-gambar" class="form-input w-full p-2.5" placeholder="Contoh: di atas meja kayu, studio putih, pantai saat senja">
+                                    </div>
                                      <div class="mt-5">
-                                        <label for="detail-gambar" class="block mb-2 text-sm font-medium text-secondary"><span class="form-num">4.</span> <span id="detail-gambar-label-text">Detail Tambahan (Opsional)</span></label>
-                                        <textarea id="detail-gambar" rows="4" class="form-input w-full p-2.5" placeholder="Contoh: latar belakang marmer putih, percikan air"></textarea>
+                                        <label for="detail-gambar" class="block mb-2 text-sm font-medium text-secondary"><span class="form-num">5.</span> <span id="detail-gambar-label-text">Detail Tambahan (Opsional)</span></label>
+                                        <textarea id="detail-gambar" rows="4" class="form-input w-full p-2.5" placeholder="Contoh: percikan air, ada buah jeruk di sampingnya"></textarea>
                                     </div>
                                 </div>
 
@@ -683,15 +687,19 @@
                                      <textarea id="subjek-video-action" rows="2" class="form-input w-full p-2.5" placeholder="Contoh: berjalan di pantai saat matahari terbenam."></textarea>
                                  </div>
                                  <div>
-                                     <label for="gaya-video" class="block mb-2 text-sm font-medium text-secondary">3. Gaya, Kamera & Suasana</label>
+                                     <label for="latar-belakang-video" class="block mb-2 text-sm font-medium text-secondary">3. Latar Belakang</label>
+                                     <input type="text" id="latar-belakang-video" class="form-input w-full p-2.5" placeholder="Contoh: di sebuah kota cyberpunk yang ramai, di hutan berkabut">
+                                 </div>
+                                 <div>
+                                     <label for="gaya-video" class="block mb-2 text-sm font-medium text-secondary">4. Gaya, Kamera & Suasana</label>
                                      <input type="text" id="gaya-video" class="form-input w-full p-2.5" placeholder="Contoh: Gaya film noir, wide shot, dolly in, nada biru dingin">
                                  </div>
                                  <div>
-                                     <label for="audio-video" class="block mb-2 text-sm font-medium text-secondary">4. Detail Audio (Dialog, Musik, SFX)</label>
+                                     <label for="audio-video" class="block mb-2 text-sm font-medium text-secondary">5. Detail Audio (Dialog, Musik, SFX)</label>
                                      <textarea id="audio-video" rows="3" class="form-input w-full p-2.5" placeholder="Contoh: Dia berkata, “Aku menemukannya.” Musik: lo-fi. SFX: deburan ombak."></textarea>
                                  </div>
                                  <div>
-                                     <label for="negatif-video" class="block mb-2 text-sm font-medium text-secondary">5. Prompt Negatif (Elemen yang Dihindari)</label>
+                                     <label for="negatif-video" class="block mb-2 text-sm font-medium text-secondary">6. Prompt Negatif (Elemen yang Dihindari)</label>
                                      <input type="text" id="negatif-video" class="form-input w-full p-2.5" placeholder="Contoh: bangunan, orang lain, tulisan">
                                  </div>
                              </div>
@@ -891,6 +899,7 @@
             jenisKemasanEl: document.getElementById('jenis-kemasan'),
             produkGambarEl: document.getElementById('produk-gambar'),
             gayaGambarEl: document.getElementById('gaya-gambar'),
+            latarBelakangGambarEl: document.getElementById('latar-belakang-gambar'),
             detailGambarEl: document.getElementById('detail-gambar'),
             produkGambarLabelText: document.getElementById('produk-gambar-label-text'),
             gayaGambarLabelText: document.getElementById('gaya-gambar-label-text'),
@@ -912,6 +921,7 @@
             characterScenarioInputEl: document.getElementById('character-scenario-input'),
             subjekVideoSubjectEl: document.getElementById('subjek-video-subject'),
             subjekVideoActionEl: document.getElementById('subjek-video-action'),
+            latarBelakangVideoEl: document.getElementById('latar-belakang-video'),
             gayaVideoEl: document.getElementById('gaya-video'),
             audioVideoEl: document.getElementById('audio-video'),
             negatifVideoEl: document.getElementById('negatif-video'),
@@ -1036,28 +1046,29 @@
             const isEditing = tujuan === 'edit';
             const produk = elements.produkGambarEl.value.trim();
             const gaya = elements.gayaGambarEl.value.trim();
+            const latar = elements.latarBelakangGambarEl.value.trim();
             const detail = elements.detailGambarEl.value.trim();
             const jenisKemasan = elements.jenisKemasanEl.value;
             let prompt = "";
 
             if (isEditing) {
-                prompt = detail || `Sempurnakan foto dari "${produk || 'gambar ini'}", terapkan gaya visual ${gaya || 'profesional'}.`;
+                prompt = detail || `Sempurnakan foto dari "${produk || 'gambar ini'}", terapkan gaya visual ${gaya || 'profesional'} dan sesuaikan latar belakang menjadi ${latar || 'lebih baik'}.`;
             } else {
                  switch (tujuan) {
                     case 'produk':
-                        prompt = `Sebuah foto produk profesional dari ${produk || '[Produk Anda]'}, bergaya ${gaya || '[Gaya Visual Anda]'}. ${detail}`;
+                        prompt = `Sebuah foto produk profesional dari ${produk || '[Produk Anda]'} dengan latar belakang ${latar || 'yang sesuai'}. Bergaya ${gaya || '[Gaya Visual Anda]'}. ${detail}`;
                         break;
                     case 'packaging':
-                        prompt = `Desain kemasan (${jenisKemasan}) untuk ${produk || '[Produk Anda]'}, bergaya ${gaya || '[Gaya Visual Anda]'}. ${detail}`;
+                        prompt = `Desain kemasan (${jenisKemasan}) untuk ${produk || '[Produk Anda]'} dengan latar belakang ${latar || 'yang menarik'}. Bergaya ${gaya || '[Gaya Visual Anda]'}. ${detail}`;
                         break;
                     case 'pemasaran':
-                         prompt = `Aset pemasaran visual untuk ${produk || '[Tujuan Pemasaran Anda]'}, bergaya ${gaya || '[Gaya Visual Anda]'}. ${detail}`;
+                         prompt = `Aset pemasaran visual untuk ${produk || '[Tujuan Pemasaran Anda]'} dengan latar belakang ${latar || 'profesional'}. Bergaya ${gaya || '[Gaya Visual Anda]'}. ${detail}`;
                         break;
                     case 'logo':
-                        prompt = `Desain logo untuk brand bernama "${produk || '[Nama Brand Anda]'}" dengan teks "${produk || '[Teks Logo Anda]'}". Desainnya harus bergaya ${gaya || '[Gaya Visual Anda]'}. ${detail}`;
+                        prompt = `Desain logo untuk brand bernama "${produk || '[Nama Brand Anda]'}" dengan teks "${produk || '[Teks Logo Anda]'}". Desainnya harus bergaya ${gaya || '[Gaya Visual Anda]'} dengan latar belakang ${latar || 'sederhana'}. ${detail}`;
                         break;
                     case 'ilustrasi':
-                        prompt = `Sebuah ilustrasi dari ${produk || '[Subjek Ilustrasi Anda]'}, dengan gaya seni ${gaya || '[Gaya Artistik Anda]'}. ${detail}`;
+                        prompt = `Sebuah ilustrasi dari ${produk || '[Subjek Ilustrasi Anda]'} di sebuah ${latar || 'lingkungan yang imajinatif'}. Gaya seni ${gaya || '[Gaya Artistik Anda]'}. ${detail}`;
                         break;
                 }
             }
@@ -1068,6 +1079,7 @@
         function generateVideoPrompt() {
             const subject = elements.subjekVideoSubjectEl.value.trim() || "[Subjek]";
             const action = elements.subjekVideoActionEl.value.trim() || "[Aksi]";
+            const latar = elements.latarBelakangVideoEl.value.trim();
             const subjekDanAksi = `${subject} ${action}`.trim();
 
             const gaya = elements.gayaVideoEl.value.trim() || "[Gaya, kamera, dan suasana]";
@@ -1077,7 +1089,12 @@
             if (videoRefImageFile) {
                 prompt += "[Gambar Input] ";
             }
-            prompt += `${subjekDanAksi}. ${gaya}.`;
+            prompt += `${subjekDanAksi}`;
+            if (latar) {
+                prompt += ` berlatar di ${latar}`;
+            }
+            prompt += `. ${gaya}.`;
+
             if (audio) {
                 prompt += ` Detail audio: ${audio}.`;
             }
@@ -1287,7 +1304,7 @@
                 return;
             }
             elements.enhanceButton.disabled = true;
-            elements.enhanceButton.innerHTML = `<span class="loader"></span> SEMPURNAKAN...`;
+            elements.enhanceButton.innerHTML = `<span class="loader"></span> MENINGKATKAN...`;
             
             const isVideo = elements.designerTabVideo.classList.contains('active');
             const tujuan = elements.tujuanGambarEl.value;
@@ -1491,7 +1508,7 @@
             elements.videoImageAnalysisResult.classList.remove('hidden');
             elements.videoImageAnalysisResult.value = "AI sedang menganalisa gambar Anda untuk diubah menjadi ide prompt video...";
             
-            const systemPrompt = `PENTING: Jawaban Anda HARUS dalam Bahasa Indonesia. Anda adalah seorang sutradara film dan analis visual. Diberikan sebuah gambar, tugas Anda adalah mengekstrak esensinya untuk diubah menjadi prompt video. Balas HANYA dengan format JSON yang ketat. JSON harus memiliki properti: "subject" (deskripsi subjek utama dalam 2-5 kata), "action" (deskripsi aksi atau suasana yang tersirat dalam gambar), dan "style" (deskripsi gaya visual, potensi gerakan kamera, sinematografi, dan pencahayaan).`;
+            const systemPrompt = `PENTING: Jawaban Anda HARUS dalam Bahasa Indonesia. Anda adalah seorang sutradara film dan analis visual. Diberikan sebuah gambar, tugas Anda adalah mengekstrak esensinya untuk diubah menjadi prompt video. Balas HANYA dengan format JSON yang ketat. JSON harus memiliki properti: "subject" (deskripsi subjek utama dalam 2-5 kata), "action" (deskripsi aksi atau suasana yang tersirat dalam gambar), "background" (deskripsi singkat dan jelas tentang latar belakang), dan "style" (deskripsi gaya visual, potensi gerakan kamera, sinematografi, dan pencahayaan).`;
             const userPrompt = "Analisa gambar ini dan berikan hasilnya dalam format JSON sesuai instruksi sistem.";
             
             const apiKey = apiMode === 'user' ? userApiKey : "";
@@ -1519,9 +1536,10 @@
                         properties: {
                             "subject": { "type": "STRING" },
                             "action": { "type": "STRING" },
+                            "background": { "type": "STRING" },
                             "style": { "type": "STRING" }
                         },
-                        required: ["subject", "action", "style"]
+                        required: ["subject", "action", "background", "style"]
                     }
                 },
                 systemInstruction: { parts: [{ text: systemPrompt }] },
@@ -1542,8 +1560,9 @@
                 if (parsedJson) {
                     elements.subjekVideoSubjectEl.value = parsedJson.subject || '';
                     elements.subjekVideoActionEl.value = parsedJson.action || '';
+                    elements.latarBelakangVideoEl.value = parsedJson.background || '';
                     elements.gayaVideoEl.value = parsedJson.style || '';
-                    elements.videoImageAnalysisResult.value = `Analisa Selesai:\nSubjek: ${parsedJson.subject}\nAksi: ${parsedJson.action}\nGaya: ${parsedJson.style}`;
+                    elements.videoImageAnalysisResult.value = `Analisa Selesai:\nSubjek: ${parsedJson.subject}\nAksi: ${parsedJson.action}\nLatar: ${parsedJson.background}\nGaya: ${parsedJson.style}`;
                     updateGeneratedPrompt(); 
                 } else {
                     throw new Error("Respons JSON tidak valid.");
