@@ -925,7 +925,7 @@
             gayaVideoEl: document.getElementById('gaya-video'),
             audioVideoEl: document.getElementById('audio-video'),
             negatifVideoEl: document.getElementById('negatif-video'),
-            allFormInputs: document.querySelectorAll('.form-input, .form-select'),
+            allFormInputs: document.querySelectorAll('.form-input:not(#output-prompt):not(#character-sheet-output):not(#image-analysis-result):not(#video-image-analysis-result), .form-select'),
             enhanceButton: document.getElementById('enhance-prompt-button'),
             finalPromptContainer: document.getElementById('final-prompt-container'),
             imageUploadEl: document.getElementById('image-upload'),
