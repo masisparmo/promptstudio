@@ -535,7 +535,7 @@
             </section>
             <section id="content-desainer" class="content-section">
                 <div class="card p-6 md:p-8">
-                     <h2 class="text-3xl font-bold mb-2">Desainer Prompt</h2>
+                     <h2 class="text-3xl font-bold mb-2">Desainer Prompt Bisnis</h2>
                      <p class="mb-6 text-secondary">Rancang prompt profesional untuk kebutuhan bisnis Anda. Pilih jenis output dan isi form di bawah ini.</p>
                     <div class="flex border-b border-border-color mb-6">
                         <button id="designer-tab-image" class="designer-tab-button active">
@@ -1051,7 +1051,13 @@
             let prompt = "";
 
             if (isEditing) {
-                prompt = detail || `Sempurnakan foto dari "${produk || 'gambar ini'}", terapkan gaya visual ${gaya || 'profesional'} dan sesuaikan latar belakang menjadi ${latar || 'lebih baik'}.`;
+                // --- KODE PERBAIKAN ---
+                let baseDescription = detail || `Sempurnakan foto dari "${produk || 'gambar ini'}"`;
+                let styleInstruction = gaya ? ` terapkan gaya visual ${gaya}` : "";
+                let backgroundInstruction = latar ? ` dengan latar belakang baru yaitu ${latar}` : "";
+                
+                prompt = `${baseDescription}${styleInstruction}${backgroundInstruction}.`;
+                // --- AKHIR KODE PERBAIKAN ---
             } else {
                  switch (tujuan) {
                     case 'produk':
