@@ -695,6 +695,20 @@
                                          <div class="space-y-1 text-center"><svg class="mx-auto h-12 w-12 text-secondary" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true"><path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg><div class="flex text-sm text-secondary"><label for="image-upload-video" class="relative cursor-pointer rounded-md font-medium text-indigo-400 hover:text-indigo-500"><span>UPLOAD SEBUAH FILE</span><input id="image-upload-video" name="image-upload-video" type="file" class="sr-only" accept="image/*"></label><p class="pl-1">atau tarik dan lepas</p></div></div>
                                      </div>
                                  </div>
+                                 <div id="video-preview-container" class="hidden space-y-3">
+                                     <h4 class="text-md font-semibold">Preview Gambar Referensi Video</h4>
+                                      <div class="relative w-full">
+                                         <img id="uploaded-video-preview" src="" alt="Uploaded Video Reference Preview" class="w-full rounded-lg shadow-md object-contain max-h-48 mx-auto">
+                                         <button id="remove-video-button" class="absolute -top-2 -right-2 bg-red-600 hover:bg-red-700 text-white rounded-full h-6 w-6 flex items-center justify-center font-bold text-sm leading-none">&times;</button>
+                                      </div>
+                                      <div class="w-full mt-4">
+                                            <button id="analyze-video-image-button" class="btn btn-secondary w-full px-3 py-1.5 text-sm mb-2">
+                                               <span id="analyze-video-image-text">ANALISA GAMBAR & ISI FORM</span>
+                                            </button>
+                                            <textarea id="video-image-analysis-result" rows="4" class="form-input w-full p-2.5 text-xs hidden" placeholder="Hasil analisa gambar oleh AI akan muncul di sini..."></textarea>
+                                        </div>
+                                     <hr class="border-border-color">
+                                 </div>
                                  <div>
                                      <label for="subjek-video-subject" class="block mb-2 text-sm font-medium text-secondary">1. Subjek</label>
                                      <input type="text" id="subjek-video-subject" class="form-input w-full p-2.5" placeholder="Contoh: Seorang wanita, seekor naga api">
@@ -749,20 +763,6 @@
                                 </div>
                              </div>
 
-                              <div id="video-preview-container" class="hidden space-y-3">
-                                 <h4 class="text-md font-semibold">Preview Gambar Referensi Video</h4>
-                                  <div class="relative w-full">
-                                     <img id="uploaded-video-preview" src="" alt="Uploaded Video Reference Preview" class="w-full rounded-lg shadow-md object-contain max-h-48 mx-auto">
-                                     <button id="remove-video-button" class="absolute -top-2 -right-2 bg-red-600 hover:bg-red-700 text-white rounded-full h-6 w-6 flex items-center justify-center font-bold text-sm leading-none">&times;</button>
-                                  </div>
-                                  <div class="w-full mt-4">
-                                        <button id="analyze-video-image-button" class="btn btn-secondary w-full px-3 py-1.5 text-sm mb-2">
-                                           <span id="analyze-video-image-text">ANALISA GAMBAR & ISI FORM</span>
-                                        </button>
-                                        <textarea id="video-image-analysis-result" rows="4" class="form-input w-full p-2.5 text-xs hidden" placeholder="Hasil analisa gambar oleh AI akan muncul di sini..."></textarea>
-                                    </div>
-                                 <hr class="border-border-color">
-                             </div>
                              <div>
                                 <label for="aspect-ratio-button" class="block mb-2 text-sm font-medium text-secondary">Pilih Aspek Rasio</label>
                                 <div class="relative" id="aspect-ratio-dropdown">
