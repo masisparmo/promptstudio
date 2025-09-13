@@ -581,6 +581,23 @@
                                             </div>
                                         </div>
                                     </div>
+                                     <div id="image-preview-container" class="hidden space-y-3 mt-5">
+                                         <h4 class="text-md font-semibold">Preview & Analisa Gambar Referensi</h4>
+                                         <div class="flex flex-col md:flex-row items-start gap-4">
+                                             <div class="relative w-full md:w-1/3">
+                                                 <img id="uploaded-image-preview" src="" alt="Uploaded Image Preview" class="rounded-lg shadow-md object-contain">
+                                                 <button id="remove-image-button" class="absolute -top-2 -right-2 bg-red-600 hover:bg-red-700 text-white rounded-full h-6 w-6 flex items-center justify-center font-bold text-sm leading-none">&times;</button>
+                                             </div>
+                                             <div class="w-full md:w-2/3">
+                                                 <button id="analyze-image-button" class="btn btn-secondary w-full px-3 py-1.5 text-sm mb-2">
+                                                     <span id="analyze-image-icon">🔍</span>
+                                                     <span id="analyze-image-text">ANALISA GAMBAR</span>
+                                                 </button>
+                                                 <textarea id="image-analysis-result" rows="6" class="form-input w-full p-2.5 text-xs" placeholder="Hasil analisa gambar oleh AI akan muncul di sini..."></textarea>
+                                             </div>
+                                         </div>
+                                          <hr class="border-border-color">
+                                     </div>
                                      <div id="kemasan-container" class="hidden mt-5">
                                         <label for="jenis-kemasan" class="block mb-2 text-sm font-medium text-secondary"><span class="form-num">2.</span> Pilih Jenis Kemasan</label>
                                         <select id="jenis-kemasan" class="form-select w-full p-2.5">
@@ -705,23 +722,6 @@
                              </div>
                          </div>
                          <div class="space-y-6">
-                             <div id="image-preview-container" class="hidden space-y-3">
-                                 <h4 class="text-md font-semibold">Preview & Analisa Gambar Referensi</h4>
-                                 <div class="flex flex-col md:flex-row items-start gap-4">
-                                     <div class="relative w-full md:w-1/3">
-                                         <img id="uploaded-image-preview" src="" alt="Uploaded Image Preview" class="rounded-lg shadow-md object-contain">
-                                         <button id="remove-image-button" class="absolute -top-2 -right-2 bg-red-600 hover:bg-red-700 text-white rounded-full h-6 w-6 flex items-center justify-center font-bold text-sm leading-none">&times;</button>
-                                     </div>
-                                     <div class="w-full md:w-2/3">
-                                         <button id="analyze-image-button" class="btn btn-secondary w-full px-3 py-1.5 text-sm mb-2">
-                                             <span id="analyze-image-icon">🔍</span>
-                                             <span id="analyze-image-text">ANALISA GAMBAR</span>
-                                         </button>
-                                         <textarea id="image-analysis-result" rows="6" class="form-input w-full p-2.5 text-xs" placeholder="Hasil analisa gambar oleh AI akan muncul di sini..."></textarea>
-                                     </div>
-                                 </div>
-                                  <hr class="border-border-color">
-                             </div>
                              
                              <div id="composition-preview-container" class="hidden space-y-3">
                                 <h4 class="text-md font-semibold">Preview Foto untuk Digabungkan</h4>
