@@ -805,13 +805,23 @@
                               <div id="final-prompt-container">
                                  <div class="flex justify-between items-center mb-2">
                                      <h3 class="text-lg font-semibold">Hasil Prompt:</h3>
-                                     <button id="enhance-prompt-button" class="btn btn-primary px-3 py-1.5 text-xs">
-                                         <span id="enhance-prompt-text">SEMPURNAKAN PROMPT</span>
-                                     </button>
+                                     <div class="flex items-center gap-2">
+                                        <button id="show-json-button" class="btn btn-secondary px-3 py-1.5 text-xs">TAMPILKAN JSON</button>
+                                        <button id="enhance-prompt-button" class="btn btn-primary px-3 py-1.5 text-xs">
+                                             <span id="enhance-prompt-text">SEMPURNAKAN PROMPT</span>
+                                         </button>
+                                     </div>
                                  </div>
                                  <div class="relative">
                                      <textarea id="output-prompt" rows="8" class="form-input w-full p-2.5 pr-24"></textarea>
                                      <button id="copy-button" class="absolute top-2 right-2 btn btn-secondary px-3 py-1.5 text-xs">SALIN</button>
+                                 </div>
+                             </div>
+                             <div id="json-output-container" class="hidden mt-4">
+                                 <label for="json-output-prompt" class="block mb-2 text-sm font-medium text-secondary">Output JSON:</label>
+                                 <div class="relative">
+                                     <textarea id="json-output-prompt" rows="10" class="form-input w-full p-2.5 pr-24 text-xs font-mono"></textarea>
+                                     <button id="copy-json-button" class="absolute top-2 right-2 btn btn-secondary px-3 py-1.5 text-xs">SALIN</button>
                                  </div>
                              </div>
                          </div>
@@ -970,6 +980,10 @@
             assistantChatBody: document.getElementById('assistant-chat-body'),
             assistantInput: document.getElementById('assistant-input'),
             sendAssistantMessage: document.getElementById('send-assistant-message'),
+            showJsonButton: document.getElementById('show-json-button'),
+            jsonOutputContainer: document.getElementById('json-output-container'),
+            jsonOutputPrompt: document.getElementById('json-output-prompt'),
+            copyJsonButton: document.getElementById('copy-json-button'),
         };
 
         // --- Functions ---
@@ -1006,6 +1020,8 @@
             }
             elements.imagePreviewContainer.classList.toggle('hidden', tab !== 'image' || !uploadedImageBase64);
             elements.videoPreviewContainer.classList.toggle('hidden', tab !== 'video' || !videoRefImageFile);
+            elements.jsonOutputContainer.classList.add('hidden');
+            elements.showJsonButton.textContent = 'TAMPILKAN JSON';
             updateGeneratedPrompt();
         }
 
@@ -1117,6 +1133,86 @@
                 generateVideoPrompt();
             }
         }
+
+        function generatePromptObject() {
+            const promptData = {
+                mode: '',
+                form_type: '',
+                prompt_string: elements.outputPromptEl.value,
+                aspect_ratio: selectedAspectRatio,
+                fields: {}
+            };
+
+            if (elements.designerTabVideo.classList.contains('active')) {
+                promptData.mode = 'video';
+                promptData.form_type = 'standard';
+                promptData.fields = {
+                    subjek: elements.subjekVideoSubjectEl.value,
+                    aksi: elements.subjekVideoActionEl.value,
+                    latar_belakang: elements.latarBelakangVideoEl.value,
+                    gaya_kamera_suasana: elements.gayaVideoEl.value,
+                    audio: elements.audioVideoEl.value,
+                    prompt_negatif: elements.negatifVideoEl.value,
+                };
+                if (videoRefImageFile) {
+                    promptData.fields.gambar_referensi = videoRefImageFile.name;
+                }
+            } else { // Image tab is active
+                promptData.mode = 'image';
+                const tujuan = elements.tujuanGambarEl.value;
+                promptData.form_type = tujuan;
+
+                switch (tujuan) {
+                    case 'gabungkan':
+                        promptData.fields = {
+                            detail_komposisi: elements.compositionDetailsEl.value,
+                            gambar_referensi_1: composeImage1Base64 ? 'uploaded_image_1.jpg' : null,
+                            gambar_referensi_2: composeImage2Base64 ? 'uploaded_image_2.jpg' : null,
+                        };
+                        break;
+                    case 'karakter':
+                        promptData.fields = {
+                            nama_karakter: elements.charNameEl.value,
+                            ciri_fisik: elements.charPhysicEl.value,
+                            pakaian_khas: elements.charAttireEl.value,
+                            gaya_artistik: elements.charStyleEl.value,
+                            skenario: elements.characterScenarioInputEl.value,
+                            gambar_referensi: characterRefImageBase64 ? 'character_ref_image.jpg' : null,
+                        };
+                        break;
+                    default: // Standard image forms (produk, packaging, etc.)
+                        promptData.fields = {
+                            objek_utama: elements.produkGambarEl.value,
+                            gaya_visual: elements.gayaGambarEl.value,
+                            latar_belakang: elements.latarBelakangGambarEl.value,
+                            detail_tambahan: elements.detailGambarEl.value,
+                        };
+                        if (tujuan === 'packaging') {
+                            promptData.fields.jenis_kemasan = elements.jenisKemasanEl.value;
+                        }
+                        if (uploadedImageBase64) {
+                            promptData.fields.gambar_referensi = 'uploaded_image.jpg';
+                        }
+                        break;
+                }
+            }
+            return promptData;
+        }
+
+        function handleShowJson() {
+            // If it's already visible, hide it and do nothing else.
+            if (!elements.jsonOutputContainer.classList.contains('hidden')) {
+                elements.jsonOutputContainer.classList.add('hidden');
+                elements.showJsonButton.textContent = 'TAMPILKAN JSON';
+                return;
+            }
+
+            const promptObject = generatePromptObject();
+            const jsonString = JSON.stringify(promptObject, null, 2); // Pretty print with 2 spaces
+            elements.jsonOutputPrompt.value = jsonString;
+            elements.jsonOutputContainer.classList.remove('hidden');
+            elements.showJsonButton.textContent = 'SEMBUNYIKAN JSON';
+        }
         
         function handleTujuanGambarChange() {
             const tujuan = elements.tujuanGambarEl.value;
@@ -1131,6 +1227,8 @@
             elements.characterOutputSection.classList.add('hidden');
             elements.kemasanContainerEl.classList.add('hidden');
             elements.finalPromptContainer.classList.add('hidden');
+            elements.jsonOutputContainer.classList.add('hidden');
+            elements.showJsonButton.textContent = 'TAMPILKAN JSON';
 
             // 2. Handle special forms that don't use the standard layout
             if (tujuan === 'gabungkan') {
@@ -1739,6 +1837,18 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
             });
 
             elements.enhanceButton.addEventListener('click', enhancePromptWithGemini);
+            elements.showJsonButton.addEventListener('click', handleShowJson);
+
+            elements.copyJsonButton.addEventListener('click', () => {
+                elements.jsonOutputPrompt.select();
+                try {
+                    document.execCommand('copy');
+                    elements.copyJsonButton.textContent = 'DISALIN!';
+                    setTimeout(() => { elements.copyJsonButton.textContent = 'SALIN'; }, 2000);
+                } catch (err) {
+                    elements.copyJsonButton.textContent = 'GAGAL';
+                }
+            });
 
             // File Upload Listeners
             elements.imageUploadEl.addEventListener('change', (event) => handleFileSelect(event.target.files[0], 'single'));
