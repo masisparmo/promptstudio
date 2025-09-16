@@ -826,6 +826,14 @@
                              </div>
                          </div>
                      </div>
+                     <div class="mt-8 border-t border-border-color pt-6">
+                        <button id="clear-all-button" class="btn w-full bg-red-600 hover:bg-red-700 text-white border-b-4 border-red-800 active:bg-red-800 active:border-red-900 transform transition-transform duration-150 ease-out hover:-translate-y-0.5 active:translate-y-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm4 0a1 1 0 012 0v6a1 1 0 11-2 0V8z" clip-rule="evenodd" />
+                            </svg>
+                            <span>BERSIHKAN SEMUA INPUT</span>
+                        </button>
+                    </div>
                 </div>
             </section>
         </main>
@@ -984,9 +992,62 @@
             jsonOutputContainer: document.getElementById('json-output-container'),
             jsonOutputPrompt: document.getElementById('json-output-prompt'),
             copyJsonButton: document.getElementById('copy-json-button'),
+            clearAllButton: document.getElementById('clear-all-button'),
         };
 
         // --- Functions ---
+        function clearAllInputs() {
+            // Select all text inputs and textareas in both designer forms
+            const inputsToClear = document.querySelectorAll(
+                '#image-designer-form input[type="text"], #image-designer-form textarea, ' +
+                '#video-designer-form input[type="text"], #video-designer-form textarea'
+            );
+            inputsToClear.forEach(input => input.value = '');
+
+            // Reset all file input fields
+            elements.imageUploadEl.value = '';
+            elements.imageUploadCompose1.value = '';
+            elements.imageUploadCompose2.value = '';
+            elements.imageUploadChar.value = '';
+            elements.imageUploadVideoEl.value = '';
+
+            // Reset all internal variables holding file data
+            uploadedImageBase64 = null;
+            composeImage1Base64 = null;
+            composeImage2Base64 = null;
+            characterRefImageBase64 = null;
+            videoRefImageFile = null;
+            videoRefImageBase64 = null;
+
+            // Hide all preview containers and reset their image sources
+            [
+                elements.imagePreviewContainer, elements.compositionPreviewContainer,
+                elements.characterPreviewContainer, elements.videoPreviewContainer,
+                elements.jsonOutputContainer
+            ].forEach(container => container.classList.add('hidden'));
+
+            elements.uploadedImagePreview.src = '';
+            elements.uploadedComposePreview1.src = '';
+            elements.uploadedComposePreview2.src = '';
+            elements.uploadedCharPreview.src = '';
+            elements.uploadedVideoPreview.src = '';
+            elements.uploadedComposePreview1.parentElement.classList.add('hidden');
+            elements.uploadedComposePreview2.parentElement.classList.add('hidden');
+
+            // Reset dropdowns to their default values as requested
+            elements.tujuanGambarEl.value = 'produk';
+            elements.jenisKemasanEl.selectedIndex = 0;
+
+            // Reset aspect ratio to default (1:1)
+            selectedAspectRatio = '1:1';
+            const defaultAspectRatioOption = elements.aspectRatioMenu.querySelector('.aspect-ratio-option[data-ratio="1:1"]');
+            updateDropdownButton(defaultAspectRatioOption);
+
+            // Call the main handler functions to reset the UI to its initial state
+            handleTujuanGambarChange();
+            updateGeneratedPrompt();
+        }
+
         const applyTheme = (theme) => {
             if (theme === 'dark') {
                 document.documentElement.classList.add('dark');
@@ -1939,6 +2000,8 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
                     elements.aspectRatioMenu.classList.add('hidden');
                 }
             });
+
+            elements.clearAllButton.addEventListener('click', clearAllInputs);
         }
        
        // --- Initial Setup ---
