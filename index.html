@@ -1605,11 +1605,6 @@
                 return;
             }
 
-            if (apiMode === 'shared') {
-                alert("Fitur analisa gambar tidak tersedia di Lingkungan Gemini (mode default). Harap gunakan API Key Anda sendiri untuk menggunakan fitur ini di dalam aplikasi.");
-                return;
-            }
-
             elements.analyzeVideoImageButton.disabled = true;
             elements.analyzeVideoImageText.textContent = 'MENGANALISA...';
             elements.analyzeVideoImageIcon.innerHTML = `<span class="loader"></span>`;
@@ -1646,9 +1641,18 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
                 });
-                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                if (!response.ok) {
+                    const errorBody = await response.text();
+                    throw new Error(`HTTP error! status: ${response.status}, body: ${errorBody}`);
+                }
                 
                 const result = await response.json();
+
+                if (!result.candidates || !result.candidates[0].content || !result.candidates[0].content.parts[0].text) {
+                    console.error("Invalid API response structure:", result);
+                    throw new Error("Struktur respons API tidak valid.");
+                }
+
                 const responseText = result.candidates[0].content.parts[0].text;
                 const cleanedJsonText = responseText.replace(/```json/g, '').replace(/```/g, '').trim();
                 const parsedJson = JSON.parse(cleanedJsonText);
@@ -1661,7 +1665,7 @@
                     elements.videoImageAnalysisResult.value = `Analisa Selesai:\nSubjek: ${parsedJson.subject}\nAksi: ${parsedJson.action}\nLatar: ${parsedJson.background}\nGaya: ${parsedJson.style}`;
                     updateGeneratedPrompt(); 
                 } else {
-                    throw new Error("Respons JSON tidak valid.");
+                    throw new Error("Respons JSON tidak valid atau kosong.");
                 }
 
             } catch (error) {
