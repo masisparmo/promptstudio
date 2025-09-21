@@ -1356,28 +1356,16 @@
         async function makeApiCallWithRetry(systemPrompt, userQuery, isJson = false) {
             const apiKey = apiMode === 'user' ? userApiKey : "";
             if (apiMode === 'user' && !apiKey) {
-                throw new Error("API Key pengguna tidak valid atau tidak tersedia.");
+                 throw new Error("API Key pengguna tidak valid atau tidak tersedia.");
             }
-
-            let apiUrl;
-            let payload;
-            const headers = { 'Content-Type': 'application/json' };
-
-            if (apiMode === 'user') {
-                apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
-                payload = {
-                    contents: [{ parts: [{ text: userQuery }] }],
-                    systemInstruction: { parts: [{ text: systemPrompt }] },
-                };
-            } else {
-                apiUrl = 'https://promptstudio.isparmo.com/gemini-proxy/generateContent';
-                payload = {
-                    contents: [{ parts: [{ text: `System instruction: ${systemPrompt}. User query: ${userQuery}` }] }],
-                };
-            }
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+            const payload = {
+                contents: [{ parts: [{ text: userQuery }] }],
+                systemInstruction: { parts: [{ text: systemPrompt }] },
+            };
 
             if (isJson) {
-                payload.generationConfig = {
+                 payload.generationConfig = {
                     responseMimeType: "application/json",
                     responseSchema: {
                         type: "OBJECT",
@@ -1389,7 +1377,7 @@
                         },
                         required: ["name", "physic", "attire", "style"]
                     }
-                };
+                }
             }
 
 
@@ -1397,7 +1385,7 @@
                 try {
                     const response = await fetch(apiUrl, {
                         method: 'POST',
-                        headers: headers,
+                        headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(payload)
                     });
                     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
@@ -1499,31 +1487,16 @@
             const userPrompt = "Analisa gambar ini sesuai format yang diperintahkan.";
             const apiKey = apiMode === 'user' ? userApiKey : "";
             if (apiMode === 'user' && !apiKey) {
-                elements.imageAnalysisResult.value = "Error: API Key pengguna tidak valid...";
-                return;
+                 elements.imageAnalysisResult.value = "Error: API Key pengguna tidak valid...";
+                 return;
             }
-
-            let apiUrl;
-            let payload;
-            const headers = { 'Content-Type': 'application/json' };
-
-            if (apiMode === 'user') {
-                apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
-                payload = {
-                    contents: [{ parts: [ { text: userPrompt }, { inlineData: { mimeType: "image/jpeg", data: uploadedImageBase64 } } ] }],
-                    systemInstruction: { parts: [{ text: systemPrompt }] },
-                };
-            } else {
-                apiUrl = 'https://promptstudio.isparmo.com/gemini-proxy/generateContent';
-                // The proxy doesn't need systemInstruction at the top level.
-                // The proxy also doesn't need the API key in the request.
-                payload = {
-                    contents: [{ parts: [ { text: userPrompt }, { inlineData: { mimeType: "image/jpeg", data: uploadedImageBase64 } } ] }],
-                };
-            }
-
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+            const payload = {
+                contents: [{ parts: [ { text: userPrompt }, { inlineData: { mimeType: "image/jpeg", data: uploadedImageBase64 } } ] }],
+                systemInstruction: { parts: [{ text: systemPrompt }] },
+            };
             try {
-                const response = await fetch(apiUrl, { method: 'POST', headers: headers, body: JSON.stringify(payload) });
+                const response = await fetch(apiUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
                 if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                 const result = await response.json();
                 if (result.candidates && result.candidates[0].content && result.candidates[0].content.parts[0].text) {
@@ -1569,64 +1542,35 @@
                 return;
             }
 
-            let apiUrl;
-            let payload;
-            const headers = { 'Content-Type': 'application/json' };
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
 
-            if (apiMode === 'user') {
-                apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
-                payload = {
-                    contents: [{
-                        parts: [
-                            { text: userPrompt },
-                            { inlineData: { mimeType: "image/jpeg", data: characterRefImageBase64 } }
-                        ]
-                    }],
-                    generationConfig: {
-                        responseMimeType: "application/json",
-                        responseSchema: {
-                            type: "OBJECT",
-                            properties: {
-                                "name": { "type": "STRING" },
-                                "physic": { "type": "STRING" },
-                                "attire": { "type": "STRING" },
-                                "style": { "type": "STRING" }
-                            },
-                            required: ["name", "physic", "attire", "style"]
-                        }
-                    },
-                    systemInstruction: { parts: [{ text: systemPrompt }] },
-                };
-            } else {
-                apiUrl = 'https://promptstudio.isparmo.com/gemini-proxy/generateContent';
-                payload = {
-                    contents: [{
-                        parts: [
-                            { text: userPrompt },
-                            { inlineData: { mimeType: "image/jpeg", data: characterRefImageBase64 } }
-                        ]
-                    }],
-                    generationConfig: {
-                        responseMimeType: "application/json",
-                        responseSchema: {
-                            type: "OBJECT",
-                            properties: {
-                                "name": { "type": "STRING" },
-                                "physic": { "type": "STRING" },
-                                "attire": { "type": "STRING" },
-                                "style": { "type": "STRING" }
-                            },
-                            required: ["name", "physic", "attire", "style"]
-                        }
+            const payload = {
+                contents: [{
+                    parts: [
+                        { text: userPrompt },
+                        { inlineData: { mimeType: "image/jpeg", data: characterRefImageBase64 } }
+                    ]
+                }],
+                generationConfig: {
+                    responseMimeType: "application/json",
+                    responseSchema: {
+                        type: "OBJECT",
+                        properties: {
+                            "name": { "type": "STRING" },
+                            "physic": { "type": "STRING" },
+                            "attire": { "type": "STRING" },
+                            "style": { "type": "STRING" }
+                        },
+                        required: ["name", "physic", "attire", "style"]
                     }
-                };
-            }
-
+                },
+                systemInstruction: { parts: [{ text: systemPrompt }] },
+            };
 
             try {
                 const response = await fetch(apiUrl, {
                     method: 'POST',
-                    headers: headers,
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
                 });
                 if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
@@ -1661,6 +1605,11 @@
                 return;
             }
 
+            if (apiMode === 'shared') {
+                alert("Fitur analisa gambar tidak tersedia di Lingkungan Gemini (mode default). Harap gunakan API Key Anda sendiri untuk menggunakan fitur ini di dalam aplikasi.");
+                return;
+            }
+
             elements.analyzeVideoImageButton.disabled = true;
             elements.analyzeVideoImageText.textContent = 'MENGANALISA...';
             elements.analyzeVideoImageIcon.innerHTML = `<span class="loader"></span>`;
@@ -1679,70 +1628,30 @@
                 return;
             }
 
-            let apiUrl;
-            let payload;
-            const headers = { 'Content-Type': 'application/json' };
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
 
-            if (apiMode === 'user') {
-                apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
-                payload = {
-                    contents: [{
-                        parts: [
-                            { text: userPrompt },
-                            { inlineData: { mimeType: "image/jpeg", data: videoRefImageBase64 } }
-                        ]
-                    }],
-                    generationConfig: {
-                        responseMimeType: "application/json",
-                        responseSchema: {
-                            type: "OBJECT",
-                            properties: {
-                                "subject": { "type": "STRING" },
-                                "action": { "type": "STRING" },
-                                "background": { "type": "STRING" },
-                                "style": { "type": "STRING" }
-                            },
-                            required: ["subject", "action", "background", "style"]
-                        }
-                    },
-                    systemInstruction: { parts: [{ text: systemPrompt }] },
-                };
-            } else {
-                apiUrl = 'https://promptstudio.isparmo.com/gemini-proxy/generateContent';
-                payload = {
-                     contents: [{
-                        parts: [
-                            { text: userPrompt },
-                            { inlineData: { mimeType: "image/jpeg", data: videoRefImageBase64 } }
-                        ]
-                    }],
-                    generationConfig: {
-                        responseMimeType: "application/json",
-                        responseSchema: {
-                            type: "OBJECT",
-                            properties: {
-                                "subject": { "type": "STRING" },
-                                "action": { "type": "STRING" },
-                                "background": { "type": "STRING" },
-                                "style": { "type": "STRING" }
-                            },
-                            required: ["subject", "action", "background", "style"]
-                        }
-                    }
-                };
-            }
+            const payload = {
+                contents: [{
+                    parts: [
+                        { text: userPrompt },
+                        { inlineData: { mimeType: "image/jpeg", data: videoRefImageBase64 } }
+                    ]
+                }],
+                systemInstruction: { parts: [{ text: systemPrompt }] },
+            };
 
             try {
                 const response = await fetch(apiUrl, {
                     method: 'POST',
-                    headers: headers,
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
                 });
                 if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                 
                 const result = await response.json();
-                const jsonText = result.candidates[0].content.parts[0].text;
-                const parsedJson = JSON.parse(jsonText);
+                const responseText = result.candidates[0].content.parts[0].text;
+                const cleanedJsonText = responseText.replace(/```json/g, '').replace(/```/g, '').trim();
+                const parsedJson = JSON.parse(cleanedJsonText);
 
                 if (parsedJson) {
                     elements.subjekVideoSubjectEl.value = parsedJson.subject || '';
@@ -1864,10 +1773,7 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
         // --- Event Listeners ---
         function setupEventListeners() {
             elements.useSharedEnvBtn.addEventListener('click', () => {
-                apiMode = 'shared';
-                elements.welcomeScreen.style.display = 'none';
-                elements.mainApp.classList.add('active');
-                elements.assistantButton.classList.remove('hidden');
+                window.open('https://g.co/gemini/share/ec7fc3fd066b', '_blank');
             });
             elements.useUserApiKeyBtn.addEventListener('click', () => {
                 elements.apiKeySection.classList.toggle('active');
