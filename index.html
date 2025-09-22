@@ -1949,6 +1949,55 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
             elements.clearAllButton.addEventListener('click', clearAllInputs);
         }
        
+       function clearAllInputs() {
+            // 1. Reset all form inputs and textareas
+            elements.allFormInputs.forEach(el => {
+                if (el.tagName === 'SELECT') {
+                    el.selectedIndex = 0;
+                } else if (el.type !== 'file') {
+                    el.value = '';
+                }
+            });
+
+            // 2. Reset specific textareas and outputs
+            ['imageAnalysisResult', 'videoImageAnalysisResult', 'outputPromptEl', 'jsonOutputPrompt', 'characterSheetOutputEl', 'characterScenarioInputEl', 'compositionDetailsEl'].forEach(id => {
+                if (elements[id]) elements[id].value = '';
+            });
+
+            // 3. Clear image state variables
+            uploadedImageBase64 = null;
+            composeImage1Base64 = null;
+            composeImage2Base64 = null;
+            characterRefImageBase64 = null;
+            videoRefImageFile = null;
+            videoRefImageBase64 = null;
+
+            // 4. Reset file input elements
+            ['imageUploadEl', 'imageUploadCompose1', 'imageUploadCompose2', 'imageUploadChar', 'imageUploadVideoEl'].forEach(id => {
+                if(elements[id]) elements[id].value = '';
+            });
+
+            // 5. Hide all preview containers
+            ['imagePreviewContainer', 'compositionPreviewContainer', 'characterPreviewContainer', 'videoPreviewContainer', 'jsonOutputContainer'].forEach(id => {
+                 if(elements[id]) elements[id].classList.add('hidden');
+            });
+
+            // 6. Reset image sources
+            ['uploadedImagePreview', 'uploadedComposePreview1', 'uploadedComposePreview2', 'uploadedCharPreview', 'uploadedVideoPreview'].forEach(id => {
+                if(elements[id]) elements[id].src = '';
+            });
+
+            // Also hide the parent wrappers for compose previews
+            if (elements.uploadedComposePreview1.parentElement) elements.uploadedComposePreview1.parentElement.classList.add('hidden');
+            if (elements.uploadedComposePreview2.parentElement) elements.uploadedComposePreview2.parentElement.classList.add('hidden');
+
+            // 7. Reset UI states and re-generate prompts
+            elements.showJsonButton.textContent = 'TAMPILKAN JSON';
+            handleTujuanGambarChange(); // This will reset form structure, labels and visibility
+
+            // We don't need an alert if the UI provides clear visual feedback
+        }
+
        // --- Initial Setup ---
        function init() {
            const savedTheme = localStorage.getItem('theme') || 'dark';
