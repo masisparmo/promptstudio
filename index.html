@@ -1615,8 +1615,7 @@
             }
 
             elements.analyzeVideoImageButton.disabled = true;
-            elements.analyzeVideoImageText.textContent = 'MENGANALISA...';
-            elements.analyzeVideoImageIcon.innerHTML = `<span class="loader"></span>`;
+            elements.analyzeVideoImageButton.innerHTML = `<span class="loader"></span> MENGANALISA...`;
             elements.videoImageAnalysisResult.classList.remove('hidden');
             elements.videoImageAnalysisResult.value = "AI sedang menganalisa gambar Anda untuk diubah menjadi ide prompt video...";
             
@@ -1627,8 +1626,7 @@
             if (apiMode === 'user' && !apiKey) {
                 alert("API Key tidak valid.");
                 elements.analyzeVideoImageButton.disabled = false;
-                elements.analyzeVideoImageText.textContent = 'ANALISA GAMBAR & ISI FORM';
-                elements.analyzeVideoImageIcon.innerHTML = `🤖`;
+                elements.analyzeVideoImageButton.innerHTML = `<span id="analyze-video-image-text">ANALISA GAMBAR & ISI FORM</span>`;
                 return;
             }
 
@@ -1685,8 +1683,7 @@
                 elements.videoImageAnalysisResult.value = "Maaf, terjadi kesalahan saat menganalisa gambar: " + error.message;
             } finally {
                 elements.analyzeVideoImageButton.disabled = false;
-                elements.analyzeVideoImageText.textContent = 'ANALISA GAMBAR & ISI FORM';
-                elements.analyzeVideoImageIcon.innerHTML = `🤖`;
+                elements.analyzeVideoImageButton.innerHTML = `<span id="analyze-video-image-text">ANALISA GAMBAR & ISI FORM</span>`;
             }
         }
 
