@@ -739,25 +739,6 @@
                                  </div>
                              </div>
                              <div id="lagu-designer-form" class="designer-form space-y-5">
-                                <div class="space-y-3">
-                                     <label class="block text-sm font-medium text-secondary">Analisa Lagu dari Audio (Opsional)</label>
-                                     <div id="drop-zone-audio" class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-dashed rounded-md cursor-pointer transition-colors border-border-color hover:border-accent-color">
-                                         <div class="space-y-1 text-center">
-                                             <svg class="mx-auto h-12 w-12 text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 6l12-3" /></svg>
-                                             <div class="flex text-sm text-secondary">
-                                                 <label for="audio-upload" class="relative cursor-pointer rounded-md font-medium text-indigo-400 hover:text-indigo-500"><span>UPLOAD FILE AUDIO</span><input id="audio-upload" name="audio-upload" type="file" class="sr-only" accept="audio/*"></label>
-                                                 <p class="pl-1">atau tarik dan lepas</p>
-                                             </div>
-                                             <p id="audio-file-name" class="text-xs text-secondary">MP3, WAV, M4A, FLAC, dll.</p>
-                                         </div>
-                                     </div>
-                                     <button id="analyze-audio-button" class="btn btn-secondary w-full px-3 py-1.5 text-sm hidden">
-                                         <span id="analyze-audio-icon">🎵</span>
-                                         <span id="analyze-audio-text">ANALISA AUDIO & ISI FORM</span>
-                                     </button>
-                                     <textarea id="audio-analysis-result" rows="4" class="form-input w-full p-2.5 text-xs hidden" placeholder="Hasil analisa audio oleh AI akan muncul di sini..."></textarea>
-                                     <hr class="border-border-color">
-                                 </div>
                                 <div>
                                     <label for="tema-lagu" class="block mb-2 text-sm font-medium text-secondary">1. Tema Lagu</label>
                                     <input type="text" id="tema-lagu" class="form-input w-full p-2.5" placeholder="Contoh: Hujan di sore hari, patah hati, semangat kemerdekaan">
@@ -998,7 +979,6 @@
         let characterRefImageBase64 = null;
         let videoRefImageFile = null;
         let videoRefImageBase64 = null;
-        let uploadedAudioFile = null;
         let selectedAspectRatio = '1:1';
         
         const elements = {
@@ -1127,90 +1107,7 @@
             outputAlternatif: document.getElementById('output-alternatif'),
             regenAlternatifButton: document.getElementById('regen-alternatif-button'),
             copyAlternatifButton: document.getElementById('copy-alternatif-button'),
-            audioUpload: document.getElementById('audio-upload'),
-            dropZoneAudio: document.getElementById('drop-zone-audio'),
-            audioFileName: document.getElementById('audio-file-name'),
-            analyzeAudioButton: document.getElementById('analyze-audio-button'),
-            audioAnalysisResult: document.getElementById('audio-analysis-result'),
         };
-
-        async function analyzeAudioWithGemini() {
-            // !!! IMPORTANT MOCK IMPLEMENTATION !!!
-            // The Gemini API for audio analysis from a web client is not available in this environment.
-            // This function simulates the behavior with a hardcoded response to demonstrate the UI flow.
-            // In a real-world scenario, this would involve a proper API call to a multimodal model.
-            alert("Fitur Analisa Audio saat ini hanya untuk tujuan demo dan menggunakan data tiruan (mock data).");
-
-            if (!uploadedAudioFile) {
-                alert("Mohon upload file audio terlebih dahulu.");
-                return;
-            }
-
-            elements.analyzeAudioButton.disabled = true;
-            elements.analyzeAudioButton.innerHTML = `<span class="loader"></span> MENGANALISA...`;
-            elements.audioAnalysisResult.classList.remove('hidden');
-            elements.audioAnalysisResult.value = "AI sedang menganalisa audio Anda, ini mungkin memakan waktu beberapa saat...";
-
-            const systemPrompt = `PENTING: Jawaban Anda HARUS dalam Bahasa Indonesia dan dalam format JSON yang ketat. Anda adalah seorang analis musik ahli. Diberikan sebuah file audio, tugas Anda adalah menganalisanya dan mengembalikan detail lagu. JSON harus memiliki properti berikut: "tema" (tema atau mood utama lagu), "bahasa" (bahasa liriknya, jika tidak terdeteksi, tulis "Instrumental"), "vokalis" (pilih dari "Perempuan", "Laki-laki", "Keduanya", atau "Instrumental"), "genreUtama" (genre musik yang paling dominan), dan "genreKombinasi" (genre sekunder atau pengaruh lain jika ada).`;
-            const userPrompt = "Analisa file audio ini dan berikan hasilnya dalam format JSON sesuai instruksi sistem.";
-
-            const apiKey = apiMode === 'user' ? userApiKey : "";
-            if (apiMode === 'user' && !apiKey) {
-                alert("API Key tidak valid.");
-                elements.analyzeAudioButton.disabled = false;
-                elements.analyzeAudioButton.innerHTML = `<span id="analyze-audio-icon">🎵</span><span id="analyze-audio-text">ANALISA AUDIO & ISI FORM</span>`;
-                return;
-            }
-
-            // Note: The Gemini API for audio analysis is not yet publicly available through this interface.
-            // The following is a mock implementation to simulate the functionality.
-            // In a real scenario, you would use a library or endpoint that supports multimodal input with audio.
-
-            // MOCK DELAY
-            await new Promise(res => setTimeout(res, 2000));
-
-            try {
-                // MOCK RESPONSE
-                const mockResponse = {
-                    "tema": "Semangat di pagi hari",
-                    "bahasa": "Indonesia",
-                    "vokalis": "Perempuan",
-                    "genreUtama": "Uplifting Pop",
-                    "genreKombinasi": "Acoustic"
-                };
-
-                document.getElementById('tema-lagu').value = mockResponse.tema || '';
-                document.getElementById('bahasa-lagu').value = mockResponse.bahasa || 'Indonesia';
-                document.getElementById('vokalis-lagu').value = mockResponse.vokalis || 'Perempuan';
-
-                // Set genre, or set to custom if not in list
-                const genreUtamaSelect = document.getElementById('genre-utama-lagu');
-                if ([...genreUtamaSelect.options].some(option => option.value === mockResponse.genreUtama)) {
-                    genreUtamaSelect.value = mockResponse.genreUtama;
-                } else {
-                    genreUtamaSelect.value = 'custom';
-                    document.getElementById('genre-utama-lagu-lainnya').value = mockResponse.genreUtama || '';
-                    document.getElementById('genre-utama-lagu-lainnya').classList.remove('hidden');
-                }
-
-                const genreKombinasiSelect = document.getElementById('genre-kombinasi-lagu');
-                 if ([...genreKombinasiSelect.options].some(option => option.value === mockResponse.genreKombinasi)) {
-                    genreKombinasiSelect.value = mockResponse.genreKombinasi;
-                } else {
-                    genreKombinasiSelect.value = 'custom';
-                    document.getElementById('genre-kombinasi-lagu-lainnya').value = mockResponse.genreKombinasi || '';
-                    document.getElementById('genre-kombinasi-lagu-lainnya').classList.remove('hidden');
-                }
-
-                elements.audioAnalysisResult.value = `Analisa Selesai:\nTema: ${mockResponse.tema}\nBahasa: ${mockResponse.bahasa}\nVokalis: ${mockResponse.vokalis}\nGenre Utama: ${mockResponse.genreUtama}\nGenre Kombinasi: ${mockResponse.genreKombinasi}`;
-
-            } catch (error) {
-                elements.audioAnalysisResult.value = "Maaf, terjadi kesalahan saat menganalisa audio: " + error.message;
-            } finally {
-                elements.analyzeAudioButton.disabled = false;
-                elements.analyzeAudioButton.innerHTML = `<span id="analyze-audio-icon">🎵</span><span id="analyze-audio-text">ANALISA AUDIO & ISI FORM</span>`;
-            }
-        }
 
         function renderJudulLagu(titles = []) {
             elements.judulLaguList.innerHTML = '';
@@ -2359,10 +2256,6 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
             elements.analyzeCharButton.addEventListener('click', analyzeCharacterWithGemini);
             elements.analyzeVideoImageButton.addEventListener('click', analyzeVideoImageWithGemini);
 
-            elements.analyzeAudioButton.addEventListener('click', analyzeAudioWithGemini);
-            elements.audioUpload.addEventListener('change', (e) => handleAudioFileSelect(e.target.files[0]));
-            elements.dropZoneAudio.addEventListener('drop', (e) => { e.preventDefault(); handleAudioFileSelect(e.dataTransfer.files[0]); });
-
             elements.buatPromptLaguButton.addEventListener('click', generateFullSong);
             elements.regenLirikButton.addEventListener('click', () => reGenerate('lirik'));
             elements.regenGayaButton.addEventListener('click', () => reGenerate('gaya'));
@@ -2679,14 +2572,6 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
             elements.clearAllButton.addEventListener('click', clearAllInputs);
         }
        
-       function handleAudioFileSelect(file) {
-           if (file && file.type.startsWith('audio/')) {
-                uploadedAudioFile = file;
-                elements.audioFileName.textContent = file.name;
-                elements.analyzeAudioButton.classList.remove('hidden');
-           }
-       }
-
        function clearAllInputs() {
             // 1. Reset all form inputs and textareas
             elements.allFormInputs.forEach(el => {
@@ -2711,18 +2596,11 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
             characterRefImageBase64 = null;
             videoRefImageFile = null;
             videoRefImageBase64 = null;
-            uploadedAudioFile = null;
 
             // 4. Reset file input elements
-            ['imageUploadEl', 'imageUploadCompose1', 'imageUploadCompose2', 'imageUploadChar', 'imageUploadVideoEl', 'audioUpload'].forEach(id => {
+            ['imageUploadEl', 'imageUploadCompose1', 'imageUploadCompose2', 'imageUploadChar', 'imageUploadVideoEl'].forEach(id => {
                 if(elements[id]) elements[id].value = '';
             });
-
-            // Reset audio UI
-            elements.audioFileName.textContent = 'MP3, WAV, M4A, FLAC, dll.';
-            elements.analyzeAudioButton.classList.add('hidden');
-            elements.audioAnalysisResult.classList.add('hidden');
-            elements.audioAnalysisResult.value = '';
 
             // Reset instrument UI
             document.getElementById('instrument-selection-container').classList.add('hidden');
