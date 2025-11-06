@@ -2143,7 +2143,7 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
             genreKombinasiSelect.addEventListener('change', () => {
                 genreKombinasiLainnyaInput.classList.toggle('hidden', genreKombinasiSelect.value !== 'custom');
             });
-            
+
             const vokalisSelect = document.getElementById('vokalis-lagu');
             const instrumentContainer = document.getElementById('instrument-selection-container');
             const lirikLabel = document.querySelector('label[for="output-lirik"]');
@@ -2295,25 +2295,34 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
                 }
             });
 
-            async function generateAlternativePrompt() {
-                elements.outputAlternatif.value = "Membuat prompt alternatif...";
-                const systemPrompt = `Anda adalah seorang ahli prompt engineering. Tugas Anda adalah membuat satu prompt tunggal yang komprehensif untuk AI lain (seperti ChatGPT) untuk menghasilkan lirik dan gaya musik. Prompt harus dalam format natural language (paragraf), menggabungkan semua detail yang diberikan. PENTING: Jangan menyebutkan nama artis atau band sama sekali.`;
-
+            function generateAlternativePrompt() {
                 const tema = document.getElementById('tema-lagu').value.trim();
-                const bahasa = document.getElementById('bahasa-lagu').value === 'lainnya' ? document.getElementById('bahasa-lagu-lainnya').value.trim() : document.getElementById('bahasa-lagu').value;
+
+                const bahasaSelect = document.getElementById('bahasa-lagu');
+                let bahasa = bahasaSelect.value;
+                if (bahasa === 'lainnya') {
+                    bahasa = document.getElementById('bahasa-lagu-lainnya').value.trim();
+                }
+
                 const vokalis = document.getElementById('vokalis-lagu').value;
-                const genreUtama = document.getElementById('genre-utama-lagu').value === 'custom' ? document.getElementById('genre-utama-lagu-lainnya').value.trim() : document.getElementById('genre-utama-lagu').value;
-                const genreKombinasi = document.getElementById('genre-kombinasi-lagu').value === 'custom' ? document.getElementById('genre-kombinasi-lagu-lainnya').value.trim() : document.getElementById('genre-kombinasi-lagu').value;
+
+                const genreUtamaSelect = document.getElementById('genre-utama-lagu');
+                let genreUtama = genreUtamaSelect.value;
+                if (genreUtama === 'custom') {
+                    genreUtama = document.getElementById('genre-utama-lagu-lainnya').value.trim();
+                }
+
+                const genreKombinasiSelect = document.getElementById('genre-kombinasi-lagu');
+                let genreKombinasi = genreKombinasiSelect.value;
+                if (genreKombinasi === 'custom') {
+                    genreKombinasi = document.getElementById('genre-kombinasi-lagu-lainnya').value.trim();
+                }
+
                 const inputLainnya = document.getElementById('input-lainnya-lagu').value.trim();
 
-                const userQuery = `Buatkan prompt alternatif berdasarkan detail berikut: Tema: ${tema}, Bahasa: ${bahasa}, Vokalis: ${vokalis}, Genre Utama: ${genreUtama}, Genre Kombinasi: ${genreKombinasi || 'Tidak ada'}, Input Tambahan: ${inputLainnya || 'Tidak ada'}`;
+                const prompt = `Buatkan lirik lagu dan prompt Styles (prompt styles max 1000 karakter, tanpa nama artis tanpa nama grup band) untuk Suno Ai, dengan detail sebagai berikut, Tema:(${tema || 'Tidak diisi'}), Bahasa:(${bahasa || 'Tidak diisi'}), Vokalis:(${vokalis || 'Tidak diisi'}), Genre Utama:(${genreUtama || 'Tidak diisi'}), Genre Kombinasi:(${genreKombinasi || 'Tidak ada'}), Input Tambahan:(${inputLainnya || 'Tidak ada'})`;
 
-                try {
-                    const response = await makeApiCallWithRetry(systemPrompt, userQuery);
-                    elements.outputAlternatif.value = response;
-                } catch (error) {
-                    elements.outputAlternatif.value = "Gagal membuat prompt alternatif: " + error.message;
-                }
+                elements.outputAlternatif.value = prompt;
             }
 
             async function generateFullSong() {
@@ -2412,7 +2421,7 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
                         elements.outputLirik.value = parsedResponse.lirik;
                         elements.outputGaya.value = parsedResponse.gaya;
                         renderJudulLagu(parsedResponse.judul_lagu);
-                        await generateAlternativePrompt(); // Generate the alternative prompt
+                        generateAlternativePrompt(); // Generate the alternative prompt
                     } else {
                         throw new Error("Struktur respons tidak valid.");
                     }
