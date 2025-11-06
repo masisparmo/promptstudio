@@ -546,6 +546,10 @@
                              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block mr-2" viewBox="0 0 20 20" fill="currentColor"><path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 001.553.832l3-2a1 1 0 000-1.664l-3-2z" /></svg>
                             Video (Veo3)
                         </button>
+                        <button id="designer-tab-lagu" class="designer-tab-button">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block mr-2" viewBox="0 0 20 20" fill="currentColor"><path d="M10 3.5a.5.5 0 01.5.5v12a.5.5 0 01-1 0v-12a.5.5 0 01.5-.5zM12 5a.5.5 0 01.5.5v10a.5.5 0 01-1 0v-10a.5.5 0 01.5-.5zM4 9a.5.5 0 01.5.5v2a.5.5 0 01-1 0v-2a.5.5 0 01.5-.5zM7 7a.5.5 0 01.5.5v6a.5.5 0 01-1 0v-6a.5.5 0 01.5-.5zM15 9a.5.5 0 01.5.5v2a.5.5 0 01-1 0v-2a.5.5 0 01.5-.5z"/></svg>
+                           Lagu (SUNO)
+                       </button>
                     </div>
                      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                          <div class="space-y-5">
@@ -734,6 +738,40 @@
                                      <input type="text" id="negatif-video" class="form-input w-full p-2.5" placeholder="Contoh: bangunan, orang lain, tulisan">
                                  </div>
                              </div>
+                             <div id="lagu-designer-form" class="designer-form space-y-5">
+                                <!-- Konten form untuk Lagu (SUNO) akan ditambahkan di sini -->
+                                <div>
+                                    <label for="tema-lagu" class="block mb-2 text-sm font-medium text-secondary">1. Tema Lagu</label>
+                                    <input type="text" id="tema-lagu" class="form-input w-full p-2.5" placeholder="Contoh: Hujan di sore hari, patah hati, semangat kemerdekaan">
+                                </div>
+                                <div>
+                                    <label for="bahasa-lagu" class="block mb-2 text-sm font-medium text-secondary">2. Bahasa</label>
+                                    <select id="bahasa-lagu" class="form-select w-full p-2.5">
+                                        <option>Indonesia</option>
+                                        <option>Inggris</option>
+                                        <option>Jawa</option>
+                                        <option>Sunda</option>
+                                        <option value="lainnya">Lainnya...</option>
+                                    </select>
+                                    <input type="text" id="bahasa-lagu-lainnya" class="form-input w-full p-2.5 mt-2 hidden" placeholder="Ketik bahasa yang diinginkan">
+                                </div>
+                                <div>
+                                    <label for="vokalis-lagu" class="block mb-2 text-sm font-medium text-secondary">3. Vokalis</label>
+                                    <select id="vokalis-lagu" class="form-select w-full p-2.5">
+                                        <option>Perempuan</option>
+                                        <option>Laki-laki</option>
+                                        <option>Keduanya</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="genre-utama-lagu" class="block mb-2 text-sm font-medium text-secondary">4. Genre Utama</label>
+                                    <select id="genre-utama-lagu" class="form-select w-full p-2.5"></select>
+                                </div>
+                                <div>
+                                    <label for="genre-kombinasi-lagu" class="block mb-2 text-sm font-medium text-secondary">5. Genre Kombinasi (Opsional)</label>
+                                    <select id="genre-kombinasi-lagu" class="form-select w-full p-2.5"></select>
+                                </div>
+                            </div>
                          </div>
                          <div class="space-y-6">
                              
@@ -802,6 +840,25 @@
                                     </div>
                                 </div>
                              </div>
+                             <div id="lagu-output-section" class="hidden space-y-4">
+                                <button id="buat-prompt-lagu-button" class="btn btn-primary w-full">
+                                    <span>BUAT PROMPT LAGU</span>
+                                </button>
+                                <div>
+                                    <label for="output-lyric-styles" class="block mb-2 text-sm font-medium text-secondary">Hasil: Lirik & Gaya (Styles)</label>
+                                    <div class="relative">
+                                        <textarea id="output-lyric-styles" rows="8" class="form-input w-full p-2.5 pr-24" readonly></textarea>
+                                        <button id="copy-lyric-button" class="absolute top-2 right-2 btn btn-secondary px-3 py-1.5 text-xs">SALIN</button>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label for="output-judul-lagu" class="block mb-2 text-sm font-medium text-secondary">Hasil: 5 Alternatif Judul Lagu</label>
+                                    <div class="relative">
+                                        <textarea id="output-judul-lagu" rows="5" class="form-input w-full p-2.5 pr-24" readonly></textarea>
+                                        <button id="copy-judul-button" class="absolute top-2 right-2 btn btn-secondary px-3 py-1.5 text-xs">SALIN</button>
+                                    </div>
+                                </div>
+                            </div>
                               <div id="final-prompt-container">
                                  <div class="flex justify-between items-center mb-2">
                                      <h3 class="text-lg font-semibold">Hasil Prompt:</h3>
@@ -905,8 +962,10 @@
             },
             designerTabImage: document.getElementById('designer-tab-image'),
             designerTabVideo: document.getElementById('designer-tab-video'),
+            designerTabLagu: document.getElementById('designer-tab-lagu'),
             imageForm: document.getElementById('image-designer-form'),
             videoForm: document.getElementById('video-designer-form'),
+            laguForm: document.getElementById('lagu-designer-form'),
             outputPromptEl: document.getElementById('output-prompt'),
             copyButton: document.getElementById('copy-button'),
             standardImageForm: document.getElementById('standard-image-form'),
@@ -993,6 +1052,12 @@
             jsonOutputPrompt: document.getElementById('json-output-prompt'),
             copyJsonButton: document.getElementById('copy-json-button'),
             clearAllButton: document.getElementById('clear-all-button'),
+            laguOutputSection: document.getElementById('lagu-output-section'),
+            buatPromptLaguButton: document.getElementById('buat-prompt-lagu-button'),
+            outputLyricStyles: document.getElementById('output-lyric-styles'),
+            copyLyricButton: document.getElementById('copy-lyric-button'),
+            outputJudulLagu: document.getElementById('output-judul-lagu'),
+            copyJudulButton: document.getElementById('copy-judul-button'),
         };
 
         // --- Functions ---
@@ -1014,24 +1079,130 @@
             Object.values(elements.contentSections).forEach(section => section.classList.remove('active'));
             elements.contentSections[tabName].classList.add('active');
         }
-        
-        function switchDesignerTab(tab) {
-            if (tab === 'image') {
-                elements.designerTabImage.classList.add('active');
-                elements.designerTabVideo.classList.remove('active');
-                elements.imageForm.classList.add('active');
-                elements.videoForm.classList.remove('active');
-            } else {
-                elements.designerTabImage.classList.remove('active');
-                elements.designerTabVideo.classList.add('active');
-                elements.imageForm.classList.remove('active');
-                elements.videoForm.classList.add('active');
+        const genreLagu = {
+            "VIBE CERIA & ENERGIS": [
+                "Uplifting Pop – Cerah, penuh semangat, chorus catchy (Katy Perry – Firework)",
+                "Tropical House – Nuansa pantai, santai tapi energik (Kygo – Firestone)",
+                "Funky Disco Pop – Groovy, bass menonjol, retro-modern (Dua Lipa – Levitating)",
+                "Afrobeat Celebration – Irama funky dan vokal berulang positif (Burna Boy)",
+                "Latin Dance / Reggaeton – Ritme sensual dan penuh gerak (Bad Bunny, J Balvin)",
+                "J-Pop Idol Vibe – Ceria, synth penuh warna, cepat (Perfume, YOASOBI)",
+                "K-Pop Energetic Anthem – Drop catchy, vokal harmonis (BLACKPINK, Stray Kids)",
+                "Electro Swing – Campuran jazz klasik dan beat modern (Parov Stelar)",
+                "Pop Rock Anthem – Gitar cerah, lirik motivatif (OneRepublic – Counting Stars)",
+                "Bubblegum Pop – Manis, ringan, warna-warni (Charli XCX, early Britney Spears)",
+            ],
+            "CHILL, ROMANTIS & DREAMY": [
+                "Lo-Fi Chillhop – Beat santai, tekstur analog, nuansa nostalgia",
+                "Dream Pop – Suara lembut, ambient, dan efek reverb (The 1975, Beach House)",
+                "Acoustic Love Song – Gitar lembut, vokal hangat (Ed Sheeran – Perfect)",
+                "Bossa Nova Romance – Lembut dan elegan (João Gilberto, Astrud Gilberto)",
+                "Indie Chillwave – Lembut, synth retro, vibe sore hari (Washed Out)",
+                "Ambient Piano / Neo-Classical – Minimalis dan menenangkan (Ólafur Arnalds)",
+                "R&B Slow Jam – Vokal lembut dan sensual (SZA, Usher)",
+                "Soul Ballad – Vokal emosional, tempo lambat (Adele – Someone Like You)",
+                "Jazz Lounge – Suasana malam elegan, bass lembut dan saxophone",
+                "City Pop Nostalgia – Nuansa 80-an Jepang yang tenang dan romantis",
+            ],
+            "VIBE PENUH SEMANGAT & MOTIVATIF": [
+                 "EDM Festival Pop – Build-up tinggi, drop besar (Zedd, Calvin Harris)",
+                "Electro Dance Rock – Gitar distorsi dan beat digital (Imagine Dragons)",
+                "Epic Orchestral Hybrid – Musik sinematik dan heroik (Two Steps from Hell)",
+                "Power Metal / Symphonic Rock – Cepat dan penuh semangat (Nightwish)",
+                "Workout Trap / Hype Rap – Bass berat dan motivasi keras (Drake, Travis Scott)",
+                "Drum & Bass Uplift – Tempo cepat, adrenaline tinggi (Pendulum)",
+                "Pop Punk Revival – Energi remaja dan semangat bebas (Avril Lavigne, Blink-182)",
+                "Marching Anthem / Stadium Pop – Chant dan chorus besar (Coldplay – Viva La Vida)",
+                "Synthwave Heroic – Retro futuristik dengan semangat juang (The Midnight)",
+                "Folk Empowerment – Akustik dan lirik optimis (Mumford & Sons, Of Monsters and Men)",
+            ],
+            "ETNIK & TRADISIONAL DUNIA": [
+                "Dangdut (Indonesia) – Campuran Melayu, India, dan Arab dengan gendang khas",
+                "Gamelan (Indonesia / Bali / Jawa) – Instrumen perunggu dan ritme kompleks",
+                "Keroncong (Indonesia) – Gaya klasik dengan gitar ukulele dan cello",
+                "Trot (Korea) – Musik rakyat Korea tempo cepat dengan vokal vibrato",
+                "Enka (Jepang) – Lagu sentimental tradisional Jepang",
+                "Bollywood / Filmi (India) – Lagu film dengan melodi India klasik & pop",
+                "Bhangra (India / Punjab) – Irama energik dan tarian tradisional",
+                "Qawwali (Pakistan / India) – Musik spiritual Sufi penuh improvisasi",
+                "Arab Pop / Khaleeji / Rai – Musik Timur Tengah modern & tradisional",
+                "Flamenco (Spanyol) – Gitar, tepukan, dan vokal penuh emosi",
+                "Fado (Portugal) – Musik melankolis tentang nasib dan cinta",
+                "Samba (Brasil) – Ritme cepat dengan perkusi khas Carnaval",
+                "Bossa Nova (Brasil) – Gabungan samba dan jazz yang lembut",
+                "Tango (Argentina) – Musik dansa dramatis dan romantis",
+                "Mariachi (Meksiko) – Trompet, biola, dan gitar khas perayaan",
+                "Celtic Folk (Irlandia / Skotlandia) – Seruling, biola, dan ritme tarian",
+                "African Tribal / Highlife / Soukous – Beat ritmik dan vokal berulang",
+                "Gnawa (Maroko) – Musik spiritual dengan guembri dan tepukan tangan",
+                "Inuit Throat Singing (Arktik) – Teknik vokal dua nada bersamaan",
+                "Native American Chant – Vokal ritual dan drum spiritual",
+                "Balalaika Folk (Rusia) – Melodi cepat dengan instrumen petik khas",
+                "Chinese Traditional / Guzheng – Musik klasik dengan instrumen dawai lembut",
+                "Tibetan Chant / Mantra Music – Spiritual, meditasi, dan vibrasi rendah",
+                "Polynesian / Hula / Maori Music – Vokal dan perkusi khas kepulauan Pasifik",
+                "Mongolian Throat Singing (Khoomei) – Vokal resonan ganda khas Asia Tengah",
+                "Nordic Folk / Viking Music – Drum dan nyanyian kuno Skandinavia",
+                "Balkan Brass / Romani (Gipsy) – Musik dansa cepat dan penuh energi",
+                "Andean Folk (Peru / Bolivia) – Seruling pan dan gitar charango",
+                "Tarab / Oud Music (Timur Tengah) – Improvisasi Arab klasik",
+                "Afro-Cuban / Salsa Tradisional – Ritme perkusi Latin kuat",
+            ]
+        };
+
+        function populateGenreDropdowns() {
+            const genreUtamaSelect = document.getElementById('genre-utama-lagu');
+            const genreKombinasiSelect = document.getElementById('genre-kombinasi-lagu');
+
+            genreUtamaSelect.innerHTML = '';
+            genreKombinasiSelect.innerHTML = '';
+
+            genreKombinasiSelect.add(new Option("Tidak ada", ""));
+
+            for (const group in genreLagu) {
+                const optgroupUtama = document.createElement('optgroup');
+                optgroupUtama.label = group;
+                const optgroupKombinasi = document.createElement('optgroup');
+                optgroupKombinasi.label = group;
+
+                genreLagu[group].forEach(genre => {
+                    optgroupUtama.appendChild(new Option(genre, genre));
+                    optgroupKombinasi.appendChild(new Option(genre, genre));
+                });
+
+                genreUtamaSelect.appendChild(optgroupUtama);
+                genreKombinasiSelect.appendChild(optgroupKombinasi);
             }
+        }
+
+
+        function switchDesignerTab(tab) {
+            const tabs = ['image', 'video', 'lagu'];
+            tabs.forEach(t => {
+                const tabButton = elements[`designerTab${t.charAt(0).toUpperCase() + t.slice(1)}`];
+                const form = elements[`${t}Form`];
+                if (tab === t) {
+                    tabButton.classList.add('active');
+                    form.classList.add('active');
+                } else {
+                    tabButton.classList.remove('active');
+                    form.classList.remove('active');
+                }
+            });
+
             elements.imagePreviewContainer.classList.toggle('hidden', tab !== 'image' || !uploadedImageBase64);
             elements.videoPreviewContainer.classList.toggle('hidden', tab !== 'video' || !videoRefImageFile);
+
+            const isLaguTab = tab === 'lagu';
+            elements.laguOutputSection.classList.toggle('hidden', !isLaguTab);
+            elements.finalPromptContainer.classList.toggle('hidden', isLaguTab);
+            elements.aspectRatioDropdown.classList.toggle('hidden', isLaguTab);
+
             elements.jsonOutputContainer.classList.add('hidden');
             elements.showJsonButton.textContent = 'TAMPILKAN JSON';
-            updateGeneratedPrompt();
+            if (!isLaguTab) {
+                updateGeneratedPrompt();
+            }
         }
 
         function generateCharacterPrompt() {
@@ -1362,7 +1533,7 @@
             updateGeneratedPrompt();
         }
         
-        async function makeApiCallWithRetry(systemPrompt, userQuery, isJson = false) {
+        async function makeApiCallWithRetry(systemPrompt, userQuery, isJson = false, responseSchema = null) {
             const apiKey = apiMode === 'user' ? userApiKey : ""; 
             if (apiMode === 'user' && !apiKey) {
                  throw new Error("API Key pengguna tidak valid atau tidak tersedia.");
@@ -1373,19 +1544,10 @@
                 systemInstruction: { parts: [{ text: systemPrompt }] },
             };
 
-            if (isJson) {
+            if (isJson && responseSchema) {
                  payload.generationConfig = {
                     responseMimeType: "application/json",
-                    responseSchema: {
-                        type: "OBJECT",
-                        properties: {
-                            "name": { "type": "STRING" },
-                            "physic": { "type": "STRING" },
-                            "attire": { "type": "STRING" },
-                            "style": { "type": "STRING" }
-                        },
-                        required: ["name", "physic", "attire", "style"]
-                    }
+                    responseSchema: responseSchema
                 }
             }
 
@@ -1818,6 +1980,13 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
             
             elements.designerTabImage.addEventListener('click', () => switchDesignerTab('image'));
             elements.designerTabVideo.addEventListener('click', () => switchDesignerTab('video'));
+            elements.designerTabLagu.addEventListener('click', () => switchDesignerTab('lagu'));
+
+            const bahasaLaguSelect = document.getElementById('bahasa-lagu');
+            const bahasaLaguLainnyaInput = document.getElementById('bahasa-lagu-lainnya');
+            bahasaLaguSelect.addEventListener('change', () => {
+                bahasaLaguLainnyaInput.classList.toggle('hidden', bahasaLaguSelect.value !== 'lainnya');
+            });
             
             elements.allFormInputs.forEach(el => el.addEventListener('input', updateGeneratedPrompt));
             elements.tujuanGambarEl.addEventListener('change', handleTujuanGambarChange);
@@ -1912,6 +2081,99 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
             elements.analyzeImageButton.addEventListener('click', analyzeImageWithGemini);
             elements.analyzeCharButton.addEventListener('click', analyzeCharacterWithGemini);
             elements.analyzeVideoImageButton.addEventListener('click', analyzeVideoImageWithGemini);
+            elements.buatPromptLaguButton.addEventListener('click', generateSongPrompt);
+
+            elements.copyLyricButton.addEventListener('click', () => {
+                elements.outputLyricStyles.select();
+                try {
+                    document.execCommand('copy');
+                    elements.copyLyricButton.textContent = 'DISALIN!';
+                    setTimeout(() => { elements.copyLyricButton.textContent = 'SALIN'; }, 2000);
+                } catch (err) {
+                    elements.copyLyricButton.textContent = 'GAGAL';
+                }
+            });
+
+            elements.copyJudulButton.addEventListener('click', () => {
+                elements.outputJudulLagu.select();
+                try {
+                    document.execCommand('copy');
+                    elements.copyJudulButton.textContent = 'DISALIN!';
+                    setTimeout(() => { elements.copyJudulButton.textContent = 'SALIN'; }, 2000);
+                } catch (err) {
+                    elements.copyJudulButton.textContent = 'GAGAL';
+                }
+            });
+
+            async function generateSongPrompt() {
+                const tema = document.getElementById('tema-lagu').value.trim();
+                if (!tema) {
+                    alert("Mohon masukkan Tema Lagu terlebih dahulu.");
+                    return;
+                }
+
+                elements.buatPromptLaguButton.disabled = true;
+                elements.buatPromptLaguButton.innerHTML = `<span class="loader"></span> MEMBUAT LAGU...`;
+                elements.outputLyricStyles.value = "AI sedang meracik lirik dan gaya untuk Anda...";
+                elements.outputJudulLagu.value = "AI sedang memikirkan judul-judul yang menarik...";
+
+                const bahasaSelect = document.getElementById('bahasa-lagu');
+                let bahasa = bahasaSelect.value;
+                if (bahasa === 'lainnya') {
+                    bahasa = document.getElementById('bahasa-lagu-lainnya').value.trim();
+                }
+
+                const vokalis = document.getElementById('vokalis-lagu').value;
+                const genreUtama = document.getElementById('genre-utama-lagu').value;
+                const genreKombinasi = document.getElementById('genre-kombinasi-lagu').value;
+
+                const systemPrompt = `Anda adalah seorang pencipta lagu ahli dan produser musik. Tugas Anda adalah membuat prompt lagu yang detail untuk AI generator musik SUNO berdasarkan input pengguna.
+
+                Instruksi PENTING:
+                1. Buat "Lyric dan Styles" dalam SATU BLOK TEKS. Jangan pisahkan.
+                2. "Styles" harus berupa daftar kata kunci yang deskriptif dan dipisahkan koma, TANPA menyebutkan nama artis atau band. Maksimal total teks "Lyric dan Styles" adalah 1000 karakter.
+                3. Buat persis 5 alternatif judul lagu.
+                4. Jawab HANYA dalam format JSON yang ditentukan. Jangan tambahkan teks atau penjelasan lain di luar JSON.
+                5. Gunakan bahasa yang diminta pengguna untuk lirik dan judul lagu.`;
+
+                const userQuery = `Buatkan saya prompt lagu dengan detail berikut:
+                - Tema Lagu: ${tema}
+                - Bahasa: ${bahasa}
+                - Vokalis: ${vokalis}
+                - Genre Utama: ${genreUtama}
+                - Genre Kombinasi (jika ada): ${genreKombinasi || 'Tidak ada'}`;
+
+                const songSchema = {
+                    type: "OBJECT",
+                    properties: {
+                        "lyrics_and_style": { "type": "STRING", "description": "Gabungan lirik dan gaya musik dalam satu blok teks. Maksimal 1000 karakter." },
+                        "song_titles": {
+                            "type": "ARRAY",
+                            "description": "Sebuah array berisi persis 5 string judul lagu alternatif.",
+                            "items": { "type": "STRING" }
+                        }
+                    },
+                    required: ["lyrics_and_style", "song_titles"]
+                };
+
+                try {
+                    const response = await makeApiCallWithRetry(systemPrompt, userQuery, true, songSchema);
+                    const parsedResponse = JSON.parse(response);
+
+                    if (parsedResponse.lyrics_and_style && parsedResponse.song_titles) {
+                        elements.outputLyricStyles.value = parsedResponse.lyrics_and_style;
+                        elements.outputJudulLagu.value = parsedResponse.song_titles.join('\n');
+                    } else {
+                        throw new Error("Struktur respons tidak valid.");
+                    }
+                } catch (error) {
+                     elements.outputLyricStyles.value = "Maaf, terjadi kesalahan: " + error.message;
+                     elements.outputJudulLagu.value = "Gagal membuat judul.";
+                } finally {
+                    elements.buatPromptLaguButton.disabled = false;
+                    elements.buatPromptLaguButton.innerHTML = `<span>BUAT PROMPT LAGU</span>`;
+                }
+            }
 
 
             elements.imageUploadVideoEl.addEventListener('change', (event) => { handleVideoFileSelect(event.target.files[0]); });
@@ -1958,9 +2220,10 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
                     el.value = '';
                 }
             });
+             document.getElementById('bahasa-lagu-lainnya').classList.add('hidden');
 
             // 2. Reset specific textareas and outputs
-            ['imageAnalysisResult', 'videoImageAnalysisResult', 'outputPromptEl', 'jsonOutputPrompt', 'characterSheetOutputEl', 'characterScenarioInputEl', 'compositionDetailsEl'].forEach(id => {
+            ['imageAnalysisResult', 'videoImageAnalysisResult', 'outputPromptEl', 'jsonOutputPrompt', 'characterSheetOutputEl', 'characterScenarioInputEl', 'compositionDetailsEl', 'outputLyricStyles', 'outputJudulLagu'].forEach(id => {
                 if (elements[id]) elements[id].value = '';
             });
 
@@ -2006,6 +2269,7 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
            const initialOption = elements.aspectRatioMenu.querySelector('.aspect-ratio-option');
            updateDropdownButton(initialOption);
            
+           populateGenreDropdowns();
            handleTujuanGambarChange();
            switchDesignerTab('image');
            showTab('belajar');
