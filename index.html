@@ -739,7 +739,25 @@
                                  </div>
                              </div>
                              <div id="lagu-designer-form" class="designer-form space-y-5">
-                                <!-- Konten form untuk Lagu (SUNO) akan ditambahkan di sini -->
+                                <div class="space-y-3">
+                                     <label class="block text-sm font-medium text-secondary">Analisa Lagu dari Audio (Opsional)</label>
+                                     <div id="drop-zone-audio" class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-dashed rounded-md cursor-pointer transition-colors border-border-color hover:border-accent-color">
+                                         <div class="space-y-1 text-center">
+                                             <svg class="mx-auto h-12 w-12 text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 6l12-3" /></svg>
+                                             <div class="flex text-sm text-secondary">
+                                                 <label for="audio-upload" class="relative cursor-pointer rounded-md font-medium text-indigo-400 hover:text-indigo-500"><span>UPLOAD FILE AUDIO</span><input id="audio-upload" name="audio-upload" type="file" class="sr-only" accept="audio/*"></label>
+                                                 <p class="pl-1">atau tarik dan lepas</p>
+                                             </div>
+                                             <p id="audio-file-name" class="text-xs text-secondary">MP3, WAV, M4A, FLAC, dll.</p>
+                                         </div>
+                                     </div>
+                                     <button id="analyze-audio-button" class="btn btn-secondary w-full px-3 py-1.5 text-sm hidden">
+                                         <span id="analyze-audio-icon">🎵</span>
+                                         <span id="analyze-audio-text">ANALISA AUDIO & ISI FORM</span>
+                                     </button>
+                                     <textarea id="audio-analysis-result" rows="4" class="form-input w-full p-2.5 text-xs hidden" placeholder="Hasil analisa audio oleh AI akan muncul di sini..."></textarea>
+                                     <hr class="border-border-color">
+                                 </div>
                                 <div>
                                     <label for="tema-lagu" class="block mb-2 text-sm font-medium text-secondary">1. Tema Lagu</label>
                                     <input type="text" id="tema-lagu" class="form-input w-full p-2.5" placeholder="Contoh: Hujan di sore hari, patah hati, semangat kemerdekaan">
@@ -761,18 +779,30 @@
                                         <option>Perempuan</option>
                                         <option>Laki-laki</option>
                                         <option>Keduanya</option>
+                                        <option>Instrumental</option>
                                     </select>
+                                </div>
+                                <div id="instrument-selection-container" class="hidden space-y-3">
+                                    <label for="alat-musik-utama" class="block mb-2 text-sm font-medium text-secondary">Pilih Alat Musik Utama</label>
+                                    <select id="alat-musik-utama" class="form-select w-full p-2.5"></select>
+                                    <input type="text" id="alat-musik-lainnya" class="form-input w-full p-2.5 mt-2 hidden" placeholder="Ketik alat musik yang diinginkan">
                                 </div>
                                 <div>
                                     <label for="genre-utama-lagu" class="block mb-2 text-sm font-medium text-secondary">4. Genre Utama</label>
                                     <select id="genre-utama-lagu" class="form-select w-full p-2.5"></select>
+                                    <input type="text" id="genre-utama-lagu-lainnya" class="form-input w-full p-2.5 mt-2 hidden" placeholder="Ketik genre utama yang diinginkan">
                                 </div>
                                 <div>
                                     <label for="genre-kombinasi-lagu" class="block mb-2 text-sm font-medium text-secondary">5. Genre Kombinasi (Opsional)</label>
                                     <select id="genre-kombinasi-lagu" class="form-select w-full p-2.5"></select>
+                                    <input type="text" id="genre-kombinasi-lagu-lainnya" class="form-input w-full p-2.5 mt-2 hidden" placeholder="Ketik genre kombinasi yang diinginkan">
                                 </div>
                                 <div>
-                                    <label for="batas-karakter-gaya" class="block mb-2 text-sm font-medium text-secondary">6. Batas Karakter Gaya</label>
+                                    <label for="input-lainnya-lagu" class="block mb-2 text-sm font-medium text-secondary">6. Input Lainnya (Contoh: 120 BPM, tempo ceria)</label>
+                                    <input type="text" id="input-lainnya-lagu" class="form-input w-full p-2.5" placeholder="Masukkan detail tambahan...">
+                                </div>
+                                <div>
+                                    <label for="batas-karakter-gaya" class="block mb-2 text-sm font-medium text-secondary">7. Batas Karakter Gaya</label>
                                     <select id="batas-karakter-gaya" class="form-select w-full p-2.5">
                                         <option value="200">Maksimal 200 karakter (Gratis)</option>
                                         <option value="1000">Maksimal 1000 karakter (Pro)</option>
@@ -859,6 +889,16 @@
                                     <div class="relative">
                                         <textarea id="output-lirik" rows="10" class="form-input w-full p-2.5 pr-24"></textarea>
                                         <button id="copy-lirik-button" class="absolute top-2 right-2 btn btn-secondary px-3 py-1.5 text-xs">SALIN</button>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="flex justify-between items-center mb-2">
+                                        <label for="output-alternatif" class="text-sm font-medium text-secondary">Prompt Alternatif (untuk AI Lain)</label>
+                                        <button id="regen-alternatif-button" class="btn btn-secondary px-2 py-1 text-xs">RE-GENERATE</button>
+                                    </div>
+                                    <div class="relative">
+                                        <textarea id="output-alternatif" rows="6" class="form-input w-full p-2.5 pr-24"></textarea>
+                                        <button id="copy-alternatif-button" class="absolute top-2 right-2 btn btn-secondary px-3 py-1.5 text-xs">SALIN</button>
                                     </div>
                                 </div>
                                 <div>
@@ -958,6 +998,7 @@
         let characterRefImageBase64 = null;
         let videoRefImageFile = null;
         let videoRefImageBase64 = null;
+        let uploadedAudioFile = null;
         let selectedAspectRatio = '1:1';
         
         const elements = {
@@ -1083,7 +1124,93 @@
             regenLirikButton: document.getElementById('regen-lirik-button'),
             regenGayaButton: document.getElementById('regen-gaya-button'),
             regenJudulButton: document.getElementById('regen-judul-button'),
+            outputAlternatif: document.getElementById('output-alternatif'),
+            regenAlternatifButton: document.getElementById('regen-alternatif-button'),
+            copyAlternatifButton: document.getElementById('copy-alternatif-button'),
+            audioUpload: document.getElementById('audio-upload'),
+            dropZoneAudio: document.getElementById('drop-zone-audio'),
+            audioFileName: document.getElementById('audio-file-name'),
+            analyzeAudioButton: document.getElementById('analyze-audio-button'),
+            audioAnalysisResult: document.getElementById('audio-analysis-result'),
         };
+
+        async function analyzeAudioWithGemini() {
+            // !!! IMPORTANT MOCK IMPLEMENTATION !!!
+            // The Gemini API for audio analysis from a web client is not available in this environment.
+            // This function simulates the behavior with a hardcoded response to demonstrate the UI flow.
+            // In a real-world scenario, this would involve a proper API call to a multimodal model.
+            alert("Fitur Analisa Audio saat ini hanya untuk tujuan demo dan menggunakan data tiruan (mock data).");
+
+            if (!uploadedAudioFile) {
+                alert("Mohon upload file audio terlebih dahulu.");
+                return;
+            }
+
+            elements.analyzeAudioButton.disabled = true;
+            elements.analyzeAudioButton.innerHTML = `<span class="loader"></span> MENGANALISA...`;
+            elements.audioAnalysisResult.classList.remove('hidden');
+            elements.audioAnalysisResult.value = "AI sedang menganalisa audio Anda, ini mungkin memakan waktu beberapa saat...";
+
+            const systemPrompt = `PENTING: Jawaban Anda HARUS dalam Bahasa Indonesia dan dalam format JSON yang ketat. Anda adalah seorang analis musik ahli. Diberikan sebuah file audio, tugas Anda adalah menganalisanya dan mengembalikan detail lagu. JSON harus memiliki properti berikut: "tema" (tema atau mood utama lagu), "bahasa" (bahasa liriknya, jika tidak terdeteksi, tulis "Instrumental"), "vokalis" (pilih dari "Perempuan", "Laki-laki", "Keduanya", atau "Instrumental"), "genreUtama" (genre musik yang paling dominan), dan "genreKombinasi" (genre sekunder atau pengaruh lain jika ada).`;
+            const userPrompt = "Analisa file audio ini dan berikan hasilnya dalam format JSON sesuai instruksi sistem.";
+
+            const apiKey = apiMode === 'user' ? userApiKey : "";
+            if (apiMode === 'user' && !apiKey) {
+                alert("API Key tidak valid.");
+                elements.analyzeAudioButton.disabled = false;
+                elements.analyzeAudioButton.innerHTML = `<span id="analyze-audio-icon">🎵</span><span id="analyze-audio-text">ANALISA AUDIO & ISI FORM</span>`;
+                return;
+            }
+
+            // Note: The Gemini API for audio analysis is not yet publicly available through this interface.
+            // The following is a mock implementation to simulate the functionality.
+            // In a real scenario, you would use a library or endpoint that supports multimodal input with audio.
+
+            // MOCK DELAY
+            await new Promise(res => setTimeout(res, 2000));
+
+            try {
+                // MOCK RESPONSE
+                const mockResponse = {
+                    "tema": "Semangat di pagi hari",
+                    "bahasa": "Indonesia",
+                    "vokalis": "Perempuan",
+                    "genreUtama": "Uplifting Pop",
+                    "genreKombinasi": "Acoustic"
+                };
+
+                document.getElementById('tema-lagu').value = mockResponse.tema || '';
+                document.getElementById('bahasa-lagu').value = mockResponse.bahasa || 'Indonesia';
+                document.getElementById('vokalis-lagu').value = mockResponse.vokalis || 'Perempuan';
+
+                // Set genre, or set to custom if not in list
+                const genreUtamaSelect = document.getElementById('genre-utama-lagu');
+                if ([...genreUtamaSelect.options].some(option => option.value === mockResponse.genreUtama)) {
+                    genreUtamaSelect.value = mockResponse.genreUtama;
+                } else {
+                    genreUtamaSelect.value = 'custom';
+                    document.getElementById('genre-utama-lagu-lainnya').value = mockResponse.genreUtama || '';
+                    document.getElementById('genre-utama-lagu-lainnya').classList.remove('hidden');
+                }
+
+                const genreKombinasiSelect = document.getElementById('genre-kombinasi-lagu');
+                 if ([...genreKombinasiSelect.options].some(option => option.value === mockResponse.genreKombinasi)) {
+                    genreKombinasiSelect.value = mockResponse.genreKombinasi;
+                } else {
+                    genreKombinasiSelect.value = 'custom';
+                    document.getElementById('genre-kombinasi-lagu-lainnya').value = mockResponse.genreKombinasi || '';
+                    document.getElementById('genre-kombinasi-lagu-lainnya').classList.remove('hidden');
+                }
+
+                elements.audioAnalysisResult.value = `Analisa Selesai:\nTema: ${mockResponse.tema}\nBahasa: ${mockResponse.bahasa}\nVokalis: ${mockResponse.vokalis}\nGenre Utama: ${mockResponse.genreUtama}\nGenre Kombinasi: ${mockResponse.genreKombinasi}`;
+
+            } catch (error) {
+                elements.audioAnalysisResult.value = "Maaf, terjadi kesalahan saat menganalisa audio: " + error.message;
+            } finally {
+                elements.analyzeAudioButton.disabled = false;
+                elements.analyzeAudioButton.innerHTML = `<span id="analyze-audio-icon">🎵</span><span id="analyze-audio-text">ANALISA AUDIO & ISI FORM</span>`;
+            }
+        }
 
         function renderJudulLagu(titles = []) {
             elements.judulLaguList.innerHTML = '';
@@ -1137,6 +1264,42 @@
             elements.contentSections[tabName].classList.add('active');
         }
         const genreLagu = {
+            "MODERN POP, R&B, & HIP-HOP": [
+                "Contemporary Pop – Radio-friendly, clean production (Taylor Swift, Ariana Grande)",
+                "Indie Pop – Vokal unik, sound eksperimental (Billie Eilish, Lorde)",
+                "Synth-Pop – Synth 80an, beat modern (The Weeknd, CHVRCHES)",
+                "R&B Kontemporer – Vokal soulful, beat trap/hip-hop (SZA, Frank Ocean)",
+                "Neo-Soul – Fusion soul, jazz, dan hip-hop (D'Angelo, Erykah Badu)",
+                "Trap – Beat berat, hi-hat cepat, sub-bass dalam (Migos, Travis Scott)",
+                "Boom Bap / Old School Hip-Hop – Drum break klasik, lirik fokus (Nas, A Tribe Called Quest)",
+                "Drill – Varian trap yang gelap dan sinematik (Pop Smoke, Central Cee)",
+                "Lo-Fi Hip-Hop – Santai, instrumental, fokus pada mood (Nujabes, J Dilla)",
+                "Alternative R&B – Melodi eksperimental, produksi minimalis (Joji, FKA twigs)"
+            ],
+            "ROCK & ALTERNATIF": [
+                "Classic Rock – Gitar elektrik, blues-based (Led Zeppelin, AC/DC)",
+                "Indie Rock / Alternative – Sound non-mainstream, mandiri (Arctic Monkeys, The Strokes)",
+                "Garage Rock – Sound mentah, distorsi, energi tinggi (The White Stripes, Ty Segall)",
+                "Heavy Metal – Distorsi gitar agresif, solo cepat (Iron Maiden, Metallica)",
+                "Pop Punk – Energi punk, melodi pop (Blink-182, Green Day)",
+                "Post-Punk – Eksperimental, introspektif, bass menonjol (The Cure, Joy Division)",
+                "Psychedelic Rock – Efek studio, sound trippy (Tame Impala, Pink Floyd)",
+                "Stoner / Doom Metal – Tempo lambat, riff berat, sound ‘tebal’ (Sleep, Electric Wizard)",
+                "Shoegaze – Dinding suara gitar, vokal tersembunyi (My Bloody Valentine, Slowdive)",
+                "Folk Rock – Instrumen akustik dan lirik naratif (Bob Dylan, Fleet Foxes)"
+            ],
+            "ELEKTRONIK & DANCE": [
+                "House Music – Beat 4/4, tempo 120-130 BPM (Daft Punk, Frankie Knuckles)",
+                "Techno – Sound repetitif, futuristik, fokus pada ritme (Kraftwerk, Richie Hawtin)",
+                "Trance – Melodi synth yang membangun, euforia (Armin van Buuren, Paul van Dyk)",
+                "Drum & Bass – Tempo cepat (160-180 BPM), breakbeat kompleks (Pendulum, Goldie)",
+                "Dubstep – Bass drop berat, tempo sekitar 140 BPM (Skrillex, Burial)",
+                "UK Garage – Ritme sinkopasi, vokal soulful (Craig David, Artful Dodger)",
+                "Ambient – Tanpa beat, fokus pada tekstur dan atmosfer (Brian Eno, Aphex Twin)",
+                "Hardstyle – Kickdrum keras, melodi euforik (Headhunterz, Showtek)",
+                "Vaporwave – Estetika retro 80/90an, melambat (Macintosh Plus, Blank Banshee)",
+                "Future Bass – Drop melodik, synth ‘wobbly’ (Flume, Illenium)"
+            ],
             "VIBE CERIA & ENERGIS": [
                 "Uplifting Pop – Cerah, penuh semangat, chorus catchy (Katy Perry – Firework)",
                 "Tropical House – Nuansa pantai, santai tapi energik (Kygo – Firestone)",
@@ -1207,6 +1370,34 @@
             ]
         };
 
+        const alatMusik = {
+            "Alat Musik Dawai (String Instruments)": [
+                "Biola (Violin)", "Viola", "Cello", "Kontrabas / Double Bass",
+                "Gitar Akustik / Elektrik", "Bass Guitar", "Harp / Kecapi / Guzheng (Cina)"
+            ],
+            "Alat Musik Tuts (Keyboard Instruments)": [
+                "Piano", "Organ", "Synthesizer", "Keyboard Digital / MIDI Controller", "Melodica"
+            ],
+            "Alat Musik Perkusi (Percussion Instruments)": [
+                "Drum Set", "Cajón", "Shaker, Tamborin, Maracas", "Bongo / Conga / Djembe",
+                "Timpani / Snare / Bass Drum Orkestra", "Kendang (Indonesia)", "Tabla (India)",
+                "Taiko (Jepang)", "Darbuka (Timur Tengah)"
+            ],
+            "Alat Musik Tiup (Wind Instruments)": [
+                "Saxophone", "Clarinet", "Flute (Seruling)", "Oboe", "Bassoon",
+                "Trumpet", "Trombone", "French Horn", "Tuba"
+            ],
+            "Alat Musik Elektronik & Digital": [
+                "Synthesizer Analog/Digital", "Sampler / Drum Machine", "Digital Audio Workstation (DAW)",
+                "E-Bow / Effect Pedal"
+            ],
+            "Alat Musik Tradisional & Etnik Dunia (World Instruments)": [
+                "Gamelan (Indonesia)", "Sitar (India)", "Shamisen (Jepang)", "Accordion (Eropa)",
+                "Banjo (Amerika)", "Bagpipe (Skotlandia)", "Pan Flute (Andes)", "Oud (Timur Tengah)",
+                "Kalimba (Afrika)"
+            ]
+        };
+
         function populateGenreDropdowns() {
             const genreUtamaSelect = document.getElementById('genre-utama-lagu');
             const genreKombinasiSelect = document.getElementById('genre-kombinasi-lagu');
@@ -1214,7 +1405,11 @@
             genreUtamaSelect.innerHTML = '';
             genreKombinasiSelect.innerHTML = '';
 
+            genreUtamaSelect.add(new Option("Pilih genre...", ""));
             genreKombinasiSelect.add(new Option("Tidak ada", ""));
+
+            genreUtamaSelect.add(new Option("Ketik sendiri...", "custom"));
+            genreKombinasiSelect.add(new Option("Ketik sendiri...", "custom"));
 
             for (const group in genreLagu) {
                 const optgroupUtama = document.createElement('optgroup');
@@ -1232,6 +1427,21 @@
             }
         }
 
+        function populateInstrumentDropdown() {
+            const instrumentSelect = document.getElementById('alat-musik-utama');
+            instrumentSelect.innerHTML = '';
+            instrumentSelect.add(new Option("Pilih alat musik...", ""));
+            instrumentSelect.add(new Option("Ketik sendiri...", "custom"));
+
+            for (const group in alatMusik) {
+                const optgroup = document.createElement('optgroup');
+                optgroup.label = group;
+                alatMusik[group].forEach(instrument => {
+                    optgroup.appendChild(new Option(instrument, instrument));
+                });
+                instrumentSelect.appendChild(optgroup);
+            }
+        }
 
         function switchDesignerTab(tab) {
             const tabs = ['image', 'video', 'lagu'];
@@ -1590,22 +1800,30 @@
             updateGeneratedPrompt();
         }
         
-        async function makeApiCallWithRetry(systemPrompt, userQuery, isJson = false, responseSchema = null) {
-            const apiKey = apiMode === 'user' ? userApiKey : ""; 
+        async function makeApiCallWithRetry(systemPrompt, userQuery, isJson = false, responseSchema = null, imageData = null) {
+            const apiKey = apiMode === 'user' ? userApiKey : "";
             if (apiMode === 'user' && !apiKey) {
-                 throw new Error("API Key pengguna tidak valid atau tidak tersedia.");
+                throw new Error("API Key pengguna tidak valid atau tidak tersedia.");
             }
             const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+
+            const parts = [{ text: userQuery }];
+            if (imageData && imageData.length > 0) {
+                imageData.forEach(img => {
+                    parts.push({ inlineData: { mimeType: img.mimeType, data: img.data } });
+                });
+            }
+
             const payload = {
-                contents: [{ parts: [{ text: userQuery }] }],
+                contents: [{ parts: parts }],
                 systemInstruction: { parts: [{ text: systemPrompt }] },
             };
 
             if (isJson && responseSchema) {
-                 payload.generationConfig = {
+                payload.generationConfig = {
                     responseMimeType: "application/json",
                     responseSchema: responseSchema
-                }
+                };
             }
 
 
@@ -1772,39 +1990,27 @@
 
             const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
 
-            const payload = {
-                contents: [{
-                    parts: [
-                        { text: userPrompt },
-                        { inlineData: { mimeType: "image/jpeg", data: characterRefImageBase64 } }
-                    ]
-                }],
-                generationConfig: {
-                    responseMimeType: "application/json",
-                    responseSchema: {
-                        type: "OBJECT",
-                        properties: {
-                            "name": { "type": "STRING" },
-                            "physic": { "type": "STRING" },
-                            "attire": { "type": "STRING" },
-                            "style": { "type": "STRING" }
-                        },
-                        required: ["name", "physic", "attire", "style"]
-                    }
+            const schema = {
+                type: "OBJECT",
+                properties: {
+                    "name": { "type": "STRING" },
+                    "physic": { "type": "STRING" },
+                    "attire": { "type": "STRING" },
+                    "style": { "type": "STRING" }
                 },
-                systemInstruction: { parts: [{ text: systemPrompt }] },
+                required: ["name", "physic", "attire", "style"]
             };
 
             try {
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                // The API call is now wrapped in the retry function, with the schema passed correctly.
+                const jsonText = await makeApiCallWithRetry(
+                    systemPrompt,
+                    userPrompt,
+                    true, // isJson
+                    schema, // responseSchema
+                    [{ mimeType: "image/jpeg", data: characterRefImageBase64 }] // imageData
+                );
                 
-                const result = await response.json();
-                const jsonText = result.candidates[0].content.parts[0].text;
                 const parsedJson = JSON.parse(jsonText);
 
                 if (parsedJson) {
@@ -1849,41 +2055,25 @@
                 return;
             }
 
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
-
-            const payload = {
-                contents: [{
-                    parts: [
-                        { text: userPrompt },
-                        { inlineData: { mimeType: "image/jpeg", data: videoRefImageBase64 } }
-                    ]
-                }],
-                generationConfig: {
-                    responseMimeType: "application/json",
-                    responseSchema: {
-                        type: "OBJECT",
-                        properties: {
-                            "subject": { "type": "STRING" },
-                            "action": { "type": "STRING" },
-                            "background": { "type": "STRING" },
-                            "style": { "type": "STRING" }
-                        },
-                        required: ["subject", "action", "background", "style"]
-                    }
+            const schema = {
+                type: "OBJECT",
+                properties: {
+                    "subject": { "type": "STRING" },
+                    "action": { "type": "STRING" },
+                    "background": { "type": "STRING" },
+                    "style": { "type": "STRING" }
                 },
-                systemInstruction: { parts: [{ text: systemPrompt }] },
+                required: ["subject", "action", "background", "style"]
             };
 
             try {
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                
-                const result = await response.json();
-                const jsonText = result.candidates[0].content.parts[0].text;
+                 const jsonText = await makeApiCallWithRetry(
+                    systemPrompt,
+                    userPrompt,
+                    true, // isJson
+                    schema,
+                    [{ mimeType: "image/jpeg", data: videoRefImageBase64 }]
+                );
                 const parsedJson = JSON.parse(jsonText);
 
                 if (parsedJson) {
@@ -2044,7 +2234,37 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
             bahasaLaguSelect.addEventListener('change', () => {
                 bahasaLaguLainnyaInput.classList.toggle('hidden', bahasaLaguSelect.value !== 'lainnya');
             });
+
+            const genreUtamaSelect = document.getElementById('genre-utama-lagu');
+            const genreUtamaLainnyaInput = document.getElementById('genre-utama-lagu-lainnya');
+            genreUtamaSelect.addEventListener('change', () => {
+                genreUtamaLainnyaInput.classList.toggle('hidden', genreUtamaSelect.value !== 'custom');
+            });
+
+            const genreKombinasiSelect = document.getElementById('genre-kombinasi-lagu');
+            const genreKombinasiLainnyaInput = document.getElementById('genre-kombinasi-lagu-lainnya');
+            genreKombinasiSelect.addEventListener('change', () => {
+                genreKombinasiLainnyaInput.classList.toggle('hidden', genreKombinasiSelect.value !== 'custom');
+            });
             
+            const vokalisSelect = document.getElementById('vokalis-lagu');
+            const instrumentContainer = document.getElementById('instrument-selection-container');
+            const lirikLabel = document.querySelector('label[for="output-lirik"]');
+
+            vokalisSelect.addEventListener('change', () => {
+                const isInstrumental = vokalisSelect.value === 'Instrumental';
+                instrumentContainer.classList.toggle('hidden', !isInstrumental);
+                if (lirikLabel) {
+                    lirikLabel.textContent = isInstrumental ? 'Hasil: Puisi' : 'Hasil: Lirik';
+                }
+            });
+
+            const instrumentSelect = document.getElementById('alat-musik-utama');
+            const instrumentLainnyaInput = document.getElementById('alat-musik-lainnya');
+            instrumentSelect.addEventListener('change', () => {
+                instrumentLainnyaInput.classList.toggle('hidden', instrumentSelect.value !== 'custom');
+            });
+
             elements.allFormInputs.forEach(el => el.addEventListener('input', updateGeneratedPrompt));
             elements.tujuanGambarEl.addEventListener('change', handleTujuanGambarChange);
             
@@ -2138,10 +2358,16 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
             elements.analyzeImageButton.addEventListener('click', analyzeImageWithGemini);
             elements.analyzeCharButton.addEventListener('click', analyzeCharacterWithGemini);
             elements.analyzeVideoImageButton.addEventListener('click', analyzeVideoImageWithGemini);
+
+            elements.analyzeAudioButton.addEventListener('click', analyzeAudioWithGemini);
+            elements.audioUpload.addEventListener('change', (e) => handleAudioFileSelect(e.target.files[0]));
+            elements.dropZoneAudio.addEventListener('drop', (e) => { e.preventDefault(); handleAudioFileSelect(e.dataTransfer.files[0]); });
+
             elements.buatPromptLaguButton.addEventListener('click', generateFullSong);
             elements.regenLirikButton.addEventListener('click', () => reGenerate('lirik'));
             elements.regenGayaButton.addEventListener('click', () => reGenerate('gaya'));
             elements.regenJudulButton.addEventListener('click', () => reGenerate('judul'));
+            elements.regenAlternatifButton.addEventListener('click', generateAlternativePrompt);
 
             elements.copyLirikButton.addEventListener('click', () => {
                 elements.outputLirik.select();
@@ -2165,6 +2391,38 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
                 }
             });
 
+            elements.copyAlternatifButton.addEventListener('click', () => {
+                elements.outputAlternatif.select();
+                try {
+                    document.execCommand('copy');
+                    elements.copyAlternatifButton.textContent = 'DISALIN!';
+                    setTimeout(() => { elements.copyAlternatifButton.textContent = 'SALIN'; }, 2000);
+                } catch (err) {
+                    elements.copyAlternatifButton.textContent = 'GAGAL';
+                }
+            });
+
+            async function generateAlternativePrompt() {
+                elements.outputAlternatif.value = "Membuat prompt alternatif...";
+                const systemPrompt = `Anda adalah seorang ahli prompt engineering. Tugas Anda adalah membuat satu prompt tunggal yang komprehensif untuk AI lain (seperti ChatGPT) untuk menghasilkan lirik dan gaya musik. Prompt harus dalam format natural language (paragraf), menggabungkan semua detail yang diberikan. PENTING: Jangan menyebutkan nama artis atau band sama sekali.`;
+
+                const tema = document.getElementById('tema-lagu').value.trim();
+                const bahasa = document.getElementById('bahasa-lagu').value === 'lainnya' ? document.getElementById('bahasa-lagu-lainnya').value.trim() : document.getElementById('bahasa-lagu').value;
+                const vokalis = document.getElementById('vokalis-lagu').value;
+                const genreUtama = document.getElementById('genre-utama-lagu').value === 'custom' ? document.getElementById('genre-utama-lagu-lainnya').value.trim() : document.getElementById('genre-utama-lagu').value;
+                const genreKombinasi = document.getElementById('genre-kombinasi-lagu').value === 'custom' ? document.getElementById('genre-kombinasi-lagu-lainnya').value.trim() : document.getElementById('genre-kombinasi-lagu').value;
+                const inputLainnya = document.getElementById('input-lainnya-lagu').value.trim();
+
+                const userQuery = `Buatkan prompt alternatif berdasarkan detail berikut: Tema: ${tema}, Bahasa: ${bahasa}, Vokalis: ${vokalis}, Genre Utama: ${genreUtama}, Genre Kombinasi: ${genreKombinasi || 'Tidak ada'}, Input Tambahan: ${inputLainnya || 'Tidak ada'}`;
+
+                try {
+                    const response = await makeApiCallWithRetry(systemPrompt, userQuery);
+                    elements.outputAlternatif.value = response;
+                } catch (error) {
+                    elements.outputAlternatif.value = "Gagal membuat prompt alternatif: " + error.message;
+                }
+            }
+
             async function generateFullSong() {
                 const tema = document.getElementById('tema-lagu').value.trim();
                 if (!tema) {
@@ -2185,36 +2443,73 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
                 }
 
                 const vokalis = document.getElementById('vokalis-lagu').value;
-                const genreUtama = document.getElementById('genre-utama-lagu').value;
-                const genreKombinasi = document.getElementById('genre-kombinasi-lagu').value;
+
+                const genreUtamaSelect = document.getElementById('genre-utama-lagu');
+                let genreUtama = genreUtamaSelect.value;
+                if (genreUtama === 'custom') {
+                    genreUtama = document.getElementById('genre-utama-lagu-lainnya').value.trim();
+                }
+
+                const genreKombinasiSelect = document.getElementById('genre-kombinasi-lagu');
+                let genreKombinasi = genreKombinasiSelect.value;
+                if (genreKombinasi === 'custom') {
+                    genreKombinasi = document.getElementById('genre-kombinasi-lagu-lainnya').value.trim();
+                }
+
+                const inputLainnya = document.getElementById('input-lainnya-lagu').value.trim();
                 const batasKarakter = document.getElementById('batas-karakter-gaya').value;
 
-                const systemPrompt = `Anda adalah seorang pencipta lagu ahli dan produser musik. Tugas Anda adalah membuat konten untuk prompt lagu di AI SUNO.
+                let systemPrompt, userQuery, songSchema;
+                const isInstrumental = vokalis === 'Instrumental';
 
-                Instruksi PENTING:
-                1. Hasilkan LIRIK, GAYA (Styles), dan JUDUL LAGU secara TERPISAH.
-                2. LIRIK harus memiliki format terstruktur dengan label seperti (Verse 1), (Chorus), (Bridge), (Outro), dll.
-                3. GAYA (Styles) harus berupa daftar kata kunci deskriptif, dipisahkan koma, TANPA menyebutkan nama artis. Patuhi batas karakter yang diminta.
-                4. Buat persis 5 alternatif judul lagu.
-                5. Jawab HANYA dalam format JSON yang ditentukan. Jangan ada teks lain di luar JSON.
-                6. Gunakan bahasa yang diminta untuk lirik dan judul.`;
+                if (isInstrumental) {
+                    const instrumentSelect = document.getElementById('alat-musik-utama');
+                    let alatMusikUtama = instrumentSelect.value;
+                    if (alatMusikUtama === 'custom') {
+                        alatMusikUtama = document.getElementById('alat-musik-lainnya').value.trim();
+                    }
 
-                const userQuery = `Buatkan saya konten lagu lengkap dengan detail:
-                - Tema: ${tema}, Bahasa: ${bahasa}, Vokalis: ${vokalis}, Genre Utama: ${genreUtama}, Genre Kombinasi: ${genreKombinasi || 'Tidak ada'}, Batas Karakter Gaya: ${batasKarakter}`;
+                    systemPrompt = `Anda adalah seorang penyair dan komposer musik. Tugas Anda adalah membuat PUISI dan GAYA MUSIK instrumental.
+                    Instruksi PENTING:
+                    1. Hasilkan PUISI (bukan lirik lagu), GAYA (Styles), dan 5 JUDUL.
+                    2. PUISI harus puitis dan sesuai dengan tema.
+                    3. GAYA (Styles) harus mendeskripsikan musik instrumental, fokus pada alat musik utama yang dipilih. JANGAN menyebut nama artis.
+                    4. Jawab HANYA dalam format JSON.`;
 
-                const songSchema = {
-                    type: "OBJECT",
-                    properties: {
-                        "lirik": { "type": "STRING", "description": "Lirik lagu terstruktur dengan label (Verse), (Chorus), dll." },
-                        "gaya": { "type": "STRING", "description": `Gaya musik dalam kata kunci, maksimal ${batasKarakter} karakter.` },
-                        "judul_lagu": {
-                            "type": "ARRAY",
-                            "description": "Array berisi persis 5 string judul lagu.",
-                            "items": { "type": "STRING" }
-                        }
-                    },
-                    required: ["lirik", "gaya", "judul_lagu"]
-                };
+                    userQuery = `Buatkan saya konten instrumental dengan detail:
+                    - Tema: ${tema}, Alat Musik Utama: ${alatMusikUtama}, Genre Utama: ${genreUtama}, Genre Kombinasi: ${genreKombinasi || 'Tidak ada'}, Input Tambahan: ${inputLainnya || 'Tidak ada'}`;
+
+                    songSchema = {
+                        type: "OBJECT",
+                        properties: {
+                            "lirik": { "type": "STRING", "description": "Sebuah puisi yang sesuai dengan tema." },
+                            "gaya": { "type": "STRING", "description": `Gaya musik instrumental, maksimal ${batasKarakter} karakter.` },
+                            "judul_lagu": { "type": "ARRAY", "items": { "type": "STRING" } }
+                        },
+                        required: ["lirik", "gaya", "judul_lagu"]
+                    };
+
+                } else {
+                    systemPrompt = `Anda adalah seorang pencipta lagu ahli dan produser musik. Tugas Anda adalah membuat konten untuk prompt lagu di AI SUNO.
+                    Instruksi PENTING:
+                    1. Hasilkan LIRIK, GAYA (Styles), dan 5 JUDUL LAGU.
+                    2. LIRIK harus memiliki format terstruktur dengan label (Verse 1), (Chorus), dll.
+                    3. GAYA (Styles) harus berupa daftar kata kunci deskriptif, TANPA menyebutkan nama artis.
+                    4. Jawab HANYA dalam format JSON.`;
+
+                    userQuery = `Buatkan saya konten lagu lengkap dengan detail:
+                    - Tema: ${tema}, Bahasa: ${bahasa}, Vokalis: ${vokalis}, Genre Utama: ${genreUtama}, Genre Kombinasi: ${genreKombinasi || 'Tidak ada'}, Input Tambahan: ${inputLainnya || 'Tidak ada'}`;
+
+                    songSchema = {
+                        type: "OBJECT",
+                        properties: {
+                            "lirik": { "type": "STRING", "description": "Lirik lagu terstruktur." },
+                            "gaya": { "type": "STRING", "description": `Gaya musik, maksimal ${batasKarakter} karakter.` },
+                            "judul_lagu": { "type": "ARRAY", "items": { "type": "STRING" } }
+                        },
+                        required: ["lirik", "gaya", "judul_lagu"]
+                    };
+                }
 
                 try {
                     const response = await makeApiCallWithRetry(systemPrompt, userQuery, true, songSchema);
@@ -2224,6 +2519,7 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
                         elements.outputLirik.value = parsedResponse.lirik;
                         elements.outputGaya.value = parsedResponse.gaya;
                         renderJudulLagu(parsedResponse.judul_lagu);
+                        await generateAlternativePrompt(); // Generate the alternative prompt
                     } else {
                         throw new Error("Struktur respons tidak valid.");
                     }
@@ -2252,23 +2548,53 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
                     bahasa = document.getElementById('bahasa-lagu-lainnya').value.trim();
                 }
                 const vokalis = document.getElementById('vokalis-lagu').value;
-                const genreUtama = document.getElementById('genre-utama-lagu').value;
-                const genreKombinasi = document.getElementById('genre-kombinasi-lagu').value;
-                const batasKarakter = document.getElementById('batas-karakter-gaya').value;
 
-                const baseUserQuery = `
-                    - Tema: ${tema}, Bahasa: ${bahasa}, Vokalis: ${vokalis}, Genre Utama: ${genreUtama}, Genre Kombinasi: ${genreKombinasi || 'Tidak ada'}, Batas Karakter Gaya: ${batasKarakter}
-                    - Lirik Saat Ini: ${elements.outputLirik.value}
-                    - Gaya Saat Ini: ${elements.outputGaya.value}`;
+                const genreUtamaSelect = document.getElementById('genre-utama-lagu');
+                let genreUtama = genreUtamaSelect.value;
+                if (genreUtama === 'custom') {
+                    genreUtama = document.getElementById('genre-utama-lagu-lainnya').value.trim();
+                }
+
+                const genreKombinasiSelect = document.getElementById('genre-kombinasi-lagu');
+                let genreKombinasi = genreKombinasiSelect.value;
+                if (genreKombinasi === 'custom') {
+                    genreKombinasi = document.getElementById('genre-kombinasi-lagu-lainnya').value.trim();
+                }
+
+                const inputLainnya = document.getElementById('input-lainnya-lagu').value.trim();
+                const batasKarakter = document.getElementById('batas-karakter-gaya').value;
+                const isInstrumental = vokalis === 'Instrumental';
+
+                let baseUserQuery;
+
+                if (isInstrumental) {
+                    const instrumentSelect = document.getElementById('alat-musik-utama');
+                    let alatMusikUtama = instrumentSelect.value;
+                    if (alatMusikUtama === 'custom') {
+                        alatMusikUtama = document.getElementById('alat-musik-lainnya').value.trim();
+                    }
+                    baseUserQuery = `
+                        - Tema: ${tema}, Alat Musik Utama: ${alatMusikUtama}, Genre Utama: ${genreUtama}, Genre Kombinasi: ${genreKombinasi || 'Tidak ada'}, Input Tambahan: ${inputLainnya || 'Tidak ada'}
+                        - Puisi Saat Ini: ${elements.outputLirik.value}
+                        - Gaya Saat Ini: ${elements.outputGaya.value}`;
+                } else {
+                    baseUserQuery = `
+                        - Tema: ${tema}, Bahasa: ${bahasa}, Vokalis: ${vokalis}, Genre Utama: ${genreUtama}, Genre Kombinasi: ${genreKombinasi || 'Tidak ada'}, Input Tambahan: ${inputLainnya || 'Tidak ada'}
+                        - Lirik Saat Ini: ${elements.outputLirik.value}
+                        - Gaya Saat Ini: ${elements.outputGaya.value}`;
+                }
+
 
                 switch (part) {
                     case 'lirik':
                         button = elements.regenLirikButton;
                         originalText = 'RE-GENERATE';
-                        loadingText = 'MEMBUAT LIRIK...';
-                        elements.outputLirik.value = "AI sedang meracik lirik baru...";
-                        systemPrompt = `Anda adalah penulis lirik ahli. Tugas Anda adalah menulis ulang atau membuat versi baru dari sebuah lirik berdasarkan konteks yang ada. Hasilkan lirik yang terstruktur dengan label (Verse), (Chorus), dll. Jawab HANYA dengan format JSON.`;
-                        userQuery = `Buatkan lirik baru berdasarkan detail ini: ${baseUserQuery}`;
+                        loadingText = isInstrumental ? 'MEMBUAT PUISI...' : 'MEMBUAT LIRIK...';
+                        elements.outputLirik.value = `AI sedang meracik ${isInstrumental ? 'puisi' : 'lirik'} baru...`;
+                        systemPrompt = isInstrumental
+                            ? `Anda adalah seorang penyair. Tugas Anda adalah menulis ulang atau membuat versi baru dari sebuah puisi. Jawab HANYA dengan format JSON.`
+                            : `Anda adalah penulis lirik ahli. Tugas Anda adalah menulis ulang atau membuat versi baru dari sebuah lirik. Hasilkan lirik terstruktur. Jawab HANYA dengan format JSON.`;
+                        userQuery = `Buatkan ${isInstrumental ? 'puisi' : 'lirik'} baru berdasarkan detail ini: ${baseUserQuery}`;
                         schema = { type: "OBJECT", properties: { "lirik": { "type": "STRING" } }, required: ["lirik"] };
                         break;
                     case 'gaya':
@@ -2353,6 +2679,14 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
             elements.clearAllButton.addEventListener('click', clearAllInputs);
         }
        
+       function handleAudioFileSelect(file) {
+           if (file && file.type.startsWith('audio/')) {
+                uploadedAudioFile = file;
+                elements.audioFileName.textContent = file.name;
+                elements.analyzeAudioButton.classList.remove('hidden');
+           }
+       }
+
        function clearAllInputs() {
             // 1. Reset all form inputs and textareas
             elements.allFormInputs.forEach(el => {
@@ -2365,7 +2699,7 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
              document.getElementById('bahasa-lagu-lainnya').classList.add('hidden');
 
             // 2. Reset specific textareas and outputs
-            ['imageAnalysisResult', 'videoImageAnalysisResult', 'outputPromptEl', 'jsonOutputPrompt', 'characterSheetOutputEl', 'characterScenarioInputEl', 'compositionDetailsEl', 'outputLirik', 'outputGaya'].forEach(id => {
+            ['imageAnalysisResult', 'videoImageAnalysisResult', 'outputPromptEl', 'jsonOutputPrompt', 'characterSheetOutputEl', 'characterScenarioInputEl', 'compositionDetailsEl', 'outputLirik', 'outputGaya', 'outputAlternatif'].forEach(id => {
                 if (elements[id]) elements[id].value = '';
             });
             renderJudulLagu([]);
@@ -2377,11 +2711,24 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
             characterRefImageBase64 = null;
             videoRefImageFile = null;
             videoRefImageBase64 = null;
+            uploadedAudioFile = null;
 
             // 4. Reset file input elements
-            ['imageUploadEl', 'imageUploadCompose1', 'imageUploadCompose2', 'imageUploadChar', 'imageUploadVideoEl'].forEach(id => {
+            ['imageUploadEl', 'imageUploadCompose1', 'imageUploadCompose2', 'imageUploadChar', 'imageUploadVideoEl', 'audioUpload'].forEach(id => {
                 if(elements[id]) elements[id].value = '';
             });
+
+            // Reset audio UI
+            elements.audioFileName.textContent = 'MP3, WAV, M4A, FLAC, dll.';
+            elements.analyzeAudioButton.classList.add('hidden');
+            elements.audioAnalysisResult.classList.add('hidden');
+            elements.audioAnalysisResult.value = '';
+
+            // Reset instrument UI
+            document.getElementById('instrument-selection-container').classList.add('hidden');
+            document.getElementById('alat-musik-lainnya').classList.add('hidden');
+            const lirikLabel = document.querySelector('label[for="output-lirik"]');
+            if (lirikLabel) lirikLabel.textContent = 'Hasil: Lirik';
 
             // 5. Hide all preview containers
             ['imagePreviewContainer', 'compositionPreviewContainer', 'characterPreviewContainer', 'videoPreviewContainer', 'jsonOutputContainer'].forEach(id => {
@@ -2413,6 +2760,7 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
            updateDropdownButton(initialOption);
            
            populateGenreDropdowns();
+           populateInstrumentDropdown();
            handleTujuanGambarChange();
            switchDesignerTab('image');
            showTab('belajar');
