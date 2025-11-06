@@ -771,6 +771,13 @@
                                     <label for="genre-kombinasi-lagu" class="block mb-2 text-sm font-medium text-secondary">5. Genre Kombinasi (Opsional)</label>
                                     <select id="genre-kombinasi-lagu" class="form-select w-full p-2.5"></select>
                                 </div>
+                                <div>
+                                    <label for="batas-karakter-gaya" class="block mb-2 text-sm font-medium text-secondary">6. Batas Karakter Gaya</label>
+                                    <select id="batas-karakter-gaya" class="form-select w-full p-2.5">
+                                        <option value="200">Maksimal 200 karakter (Gratis)</option>
+                                        <option value="1000">Maksimal 1000 karakter (Pro)</option>
+                                    </select>
+                                </div>
                             </div>
                          </div>
                          <div class="space-y-6">
@@ -845,10 +852,17 @@
                                     <span>BUAT PROMPT LAGU</span>
                                 </button>
                                 <div>
-                                    <label for="output-lyric-styles" class="block mb-2 text-sm font-medium text-secondary">Hasil: Lirik & Gaya (Styles)</label>
+                                    <label for="output-lirik" class="block mb-2 text-sm font-medium text-secondary">Hasil: Lirik</label>
                                     <div class="relative">
-                                        <textarea id="output-lyric-styles" rows="8" class="form-input w-full p-2.5 pr-24" readonly></textarea>
-                                        <button id="copy-lyric-button" class="absolute top-2 right-2 btn btn-secondary px-3 py-1.5 text-xs">SALIN</button>
+                                        <textarea id="output-lirik" rows="8" class="form-input w-full p-2.5 pr-24" readonly></textarea>
+                                        <button id="copy-lirik-button" class="absolute top-2 right-2 btn btn-secondary px-3 py-1.5 text-xs">SALIN</button>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label for="output-gaya" class="block mb-2 text-sm font-medium text-secondary">Hasil: Gaya (Styles)</label>
+                                    <div class="relative">
+                                        <textarea id="output-gaya" rows="4" class="form-input w-full p-2.5 pr-24" readonly></textarea>
+                                        <button id="copy-gaya-button" class="absolute top-2 right-2 btn btn-secondary px-3 py-1.5 text-xs">SALIN</button>
                                     </div>
                                 </div>
                                 <div>
@@ -1054,8 +1068,10 @@
             clearAllButton: document.getElementById('clear-all-button'),
             laguOutputSection: document.getElementById('lagu-output-section'),
             buatPromptLaguButton: document.getElementById('buat-prompt-lagu-button'),
-            outputLyricStyles: document.getElementById('output-lyric-styles'),
-            copyLyricButton: document.getElementById('copy-lyric-button'),
+            outputLirik: document.getElementById('output-lirik'),
+            copyLirikButton: document.getElementById('copy-lirik-button'),
+            outputGaya: document.getElementById('output-gaya'),
+            copyGayaButton: document.getElementById('copy-gaya-button'),
             outputJudulLagu: document.getElementById('output-judul-lagu'),
             copyJudulButton: document.getElementById('copy-judul-button'),
         };
@@ -2083,14 +2099,25 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
             elements.analyzeVideoImageButton.addEventListener('click', analyzeVideoImageWithGemini);
             elements.buatPromptLaguButton.addEventListener('click', generateSongPrompt);
 
-            elements.copyLyricButton.addEventListener('click', () => {
-                elements.outputLyricStyles.select();
+            elements.copyLirikButton.addEventListener('click', () => {
+                elements.outputLirik.select();
                 try {
                     document.execCommand('copy');
-                    elements.copyLyricButton.textContent = 'DISALIN!';
-                    setTimeout(() => { elements.copyLyricButton.textContent = 'SALIN'; }, 2000);
+                    elements.copyLirikButton.textContent = 'DISALIN!';
+                    setTimeout(() => { elements.copyLirikButton.textContent = 'SALIN'; }, 2000);
                 } catch (err) {
-                    elements.copyLyricButton.textContent = 'GAGAL';
+                    elements.copyLirikButton.textContent = 'GAGAL';
+                }
+            });
+
+            elements.copyGayaButton.addEventListener('click', () => {
+                elements.outputGaya.select();
+                try {
+                    document.execCommand('copy');
+                    elements.copyGayaButton.textContent = 'DISALIN!';
+                    setTimeout(() => { elements.copyGayaButton.textContent = 'SALIN'; }, 2000);
+                } catch (err) {
+                    elements.copyGayaButton.textContent = 'GAGAL';
                 }
             });
 
@@ -2114,7 +2141,8 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
 
                 elements.buatPromptLaguButton.disabled = true;
                 elements.buatPromptLaguButton.innerHTML = `<span class="loader"></span> MEMBUAT LAGU...`;
-                elements.outputLyricStyles.value = "AI sedang meracik lirik dan gaya untuk Anda...";
+                elements.outputLirik.value = "AI sedang meracik lirik untuk Anda...";
+                elements.outputGaya.value = "AI sedang meracik gaya musik untuk Anda...";
                 elements.outputJudulLagu.value = "AI sedang memikirkan judul-judul yang menarik...";
 
                 const bahasaSelect = document.getElementById('bahasa-lagu');
@@ -2126,48 +2154,53 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
                 const vokalis = document.getElementById('vokalis-lagu').value;
                 const genreUtama = document.getElementById('genre-utama-lagu').value;
                 const genreKombinasi = document.getElementById('genre-kombinasi-lagu').value;
+                const batasKarakter = document.getElementById('batas-karakter-gaya').value;
 
-                const systemPrompt = `Anda adalah seorang pencipta lagu ahli dan produser musik. Tugas Anda adalah membuat prompt lagu yang detail untuk AI generator musik SUNO berdasarkan input pengguna.
+                const systemPrompt = `Anda adalah seorang pencipta lagu ahli dan produser musik. Tugas Anda adalah membuat konten untuk prompt lagu di AI SUNO berdasarkan input pengguna.
 
                 Instruksi PENTING:
-                1. Buat "Lyric dan Styles" dalam SATU BLOK TEKS. Jangan pisahkan.
-                2. "Styles" harus berupa daftar kata kunci yang deskriptif dan dipisahkan koma, TANPA menyebutkan nama artis atau band. Maksimal total teks "Lyric dan Styles" adalah 1000 karakter.
+                1. Hasilkan LIRIK dan GAYA (Styles) secara TERPISAH.
+                2. GAYA (Styles) harus berupa daftar kata kunci deskriptif yang dipisahkan koma, TANPA menyebutkan nama artis atau band. Patuhi batas karakter yang diminta.
                 3. Buat persis 5 alternatif judul lagu.
                 4. Jawab HANYA dalam format JSON yang ditentukan. Jangan tambahkan teks atau penjelasan lain di luar JSON.
                 5. Gunakan bahasa yang diminta pengguna untuk lirik dan judul lagu.`;
 
-                const userQuery = `Buatkan saya prompt lagu dengan detail berikut:
+                const userQuery = `Buatkan saya konten lagu dengan detail berikut:
                 - Tema Lagu: ${tema}
                 - Bahasa: ${bahasa}
                 - Vokalis: ${vokalis}
                 - Genre Utama: ${genreUtama}
-                - Genre Kombinasi (jika ada): ${genreKombinasi || 'Tidak ada'}`;
+                - Genre Kombinasi (jika ada): ${genreKombinasi || 'Tidak ada'}
+                - Batas Karakter untuk Gaya: ${batasKarakter}`;
 
                 const songSchema = {
                     type: "OBJECT",
                     properties: {
-                        "lyrics_and_style": { "type": "STRING", "description": "Gabungan lirik dan gaya musik dalam satu blok teks. Maksimal 1000 karakter." },
-                        "song_titles": {
+                        "lirik": { "type": "STRING", "description": "Lirik lagu yang lengkap." },
+                        "gaya": { "type": "STRING", "description": `Gaya musik dalam bentuk kata kunci, maksimal ${batasKarakter} karakter.` },
+                        "judul_lagu": {
                             "type": "ARRAY",
                             "description": "Sebuah array berisi persis 5 string judul lagu alternatif.",
                             "items": { "type": "STRING" }
                         }
                     },
-                    required: ["lyrics_and_style", "song_titles"]
+                    required: ["lirik", "gaya", "judul_lagu"]
                 };
 
                 try {
                     const response = await makeApiCallWithRetry(systemPrompt, userQuery, true, songSchema);
                     const parsedResponse = JSON.parse(response);
 
-                    if (parsedResponse.lyrics_and_style && parsedResponse.song_titles) {
-                        elements.outputLyricStyles.value = parsedResponse.lyrics_and_style;
-                        elements.outputJudulLagu.value = parsedResponse.song_titles.join('\n');
+                    if (parsedResponse.lirik && parsedResponse.gaya && parsedResponse.judul_lagu) {
+                        elements.outputLirik.value = parsedResponse.lirik;
+                        elements.outputGaya.value = parsedResponse.gaya;
+                        elements.outputJudulLagu.value = parsedResponse.judul_lagu.join('\n');
                     } else {
                         throw new Error("Struktur respons tidak valid.");
                     }
                 } catch (error) {
-                     elements.outputLyricStyles.value = "Maaf, terjadi kesalahan: " + error.message;
+                     elements.outputLirik.value = "Maaf, terjadi kesalahan: " + error.message;
+                     elements.outputGaya.value = "Gagal membuat gaya.";
                      elements.outputJudulLagu.value = "Gagal membuat judul.";
                 } finally {
                     elements.buatPromptLaguButton.disabled = false;
@@ -2223,7 +2256,7 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
              document.getElementById('bahasa-lagu-lainnya').classList.add('hidden');
 
             // 2. Reset specific textareas and outputs
-            ['imageAnalysisResult', 'videoImageAnalysisResult', 'outputPromptEl', 'jsonOutputPrompt', 'characterSheetOutputEl', 'characterScenarioInputEl', 'compositionDetailsEl', 'outputLyricStyles', 'outputJudulLagu'].forEach(id => {
+            ['imageAnalysisResult', 'videoImageAnalysisResult', 'outputPromptEl', 'jsonOutputPrompt', 'characterSheetOutputEl', 'characterScenarioInputEl', 'compositionDetailsEl', 'outputLirik', 'outputGaya', 'outputJudulLagu'].forEach(id => {
                 if (elements[id]) elements[id].value = '';
             });
 
