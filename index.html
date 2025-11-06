@@ -808,7 +808,7 @@
                                 </div>
                              </div>
 
-                             <div>
+                             <div id="aspect-ratio-container">
                                 <label for="aspect-ratio-button" class="block mb-2 text-sm font-medium text-secondary">Pilih Aspek Rasio</label>
                                 <div class="relative" id="aspect-ratio-dropdown">
                                     <button type="button" id="aspect-ratio-button" class="form-select w-full p-2.5 flex items-center justify-between text-left">
@@ -852,25 +852,31 @@
                                     <span>BUAT PROMPT LAGU</span>
                                 </button>
                                 <div>
-                                    <label for="output-lirik" class="block mb-2 text-sm font-medium text-secondary">Hasil: Lirik</label>
+                                    <div class="flex justify-between items-center mb-2">
+                                        <label for="output-lirik" class="text-sm font-medium text-secondary">Hasil: Lirik</label>
+                                        <button id="regen-lirik-button" class="btn btn-secondary px-2 py-1 text-xs">RE-GENERATE</button>
+                                    </div>
                                     <div class="relative">
-                                        <textarea id="output-lirik" rows="8" class="form-input w-full p-2.5 pr-24" readonly></textarea>
+                                        <textarea id="output-lirik" rows="10" class="form-input w-full p-2.5 pr-24"></textarea>
                                         <button id="copy-lirik-button" class="absolute top-2 right-2 btn btn-secondary px-3 py-1.5 text-xs">SALIN</button>
                                     </div>
                                 </div>
                                 <div>
-                                    <label for="output-gaya" class="block mb-2 text-sm font-medium text-secondary">Hasil: Gaya (Styles)</label>
+                                    <div class="flex justify-between items-center mb-2">
+                                        <label for="output-gaya" class="text-sm font-medium text-secondary">Hasil: Gaya (Styles)</label>
+                                        <button id="regen-gaya-button" class="btn btn-secondary px-2 py-1 text-xs">RE-GENERATE</button>
+                                    </div>
                                     <div class="relative">
-                                        <textarea id="output-gaya" rows="4" class="form-input w-full p-2.5 pr-24" readonly></textarea>
+                                        <textarea id="output-gaya" rows="4" class="form-input w-full p-2.5 pr-24"></textarea>
                                         <button id="copy-gaya-button" class="absolute top-2 right-2 btn btn-secondary px-3 py-1.5 text-xs">SALIN</button>
                                     </div>
                                 </div>
                                 <div>
-                                    <label for="output-judul-lagu" class="block mb-2 text-sm font-medium text-secondary">Hasil: 5 Alternatif Judul Lagu</label>
-                                    <div class="relative">
-                                        <textarea id="output-judul-lagu" rows="5" class="form-input w-full p-2.5 pr-24" readonly></textarea>
-                                        <button id="copy-judul-button" class="absolute top-2 right-2 btn btn-secondary px-3 py-1.5 text-xs">SALIN</button>
+                                    <div class="flex justify-between items-center mb-2">
+                                        <label class="text-sm font-medium text-secondary">Hasil: 5 Alternatif Judul Lagu</label>
+                                        <button id="regen-judul-button" class="btn btn-secondary px-2 py-1 text-xs">RE-GENERATE</button>
                                     </div>
+                                    <div id="judul-lagu-list" class="space-y-2"></div>
                                 </div>
                             </div>
                               <div id="final-prompt-container">
@@ -1052,6 +1058,7 @@
             analyzeVideoImageText: document.getElementById('analyze-video-image-text'),
             analyzeVideoImageIcon: document.getElementById('analyze-video-image-icon'),
             videoImageAnalysisResult: document.getElementById('video-image-analysis-result'),
+            aspectRatioContainer: document.getElementById('aspect-ratio-container'),
             aspectRatioDropdown: document.getElementById('aspect-ratio-dropdown'),
             aspectRatioButton: document.getElementById('aspect-ratio-button'),
             aspectRatioMenu: document.getElementById('aspect-ratio-menu'),
@@ -1072,10 +1079,44 @@
             copyLirikButton: document.getElementById('copy-lirik-button'),
             outputGaya: document.getElementById('output-gaya'),
             copyGayaButton: document.getElementById('copy-gaya-button'),
-            outputJudulLagu: document.getElementById('output-judul-lagu'),
-            copyJudulButton: document.getElementById('copy-judul-button'),
+            judulLaguList: document.getElementById('judul-lagu-list'),
+            regenLirikButton: document.getElementById('regen-lirik-button'),
+            regenGayaButton: document.getElementById('regen-gaya-button'),
+            regenJudulButton: document.getElementById('regen-judul-button'),
         };
 
+        function renderJudulLagu(titles = []) {
+            elements.judulLaguList.innerHTML = '';
+            if (titles.length === 0) {
+                 for (let i = 0; i < 5; i++) {
+                    titles.push(`Alternatif Judul ${i + 1}`);
+                }
+            }
+            titles.forEach(title => {
+                const container = document.createElement('div');
+                container.className = 'relative flex items-center';
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.value = title;
+                input.className = 'form-input w-full p-2 pr-12';
+                const button = document.createElement('button');
+                button.textContent = 'SALIN';
+                button.className = 'absolute right-2 top-1/2 -translate-y-1/2 btn btn-secondary px-2 py-1 text-xs';
+                button.onclick = () => {
+                    input.select();
+                    try {
+                        document.execCommand('copy');
+                        button.textContent = 'DISALIN!';
+                        setTimeout(() => { button.textContent = 'SALIN'; }, 2000);
+                    } catch (err) {
+                        button.textContent = 'GAGAL';
+                    }
+                };
+                container.appendChild(input);
+                container.appendChild(button);
+                elements.judulLaguList.appendChild(container);
+            });
+        }
         // --- Functions ---
         const applyTheme = (theme) => {
             if (theme === 'dark') {
@@ -1212,7 +1253,7 @@
             const isLaguTab = tab === 'lagu';
             elements.laguOutputSection.classList.toggle('hidden', !isLaguTab);
             elements.finalPromptContainer.classList.toggle('hidden', isLaguTab);
-            elements.aspectRatioDropdown.classList.toggle('hidden', isLaguTab);
+            elements.aspectRatioContainer.classList.toggle('hidden', isLaguTab);
 
             elements.jsonOutputContainer.classList.add('hidden');
             elements.showJsonButton.textContent = 'TAMPILKAN JSON';
@@ -2097,7 +2138,10 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
             elements.analyzeImageButton.addEventListener('click', analyzeImageWithGemini);
             elements.analyzeCharButton.addEventListener('click', analyzeCharacterWithGemini);
             elements.analyzeVideoImageButton.addEventListener('click', analyzeVideoImageWithGemini);
-            elements.buatPromptLaguButton.addEventListener('click', generateSongPrompt);
+            elements.buatPromptLaguButton.addEventListener('click', generateFullSong);
+            elements.regenLirikButton.addEventListener('click', () => reGenerate('lirik'));
+            elements.regenGayaButton.addEventListener('click', () => reGenerate('gaya'));
+            elements.regenJudulButton.addEventListener('click', () => reGenerate('judul'));
 
             elements.copyLirikButton.addEventListener('click', () => {
                 elements.outputLirik.select();
@@ -2121,18 +2165,7 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
                 }
             });
 
-            elements.copyJudulButton.addEventListener('click', () => {
-                elements.outputJudulLagu.select();
-                try {
-                    document.execCommand('copy');
-                    elements.copyJudulButton.textContent = 'DISALIN!';
-                    setTimeout(() => { elements.copyJudulButton.textContent = 'SALIN'; }, 2000);
-                } catch (err) {
-                    elements.copyJudulButton.textContent = 'GAGAL';
-                }
-            });
-
-            async function generateSongPrompt() {
+            async function generateFullSong() {
                 const tema = document.getElementById('tema-lagu').value.trim();
                 if (!tema) {
                     alert("Mohon masukkan Tema Lagu terlebih dahulu.");
@@ -2143,7 +2176,7 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
                 elements.buatPromptLaguButton.innerHTML = `<span class="loader"></span> MEMBUAT LAGU...`;
                 elements.outputLirik.value = "AI sedang meracik lirik untuk Anda...";
                 elements.outputGaya.value = "AI sedang meracik gaya musik untuk Anda...";
-                elements.outputJudulLagu.value = "AI sedang memikirkan judul-judul yang menarik...";
+                renderJudulLagu([]); // Clear and show placeholders
 
                 const bahasaSelect = document.getElementById('bahasa-lagu');
                 let bahasa = bahasaSelect.value;
@@ -2156,31 +2189,27 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
                 const genreKombinasi = document.getElementById('genre-kombinasi-lagu').value;
                 const batasKarakter = document.getElementById('batas-karakter-gaya').value;
 
-                const systemPrompt = `Anda adalah seorang pencipta lagu ahli dan produser musik. Tugas Anda adalah membuat konten untuk prompt lagu di AI SUNO berdasarkan input pengguna.
+                const systemPrompt = `Anda adalah seorang pencipta lagu ahli dan produser musik. Tugas Anda adalah membuat konten untuk prompt lagu di AI SUNO.
 
                 Instruksi PENTING:
-                1. Hasilkan LIRIK dan GAYA (Styles) secara TERPISAH.
-                2. GAYA (Styles) harus berupa daftar kata kunci deskriptif yang dipisahkan koma, TANPA menyebutkan nama artis atau band. Patuhi batas karakter yang diminta.
-                3. Buat persis 5 alternatif judul lagu.
-                4. Jawab HANYA dalam format JSON yang ditentukan. Jangan tambahkan teks atau penjelasan lain di luar JSON.
-                5. Gunakan bahasa yang diminta pengguna untuk lirik dan judul lagu.`;
+                1. Hasilkan LIRIK, GAYA (Styles), dan JUDUL LAGU secara TERPISAH.
+                2. LIRIK harus memiliki format terstruktur dengan label seperti (Verse 1), (Chorus), (Bridge), (Outro), dll.
+                3. GAYA (Styles) harus berupa daftar kata kunci deskriptif, dipisahkan koma, TANPA menyebutkan nama artis. Patuhi batas karakter yang diminta.
+                4. Buat persis 5 alternatif judul lagu.
+                5. Jawab HANYA dalam format JSON yang ditentukan. Jangan ada teks lain di luar JSON.
+                6. Gunakan bahasa yang diminta untuk lirik dan judul.`;
 
-                const userQuery = `Buatkan saya konten lagu dengan detail berikut:
-                - Tema Lagu: ${tema}
-                - Bahasa: ${bahasa}
-                - Vokalis: ${vokalis}
-                - Genre Utama: ${genreUtama}
-                - Genre Kombinasi (jika ada): ${genreKombinasi || 'Tidak ada'}
-                - Batas Karakter untuk Gaya: ${batasKarakter}`;
+                const userQuery = `Buatkan saya konten lagu lengkap dengan detail:
+                - Tema: ${tema}, Bahasa: ${bahasa}, Vokalis: ${vokalis}, Genre Utama: ${genreUtama}, Genre Kombinasi: ${genreKombinasi || 'Tidak ada'}, Batas Karakter Gaya: ${batasKarakter}`;
 
                 const songSchema = {
                     type: "OBJECT",
                     properties: {
-                        "lirik": { "type": "STRING", "description": "Lirik lagu yang lengkap." },
-                        "gaya": { "type": "STRING", "description": `Gaya musik dalam bentuk kata kunci, maksimal ${batasKarakter} karakter.` },
+                        "lirik": { "type": "STRING", "description": "Lirik lagu terstruktur dengan label (Verse), (Chorus), dll." },
+                        "gaya": { "type": "STRING", "description": `Gaya musik dalam kata kunci, maksimal ${batasKarakter} karakter.` },
                         "judul_lagu": {
                             "type": "ARRAY",
-                            "description": "Sebuah array berisi persis 5 string judul lagu alternatif.",
+                            "description": "Array berisi persis 5 string judul lagu.",
                             "items": { "type": "STRING" }
                         }
                     },
@@ -2194,17 +2223,97 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
                     if (parsedResponse.lirik && parsedResponse.gaya && parsedResponse.judul_lagu) {
                         elements.outputLirik.value = parsedResponse.lirik;
                         elements.outputGaya.value = parsedResponse.gaya;
-                        elements.outputJudulLagu.value = parsedResponse.judul_lagu.join('\n');
+                        renderJudulLagu(parsedResponse.judul_lagu);
                     } else {
                         throw new Error("Struktur respons tidak valid.");
                     }
                 } catch (error) {
                      elements.outputLirik.value = "Maaf, terjadi kesalahan: " + error.message;
                      elements.outputGaya.value = "Gagal membuat gaya.";
-                     elements.outputJudulLagu.value = "Gagal membuat judul.";
+                     renderJudulLagu(["Gagal membuat judul."]);
                 } finally {
                     elements.buatPromptLaguButton.disabled = false;
                     elements.buatPromptLaguButton.innerHTML = `<span>BUAT PROMPT LAGU</span>`;
+                }
+            }
+
+            async function reGenerate(part) {
+                const tema = document.getElementById('tema-lagu').value.trim();
+                if (!tema) {
+                    alert("Mohon masukkan Tema Lagu terlebih dahulu.");
+                    return;
+                }
+
+                let button, originalText, loadingText, schema, systemPrompt, userQuery;
+
+                const bahasaSelect = document.getElementById('bahasa-lagu');
+                let bahasa = bahasaSelect.value;
+                if (bahasa === 'lainnya') {
+                    bahasa = document.getElementById('bahasa-lagu-lainnya').value.trim();
+                }
+                const vokalis = document.getElementById('vokalis-lagu').value;
+                const genreUtama = document.getElementById('genre-utama-lagu').value;
+                const genreKombinasi = document.getElementById('genre-kombinasi-lagu').value;
+                const batasKarakter = document.getElementById('batas-karakter-gaya').value;
+
+                const baseUserQuery = `
+                    - Tema: ${tema}, Bahasa: ${bahasa}, Vokalis: ${vokalis}, Genre Utama: ${genreUtama}, Genre Kombinasi: ${genreKombinasi || 'Tidak ada'}, Batas Karakter Gaya: ${batasKarakter}
+                    - Lirik Saat Ini: ${elements.outputLirik.value}
+                    - Gaya Saat Ini: ${elements.outputGaya.value}`;
+
+                switch (part) {
+                    case 'lirik':
+                        button = elements.regenLirikButton;
+                        originalText = 'RE-GENERATE';
+                        loadingText = 'MEMBUAT LIRIK...';
+                        elements.outputLirik.value = "AI sedang meracik lirik baru...";
+                        systemPrompt = `Anda adalah penulis lirik ahli. Tugas Anda adalah menulis ulang atau membuat versi baru dari sebuah lirik berdasarkan konteks yang ada. Hasilkan lirik yang terstruktur dengan label (Verse), (Chorus), dll. Jawab HANYA dengan format JSON.`;
+                        userQuery = `Buatkan lirik baru berdasarkan detail ini: ${baseUserQuery}`;
+                        schema = { type: "OBJECT", properties: { "lirik": { "type": "STRING" } }, required: ["lirik"] };
+                        break;
+                    case 'gaya':
+                        button = elements.regenGayaButton;
+                        originalText = 'RE-GENERATE';
+                        loadingText = 'MEMBUAT GAYA...';
+                        elements.outputGaya.value = "AI sedang meracik gaya musik baru...";
+                        systemPrompt = `Anda adalah produser musik ahli. Tugas Anda adalah membuat deskripsi gaya musik (Styles) dalam bentuk kata kunci. Patuhi batas karakter yang diminta dan JANGAN menyebut nama artis. Jawab HANYA dengan format JSON.`;
+                        userQuery = `Buatkan gaya musik baru berdasarkan detail ini: ${baseUserQuery}`;
+                        schema = { type: "OBJECT", properties: { "gaya": { "type": "STRING" } }, required: ["gaya"] };
+                        break;
+                    case 'judul':
+                        button = elements.regenJudulButton;
+                        originalText = 'RE-GENERATE';
+                        loadingText = 'MEMBUAT JUDUL...';
+                        renderJudulLagu([]);
+                        systemPrompt = `Anda adalah seorang ahli penamaan judul lagu. Tugas Anda adalah membuat 5 alternatif judul lagu yang unik dan menarik. Jawab HANYA dengan format JSON.`;
+                        userQuery = `Buatkan 5 judul lagu baru berdasarkan detail ini: ${baseUserQuery}`;
+                        schema = { type: "OBJECT", properties: { "judul_lagu": { "type": "ARRAY", "items": { "type": "STRING" } } }, required: ["judul_lagu"] };
+                        break;
+                }
+
+                button.disabled = true;
+                button.textContent = loadingText;
+
+                try {
+                    const response = await makeApiCallWithRetry(systemPrompt, userQuery, true, schema);
+                    const parsedResponse = JSON.parse(response);
+
+                    if (part === 'lirik' && parsedResponse.lirik) {
+                        elements.outputLirik.value = parsedResponse.lirik;
+                    } else if (part === 'gaya' && parsedResponse.gaya) {
+                        elements.outputGaya.value = parsedResponse.gaya;
+                    } else if (part === 'judul' && parsedResponse.judul_lagu) {
+                        renderJudulLagu(parsedResponse.judul_lagu);
+                    } else {
+                        throw new Error("Respons tidak sesuai format.");
+                    }
+                } catch (error) {
+                    if (part === 'lirik') elements.outputLirik.value = "Gagal: " + error.message;
+                    if (part === 'gaya') elements.outputGaya.value = "Gagal: " + error.message;
+                    if (part === 'judul') renderJudulLagu(["Gagal."]);
+                } finally {
+                    button.disabled = false;
+                    button.textContent = originalText;
                 }
             }
 
@@ -2256,9 +2365,10 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
              document.getElementById('bahasa-lagu-lainnya').classList.add('hidden');
 
             // 2. Reset specific textareas and outputs
-            ['imageAnalysisResult', 'videoImageAnalysisResult', 'outputPromptEl', 'jsonOutputPrompt', 'characterSheetOutputEl', 'characterScenarioInputEl', 'compositionDetailsEl', 'outputLirik', 'outputGaya', 'outputJudulLagu'].forEach(id => {
+            ['imageAnalysisResult', 'videoImageAnalysisResult', 'outputPromptEl', 'jsonOutputPrompt', 'characterSheetOutputEl', 'characterScenarioInputEl', 'compositionDetailsEl', 'outputLirik', 'outputGaya'].forEach(id => {
                 if (elements[id]) elements[id].value = '';
             });
+            renderJudulLagu([]);
 
             // 3. Clear image state variables
             uploadedImageBase64 = null;
