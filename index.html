@@ -1316,18 +1316,18 @@
         function setupGenreSearch(inputElement, resultsElement) {
             const allGenres = Object.values(genreLagu).flat();
 
-            inputElement.addEventListener('input', () => {
-                const query = inputElement.value.toLowerCase();
-                if (!query) {
-                    resultsElement.classList.add('hidden');
-                    return;
-                }
-
+            const renderResults = (filter = '') => {
                 resultsElement.innerHTML = '';
-                const filteredGenres = allGenres.filter(genre => genre.toLowerCase().includes(query));
+                const filtered = allGenres.filter(genre => genre.toLowerCase().includes(filter.toLowerCase()));
 
-                if (filteredGenres.length > 0) {
-                    filteredGenres.forEach(genre => {
+                if (filtered.length === 0 && filter) {
+                    const item = document.createElement('div');
+                    item.textContent = `Gunakan genre custom: "${filter}"`;
+                    item.className = 'p-2 text-secondary italic';
+                    resultsElement.appendChild(item);
+                } else {
+                    const genresToShow = filter ? filtered : allGenres;
+                    genresToShow.forEach(genre => {
                         const item = document.createElement('div');
                         item.textContent = genre;
                         item.className = 'p-2 cursor-pointer hover:bg-tertiary';
@@ -1337,15 +1337,12 @@
                         });
                         resultsElement.appendChild(item);
                     });
-                } else {
-                     const item = document.createElement('div');
-                     item.textContent = `Gunakan genre custom: "${inputElement.value}"`;
-                     item.className = 'p-2 text-secondary italic';
-                     resultsElement.appendChild(item);
                 }
-
                 resultsElement.classList.remove('hidden');
-            });
+            };
+
+            inputElement.addEventListener('focus', () => renderResults(inputElement.value));
+            inputElement.addEventListener('input', () => renderResults(inputElement.value));
 
             document.addEventListener('click', (e) => {
                 if (!inputElement.parentElement.contains(e.target)) {
