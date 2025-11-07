@@ -1388,15 +1388,20 @@
             elements.videoPreviewContainer.classList.toggle('hidden', tab !== 'video' || !videoRefImageFile);
 
             const isLaguTab = tab === 'lagu';
-            elements.laguOutputSection.classList.toggle('hidden', !isLaguTab);
-            elements.finalPromptContainer.classList.toggle('hidden', isLaguTab);
-            elements.aspectRatioContainer.classList.toggle('hidden', isLaguTab);
+
+            if (isLaguTab) {
+                elements.laguOutputSection.classList.remove('hidden');
+                elements.finalPromptContainer.classList.add('hidden');
+                elements.aspectRatioContainer.classList.add('hidden');
+            } else {
+                elements.laguOutputSection.classList.add('hidden');
+                elements.finalPromptContainer.classList.remove('hidden');
+                elements.aspectRatioContainer.classList.remove('hidden');
+                updateGeneratedPrompt();
+            }
 
             elements.jsonOutputContainer.classList.add('hidden');
             elements.showJsonButton.textContent = 'TAMPILKAN JSON';
-            if (!isLaguTab) {
-                updateGeneratedPrompt();
-            }
         }
 
         function generateCharacterPrompt() {
