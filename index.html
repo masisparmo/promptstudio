@@ -300,7 +300,7 @@
             overflow-y: auto; 
         }
 
-        .chat-bubble {
+        .chat-bubble, .preserve-whitespace {
             white-space: pre-wrap;
             word-break: break-word;
         }
@@ -314,7 +314,7 @@
         }
     </style>
 </head>
-<body class="antialiased pt-32">
+<body class="antialiased">
     <!-- Welcome Screen -->
     <div id="welcome-screen" class="min-h-screen flex flex-col items-center justify-center p-4">
         <div class="text-center mb-8">
@@ -779,14 +779,18 @@
                                     <input type="text" id="alat-musik-lainnya" class="form-input w-full p-2.5 mt-2 hidden" placeholder="Ketik alat musik yang diinginkan">
                                 </div>
                                 <div>
-                                    <label for="genre-utama-lagu" class="block mb-2 text-sm font-medium text-secondary">4. Genre Utama</label>
-                                    <select id="genre-utama-lagu" class="form-select w-full p-2.5"></select>
-                                    <input type="text" id="genre-utama-lagu-lainnya" class="form-input w-full p-2.5 mt-2 hidden" placeholder="Ketik genre utama yang diinginkan">
+                                    <label for="genre-utama-search" class="block mb-2 text-sm font-medium text-secondary">4. Genre Utama</label>
+                                    <div class="relative" id="genre-utama-container">
+                                        <input type="text" id="genre-utama-search" class="form-input w-full p-2.5" placeholder="Ketik untuk mencari atau masukkan genre custom...">
+                                        <div id="genre-utama-results" class="hidden absolute z-10 w-full mt-1 bg-primary-solid border border-border-color rounded-md shadow-lg max-h-60 overflow-auto"></div>
+                                    </div>
                                 </div>
                                 <div>
-                                    <label for="genre-kombinasi-lagu" class="block mb-2 text-sm font-medium text-secondary">5. Genre Kombinasi (Opsional)</label>
-                                    <select id="genre-kombinasi-lagu" class="form-select w-full p-2.5"></select>
-                                    <input type="text" id="genre-kombinasi-lagu-lainnya" class="form-input w-full p-2.5 mt-2 hidden" placeholder="Ketik genre kombinasi yang diinginkan">
+                                    <label for="genre-kombinasi-search" class="block mb-2 text-sm font-medium text-secondary">5. Genre Kombinasi (Opsional)</label>
+                                    <div class="relative" id="genre-kombinasi-container">
+                                        <input type="text" id="genre-kombinasi-search" class="form-input w-full p-2.5" placeholder="Ketik untuk mencari atau masukkan genre custom...">
+                                        <div id="genre-kombinasi-results" class="hidden absolute z-10 w-full mt-1 bg-primary-solid border border-border-color rounded-md shadow-lg max-h-60 overflow-auto"></div>
+                                    </div>
                                 </div>
                                 <div>
                                     <label for="input-lainnya-lagu" class="block mb-2 text-sm font-medium text-secondary">6. Input Lainnya (Contoh: 120 BPM, tempo ceria)</label>
@@ -878,7 +882,7 @@
                                         <button id="regen-lirik-button" class="btn btn-secondary px-2 py-1 text-xs">RE-GENERATE</button>
                                     </div>
                                     <div class="relative">
-                                        <textarea id="output-lirik" rows="10" class="form-input w-full p-2.5 pr-24"></textarea>
+                                        <textarea id="output-lirik" rows="10" class="form-input w-full p-2.5 pr-24 preserve-whitespace"></textarea>
                                         <button id="copy-lirik-button" class="absolute top-2 right-2 btn btn-secondary px-3 py-1.5 text-xs">SALIN</button>
                                     </div>
                                 </div>
@@ -888,7 +892,7 @@
                                         <button id="regen-alternatif-button" class="btn btn-secondary px-2 py-1 text-xs">RE-GENERATE</button>
                                     </div>
                                     <div class="relative">
-                                        <textarea id="output-alternatif" rows="6" class="form-input w-full p-2.5 pr-24"></textarea>
+                                        <textarea id="output-alternatif" rows="6" class="form-input w-full p-2.5 pr-24 preserve-whitespace"></textarea>
                                         <button id="copy-alternatif-button" class="absolute top-2 right-2 btn btn-secondary px-3 py-1.5 text-xs">SALIN</button>
                                     </div>
                                 </div>
@@ -898,7 +902,7 @@
                                         <button id="regen-gaya-button" class="btn btn-secondary px-2 py-1 text-xs">RE-GENERATE</button>
                                     </div>
                                     <div class="relative">
-                                        <textarea id="output-gaya" rows="4" class="form-input w-full p-2.5 pr-24"></textarea>
+                                        <textarea id="output-gaya" rows="4" class="form-input w-full p-2.5 pr-24 preserve-whitespace"></textarea>
                                         <button id="copy-gaya-button" class="absolute top-2 right-2 btn btn-secondary px-3 py-1.5 text-xs">SALIN</button>
                                     </div>
                                 </div>
@@ -1117,6 +1121,10 @@
             outputAlternatif: document.getElementById('output-alternatif'),
             regenAlternatifButton: document.getElementById('regen-alternatif-button'),
             copyAlternatifButton: document.getElementById('copy-alternatif-button'),
+            genreUtamaSearch: document.getElementById('genre-utama-search'),
+            genreUtamaResults: document.getElementById('genre-utama-results'),
+            genreKombinasiSearch: document.getElementById('genre-kombinasi-search'),
+            genreKombinasiResults: document.getElementById('genre-kombinasi-results'),
         };
 
         function renderJudulLagu(titles = []) {
@@ -1305,33 +1313,45 @@
             ]
         };
 
-        function populateGenreDropdowns() {
-            const genreUtamaSelect = document.getElementById('genre-utama-lagu');
-            const genreKombinasiSelect = document.getElementById('genre-kombinasi-lagu');
+        function setupGenreSearch(inputElement, resultsElement) {
+            const allGenres = Object.values(genreLagu).flat();
 
-            genreUtamaSelect.innerHTML = '';
-            genreKombinasiSelect.innerHTML = '';
+            inputElement.addEventListener('input', () => {
+                const query = inputElement.value.toLowerCase();
+                if (!query) {
+                    resultsElement.classList.add('hidden');
+                    return;
+                }
 
-            genreUtamaSelect.add(new Option("Pilih genre...", ""));
-            genreKombinasiSelect.add(new Option("Tidak ada", ""));
+                resultsElement.innerHTML = '';
+                const filteredGenres = allGenres.filter(genre => genre.toLowerCase().includes(query));
 
-            genreUtamaSelect.add(new Option("Ketik sendiri...", "custom"));
-            genreKombinasiSelect.add(new Option("Ketik sendiri...", "custom"));
+                if (filteredGenres.length > 0) {
+                    filteredGenres.forEach(genre => {
+                        const item = document.createElement('div');
+                        item.textContent = genre;
+                        item.className = 'p-2 cursor-pointer hover:bg-tertiary';
+                        item.addEventListener('click', () => {
+                            inputElement.value = genre;
+                            resultsElement.classList.add('hidden');
+                        });
+                        resultsElement.appendChild(item);
+                    });
+                } else {
+                     const item = document.createElement('div');
+                     item.textContent = `Gunakan genre custom: "${inputElement.value}"`;
+                     item.className = 'p-2 text-secondary italic';
+                     resultsElement.appendChild(item);
+                }
 
-            for (const group in genreLagu) {
-                const optgroupUtama = document.createElement('optgroup');
-                optgroupUtama.label = group;
-                const optgroupKombinasi = document.createElement('optgroup');
-                optgroupKombinasi.label = group;
+                resultsElement.classList.remove('hidden');
+            });
 
-                genreLagu[group].forEach(genre => {
-                    optgroupUtama.appendChild(new Option(genre, genre));
-                    optgroupKombinasi.appendChild(new Option(genre, genre));
-                });
-
-                genreUtamaSelect.appendChild(optgroupUtama);
-                genreKombinasiSelect.appendChild(optgroupKombinasi);
-            }
+            document.addEventListener('click', (e) => {
+                if (!inputElement.parentElement.contains(e.target)) {
+                    resultsElement.classList.add('hidden');
+                }
+            });
         }
 
         function populateInstrumentDropdown() {
@@ -2113,6 +2133,7 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
                     userApiKey = key;
                     apiMode = 'user';
                     elements.welcomeScreen.style.display = 'none';
+                    document.body.classList.add('pt-32'); // Tambahkan padding saat aplikasi utama tampil
                     elements.mainApp.classList.add('active');
                     elements.assistantButton.classList.remove('hidden');
                 } else {
@@ -2142,17 +2163,6 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
                 bahasaLaguLainnyaInput.classList.toggle('hidden', bahasaLaguSelect.value !== 'lainnya');
             });
 
-            const genreUtamaSelect = document.getElementById('genre-utama-lagu');
-            const genreUtamaLainnyaInput = document.getElementById('genre-utama-lagu-lainnya');
-            genreUtamaSelect.addEventListener('change', () => {
-                genreUtamaLainnyaInput.classList.toggle('hidden', genreUtamaSelect.value !== 'custom');
-            });
-
-            const genreKombinasiSelect = document.getElementById('genre-kombinasi-lagu');
-            const genreKombinasiLainnyaInput = document.getElementById('genre-kombinasi-lagu-lainnya');
-            genreKombinasiSelect.addEventListener('change', () => {
-                genreKombinasiLainnyaInput.classList.toggle('hidden', genreKombinasiSelect.value !== 'custom');
-            });
 
             const vokalisSelect = document.getElementById('vokalis-lagu');
             const instrumentContainer = document.getElementById('instrument-selection-container');
@@ -2316,17 +2326,8 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
 
                 const vokalis = document.getElementById('vokalis-lagu').value;
 
-                const genreUtamaSelect = document.getElementById('genre-utama-lagu');
-                let genreUtama = genreUtamaSelect.value;
-                if (genreUtama === 'custom') {
-                    genreUtama = document.getElementById('genre-utama-lagu-lainnya').value.trim();
-                }
-
-                const genreKombinasiSelect = document.getElementById('genre-kombinasi-lagu');
-                let genreKombinasi = genreKombinasiSelect.value;
-                if (genreKombinasi === 'custom') {
-                    genreKombinasi = document.getElementById('genre-kombinasi-lagu-lainnya').value.trim();
-                }
+                let genreUtama = elements.genreUtamaSearch.value.trim();
+                let genreKombinasi = elements.genreKombinasiSearch.value.trim();
 
                 const inputLainnya = document.getElementById('input-lainnya-lagu').value.trim();
 
@@ -2356,17 +2357,8 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
 
                 const vokalis = document.getElementById('vokalis-lagu').value;
 
-                const genreUtamaSelect = document.getElementById('genre-utama-lagu');
-                let genreUtama = genreUtamaSelect.value;
-                if (genreUtama === 'custom') {
-                    genreUtama = document.getElementById('genre-utama-lagu-lainnya').value.trim();
-                }
-
-                const genreKombinasiSelect = document.getElementById('genre-kombinasi-lagu');
-                let genreKombinasi = genreKombinasiSelect.value;
-                if (genreKombinasi === 'custom') {
-                    genreKombinasi = document.getElementById('genre-kombinasi-lagu-lainnya').value.trim();
-                }
+                let genreUtama = elements.genreUtamaSearch.value.trim();
+                let genreKombinasi = elements.genreKombinasiSearch.value.trim();
 
                 const inputLainnya = document.getElementById('input-lainnya-lagu').value.trim();
                 const batasKarakter = document.getElementById('batas-karakter-gaya').value;
@@ -2461,17 +2453,8 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
                 }
                 const vokalis = document.getElementById('vokalis-lagu').value;
 
-                const genreUtamaSelect = document.getElementById('genre-utama-lagu');
-                let genreUtama = genreUtamaSelect.value;
-                if (genreUtama === 'custom') {
-                    genreUtama = document.getElementById('genre-utama-lagu-lainnya').value.trim();
-                }
-
-                const genreKombinasiSelect = document.getElementById('genre-kombinasi-lagu');
-                let genreKombinasi = genreKombinasiSelect.value;
-                if (genreKombinasi === 'custom') {
-                    genreKombinasi = document.getElementById('genre-kombinasi-lagu-lainnya').value.trim();
-                }
+                let genreUtama = elements.genreUtamaSearch.value.trim();
+                let genreKombinasi = elements.genreKombinasiSearch.value.trim();
 
                 const inputLainnya = document.getElementById('input-lainnya-lagu').value.trim();
                 const batasKarakter = document.getElementById('batas-karakter-gaya').value;
@@ -2656,7 +2639,8 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
            const initialOption = elements.aspectRatioMenu.querySelector('.aspect-ratio-option');
            updateDropdownButton(initialOption);
            
-           populateGenreDropdowns();
+           setupGenreSearch(elements.genreUtamaSearch, elements.genreUtamaResults);
+           setupGenreSearch(elements.genreKombinasiSearch, elements.genreKombinasiResults);
            populateInstrumentDropdown();
            handleTujuanGambarChange();
            switchDesignerTab('image');
