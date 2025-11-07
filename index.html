@@ -367,7 +367,7 @@
                  <h1 class="text-4xl md:text-5xl font-bold tracking-tight">
                     PROMPT STUDIO
                 </h1>
-                <p class="mt-2 text-lg text-secondary">Cara Mudah Membuat Prompt Image & Video</p>
+                <p class="mt-2 text-lg text-secondary">Cara Mudah Membuat Prompt Image, Video, Lagu</p>
             </div>
             <button id="theme-toggle" class="p-2 rounded-full bg-tertiary hover:bg-border-color transition-colors w-12 h-12 flex items-center justify-center">
                 <svg id="theme-icon-light" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
@@ -451,6 +451,108 @@
                                 <li><strong>Gunakan Instruksi Bertahap:</strong> Untuk adegan yang kompleks, bagi prompt Anda menjadi beberapa langkah. "Pertama, buat latar belakang hutan berkabut yang tenang saat fajar. Kemudian, di latar depan, tambahkan altar batu kuno yang tertutup lumut..."</li>
                                 <li><strong>Kendalikan Kamera:</strong> Gunakan bahasa fotografi dan sinematik untuk mengontrol komposisi, seperti *wide-angle shot, macro shot, low-angle perspective.*</li>
                             </ul>
+                        </div>
+                    </div>
+                </article>
+                <article class="card p-6 md:p-8">
+                    <h2 class="text-3xl font-bold mb-4">Materi 4: Prompt Engineering untuk Lagu (SUNO AI)</h2>
+                    <p class="mb-6 text-secondary">Membuat lagu dengan AI seperti SUNO adalah proses kreatif yang memadukan lirik dan deskripsi musik. Prompt yang baik adalah kunci untuk memandu AI menghasilkan lagu yang sesuai dengan visi Anda. Ada dua bagian utama dalam prompt SUNO: **Lirik** dan **Gaya Musik (Style of Music)**.</p>
+                    <div class="space-y-8">
+                        <div>
+                            <h3 class="text-2xl font-bold">1. Struktur Prompt: Lirik & Gaya</h3>
+                            <p class="mt-2 text-secondary">SUNO memisahkan lirik dari deskripsi musik. Anda memasukkan lirik di satu bidang dan gaya di bidang lain. Namun, untuk hasil terbaik, Anda perlu memahami bagaimana keduanya bekerja sama.</p>
+                            <div class="mt-4 space-y-6">
+                                <div class="prompt-card p-4">
+                                    <h4 class="font-semibold">Format Lirik dengan Penanda (Tags)</h4>
+                                    <p class="text-sm mb-2 text-secondary">SUNO mengenali penanda struktural untuk mengatur bagian-bagian lagu. Ini membantu AI memahami kapan harus mengubah dinamika musik atau vokal. Penanda yang umum digunakan adalah:</p>
+                                    <ul class="list-disc list-inside mt-2 space-y-1 text-sm text-secondary">
+                                        <li><code>[Verse]</code> atau <code>[Verse 1]</code>, <code>[Verse 2]</code></li>
+                                        <li><code>[Chorus]</code></li>
+                                        <li><code>[Bridge]</code></li>
+                                        <li><code>[Pre-Chorus]</code></li>
+                                        <li><code>[Outro]</code> / <code>[Intro]</code></li>
+                                        <li><code>[Guitar Solo]</code> atau <code>[Instrumental]</code></li>
+                                        <li><code>[Hook]</code></li>
+                                    </ul>
+                                     <p class="font-mono p-3 rounded-md text-sm mt-4">
+[Verse]<br>
+Di sudut senja, kita bertemu<br>
+Langit oranye, saksi bisu<br><br>
+[Chorus]<br>
+Oh, melodi cinta, kau tercipta<br>
+Dari dua hati, satu irama
+                                     </p>
+                                </div>
+                                <div class="prompt-card p-4">
+                                    <h4 class="font-semibold">Deskripsi Gaya Musik (Style of Music)</h4>
+                                    <p class="text-sm mb-2 text-secondary">Ini adalah bagian terpenting untuk mendefinisikan suara lagu Anda. Gunakan daftar kata kunci yang deskriptif, dipisahkan oleh koma. Semakin spesifik, semakin baik. Hindari nama artis untuk menghindari peniruan langsung.</p>
+                                    <p class="font-mono p-3 rounded-md text-sm">
+Indonesian Pop, uplifting, cheerful, acoustic guitar, female vocal, clear production, 120 BPM
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-bold mt-8">2. Praktik Terbaik untuk Prompt Gaya (Style)</h3>
+                            <p class="mt-2 text-secondary">Berikut adalah elemen-elemen kunci untuk dimasukkan dalam prompt gaya Anda untuk kontrol maksimal.</p>
+                             <div class="mt-4 space-y-6">
+                                <div class="prompt-card p-4">
+                                    <h4 class="font-semibold">Genre Inti & Kombinasi</h4>
+                                    <p class="text-sm mb-2 text-secondary">Mulailah dengan genre utama, lalu tambahkan sub-genre atau genre lain untuk menciptakan suara yang unik.</p>
+                                    <p class="font-mono p-3 rounded-md text-sm">✅ Benar: <code>Indie Rock, Shoegaze, Dream Pop</code><br>❌ Kurang Efektif: <code>Rock</code></p>
+                                </div>
+                                <div class="prompt-card p-4">
+                                    <h4 class="font-semibold">Mood dan Atmosfer</h4>
+                                    <p class="text-sm mb-2 text-secondary">Jelaskan perasaan yang ingin Anda bangkitkan. Kata-kata seperti 'melancholic', 'energetic', 'dreamy', atau 'epic' sangat membantu.</p>
+                                     <p class="font-mono p-3 rounded-md text-sm">Contoh: <code>melancholic, rainy day, nostalgic, warm</code></p>
+                                </div>
+                                <div class="prompt-card p-4">
+                                    <h4 class="font-semibold">Instrumen Spesifik</h4>
+                                    <p class="text-sm mb-2 text-secondary">Sebutkan instrumen yang Anda ingin menonjol. Ini akan sangat memengaruhi aransemen.</p>
+                                    <p class="font-mono p-3 rounded-md text-sm">Contoh: <code>acoustic guitar solo, prominent saxophone, 808 bass, gamelan percussion</code></p>
+                                </div>
+                                 <div class="prompt-card p-4">
+                                    <h4 class="font-semibold">Vokal dan Produksi</h4>
+                                    <p class="text-sm mb-2 text-secondary">Deskripsikan gaya vokal dan kualitas produksi secara keseluruhan.</p>
+                                    <p class="font-mono p-3 rounded-md text-sm">Contoh: <code>female vocal, male falsetto, choir backup vocals, lo-fi production, clean and clear mix</code></p>
+                                </div>
+                                 <div class="prompt-card p-4">
+                                    <h4 class="font-semibold">Tempo (BPM)</h4>
+                                    <p class="text-sm mb-2 text-secondary">Menentukan BPM (Beats Per Minute) memberi Anda kontrol langsung atas kecepatan lagu.</p>
+                                    <p class="font-mono p-3 rounded-md text-sm">Contoh: <code>slow tempo, 90 BPM, fast paced, 160 BPM</code></p>
+                                </div>
+                            </div>
+                        </div>
+                         <div>
+                            <h3 class="text-2xl font-bold mt-8">3. Contoh Prompt Lengkap (Lirik & Gaya)</h3>
+                            <p class="mt-2 text-secondary">Berikut adalah contoh bagaimana lirik dan gaya bekerja sama untuk sebuah lagu tentang hujan.</p>
+                            <div class="mt-4 space-y-4">
+                                <div class="card p-4">
+                                    <h4 class="font-semibold">Lirik:</h4>
+                                    <p class="font-mono p-3 rounded-md text-sm bg-tertiary">
+[Intro]<br>
+(Suara rintik hujan lembut)<br><br>
+[Verse 1]<br>
+Jendela berembun, di luar kelabu<br>
+Secangkir kopi, menemaniku<br>
+Kenangan menari, di setiap tetesnya<br>
+Tentang kita, dulu...<br><br>
+[Chorus]<br>
+Hujan sore ini, bawa aku kembali<br>
+Ke pelukmu yang hangat, redakan sepi<br>
+Setiap rintiknya, adalah melodi<br>
+Lagu cinta, yang takkan terganti<br><br>
+[Outro]<br>
+Hujan... dan kamu...
+                                    </p>
+                                </div>
+                                <div class="card p-4">
+                                    <h4 class="font-semibold">Gaya (Style of Music):</h4>
+                                    <p class="font-mono p-3 rounded-md text-sm bg-tertiary">
+Indonesian Lo-Fi Chillhop, melancholic, rainy day vibe, soft female vocal, gentle piano melody, relaxed beat, warm analog texture, slow tempo, 90 BPM
+                                    </p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </article>
