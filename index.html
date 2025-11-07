@@ -386,7 +386,16 @@
 
         <main>
             <section id="content-belajar" class="content-section active space-y-8">
-                <article class="card p-6 md:p-8">
+                <div class="card p-6 md:p-8">
+                    <h2 class="text-3xl font-bold mb-4">Daftar Isi Panduan</h2>
+                    <ul class="list-disc list-inside space-y-2 text-indigo-400">
+                        <li><a href="#materi-1" class="hover:underline">Materi 1: Prompt Engineering untuk Gambar (Nano Banana)</a></li>
+                        <li><a href="#materi-2" class="hover:underline">Materi 2: Prompt Engineering untuk Video (Veo3)</a></li>
+                        <li><a href="#materi-3" class="hover:underline">Materi 3: Menciptakan Karakter yang Konsisten</a></li>
+                        <li><a href="#materi-4" class="hover:underline">Materi 4: Prompt Engineering untuk Lagu (SUNO AI)</a></li>
+                    </ul>
+                </div>
+                <article id="materi-1" class="card p-6 md:p-8">
                     <h2 class="text-3xl font-bold mb-4">Materi 1: Prompt Engineering untuk Gambar (Nano Banana)</h2>
                     <p class="mb-6 text-secondary">Menguasai Gemini Image Generation dimulai dari satu prinsip fundamental: <strong>Deskripsikan adegan, jangan hanya mendaftar kata kunci</strong>. Kekuatan inti model ini adalah pemahaman bahasanya yang mendalam. Paragraf naratif yang deskriptif hampir selalu menghasilkan gambar yang lebih baik dan koheren.</p>
                     <div class="space-y-8">
@@ -454,7 +463,94 @@
                         </div>
                     </div>
                 </article>
-                <article class="card p-6 md:p-8">
+                <article id="materi-2" class="card p-6 md:p-8">
+                    <h2 class="text-3xl font-bold mb-4">Materi 2: Prompt Engineering untuk Video (Veo3)</h2>
+                    <p class="mb-6 text-secondary">Prompt yang baik bersifat deskriptif dan jelas. Untuk mendapatkan hasil maksimal dari Veo, mulailah dengan mengidentifikasi ide inti Anda, sempurnakan dengan kata kunci, dan gabungkan terminologi khusus video.</p>
+                     <div class="space-y-6">
+                        <div>
+                            <h3 class="text-xl font-semibold text-indigo-400">1. Elemen Dasar Penulisan Prompt</h3>
+                            <p class="mt-1 text-secondary">Prompt video yang komprehensif harus mencakup elemen-elemen berikut:</p>
+                            <ul class="list-disc list-inside mt-2 grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-2 text-secondary">
+                                <li><b>Subjek:</b> Objek, orang, atau pemandangan utama (misal: "sebuah mobil sport merah").</li>
+                                <li><b>Aksi:</b> Apa yang dilakukan subjek (misal: "melaju kencang di jalanan pesisir").</li>
+                                <li><b>Gaya:</b> Arahan kreatif atau estetika (misal: "gaya film fiksi ilmiah tahun 80-an", "animasi kartun").</li>
+                                <li><b>Posisi & Gerakan Kamera:</b> Kendalikan sudut pandang (misal: "aerial view", "eye-level", "dolly shot").</li>
+                                <li><b>Komposisi:</b> Bagaimana shot dibingkai (misal: "wide shot", "close-up", "single-shot").</li>
+                                <li><b>Fokus & Lensa:</b> Efek visual spesifik (misal: "shallow focus", "macro lens", "wide-angle lens").</li>
+                                <li><b>Suasana (Ambiance):</b> Bagaimana warna dan cahaya berkontribusi (misal: "nada biru dingin", "cahaya senja hangat").</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold text-indigo-400">2. Prompting untuk Audio</h3>
+                             <p class="mt-1 text-secondary">Veo3 dapat menangkap isyarat audio untuk menghasilkan soundtrack yang sinkron.</p>
+                             <ul class="list-disc list-inside mt-2 space-y-1 text-secondary">
+                                 <li><b>Dialog:</b> Gunakan tanda kutip untuk ucapan spesifik. (Contoh: `Pria itu bergumam, "Ini pasti kuncinya."`).</li>
+                                 <li><b>Efek Suara (SFX):</b> Jelaskan suara secara eksplisit. (Contoh: "terdengar suara decitan ban yang nyaring dan deru mesin.").</li>
+                                 <li><b>Suara Sekitar (Ambient Noise):</b> Deskripsikan lanskap suara lingkungan. (Contoh: "Dengungan samar yang menakutkan bergema di latar belakang.").</li>
+                             </ul>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold text-indigo-400">3. Menggunakan Gambar Referensi (Image-to-Video)</h3>
+                            <p class="mt-1 text-secondary">Anda dapat menganimasikan objek, menghidupkan gambar, dan menambahkan gerakan ke pemandangan dengan menggunakan gambar sebagai titik awal. Veo akan menggunakan foto tersebut sebagai frame pertama video Anda.</p>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold text-indigo-400">4. Prompt Negatif</h3>
+                            <p class="mt-1 text-secondary">Tentukan elemen yang <strong>tidak</strong> Anda inginkan dalam video. Cara terbaik adalah dengan mendeskripsikan apa yang tidak ingin Anda lihat, bukan menggunakan bahasa instruktif.</p>
+                            <div class="grid md:grid-cols-2 gap-4 mt-2">
+                                <div class="negative-prompt-box">
+                                    <h4 class="font-semibold">❌ JANGAN GUNAKAN:</h4>
+                                    <p class="text-sm">Bahasa instruktif seperti "tidak ada" atau "jangan". Contoh: "tidak ada dinding".</p>
+                                </div>
+                                <div class="positive-prompt-box">
+                                    <h4 class="font-semibold">✅ GUNAKAN:</h4>
+                                    <p class="text-sm">Deskripsikan apa yang ingin dihindari. Contoh: "-negative_prompt 'dinding, bingkai, bangunan'".</p>
+                                </div>
+                             </div>
+                        </div>
+                        <h3 class="text-2xl font-bold mt-8 mb-4">Contoh Prompt Video: Dari Sederhana ke Detail</h3>
+                        <div class="space-y-4">
+                            <div class="prompt-card p-4">
+                                <h4 class="font-semibold">Contoh: Macan Tutul Salju</h4>
+                                <p class="text-sm mt-2 mb-1 text-secondary">Prompt Sederhana:</p>
+                                <p class="font-mono p-2 rounded-md text-xs">"Makhluk lucu dengan bulu seperti macan tutul salju sedang berjalan di hutan musim dingin, render gaya kartun 3D."</p>
+                                <p class="text-sm mt-3 mb-1 text-secondary">Prompt Detail (Hasil Lebih Baik):</p>
+                                <p class="font-mono p-2 rounded-md text-xs">"Buat adegan animasi 3D pendek dengan gaya kartun yang ceria. Makhluk lucu dengan bulu seperti macan tutul salju, mata besar yang ekspressif, dan bentuk bulat yang ramah, dengan gembira melompat-lompat melalui hutan musim dingin yang aneh. Adegan ini harus menampilkan pohon-pohon bulat yang tertutup salju, kepingan salju yang turun dengan lembut, dan sinar matahari hangat yang menyaring melalui cabang-cabang. Gerakan makhluk yang memantul dan senyum lebarnya harus menyampaikan kegembiraan murni."</p>
+                            </div>
+                             <div class="prompt-card p-4">
+                                <h4 class="font-semibold">Contoh: Adegan Sinematik</h4>
+                                <p class="text-sm mt-2 mb-1 text-secondary">Prompt Kurang Detail:</p>
+                                <p class="font-mono p-2 rounded-md text-xs">"Kamera dolly untuk menunjukkan close up seorang pria putus asa dengan jas hujan hijau. Dia sedang menelepon di telepon putar dinding dengan lampu neon hijau. Terlihat seperti adegan film."</p>
+                                <p class="text-sm mt-3 mb-1 text-secondary">Prompt Detail (Hasil Lebih Baik):</p>
+                                <p class="font-mono p-2 rounded-md text-xs">"Sebuah shot sinematik close-up mengikuti seorang pria putus asa dengan jas hujan hijau yang usang saat dia memutar telepon putar yang terpasang di dinding bata yang kotor, bermandikan cahaya menakutkan dari papan neon hijau. Kamera dolly masuk, memperlihatkan ketegangan di rahangnya dan keputusasaan yang terukir di wajahnya saat dia berjuang untuk menelepon. Kedalaman bidang yang dangkal berfokus pada alisnya yang berkerut dan telepon putar hitam, mengaburkan latar belakang menjadi lautan warna neon dan bayangan yang tidak jelas, menciptakan rasa urgensi dan isolasi."</p>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+                 <article id="materi-3" class="card p-6 md:p-8">
+                    <h2 class="text-3xl font-bold mb-4">Materi 3: Menciptakan Karakter yang Konsisten</h2>
+                    <p class="mb-6 text-secondary">Salah satu tantangan terbesar dalam AI generatif adalah menjaga agar karakter yang sama muncul secara konsisten di berbagai gambar. Kuncinya adalah membuat **"Character Sheet"**, sebuah prompt dasar super detail yang menjadi fondasi karakter Anda.</p>
+                    <div class="space-y-8">
+                        <div>
+                            <h3 class="text-2xl font-bold">Konsep "Character Sheet"</h3>
+                            <p class="mt-2 text-secondary">Anggap "Character Sheet" sebagai resep atau DNA dari karakter Anda. Semakin spesifik resep awalnya, semakin mudah bagi AI untuk 'mengingat' dan mereplikasi karakter tersebut di berbagai skenario. Prompt ini selalu digunakan sebagai bagian awal dari setiap prompt baru yang melibatkan karakter tersebut.</p>
+
+                            <div class="mt-4 space-y-6">
+                                <div class="prompt-card p-4">
+                                    <h4 class="font-semibold">Contoh "Character Sheet" yang Efektif</h4>
+                                    <p class="text-sm mb-2 text-secondary">Gunakan format `(character sheet: ...)` untuk membantu AI mengenali fondasi karakter Anda. Berikan detail sebanyak mungkin.</p>
+                                    <p class="font-mono p-3 rounded-md text-sm">(character sheet: seorang wanita bernama "Aria", 25 tahun, ras asia, rambut hitam panjang lurus dengan highlight ungu, mata coklat tajam, postur atletis. Pakaian khasnya adalah jaket kulit hitam di atas kaos band metal, celana kargo, dan sepatu boots tempur. Gaya visual: ilustrasi anime modern, pencahayaan sinematik, detail tinggi)</p>
+                                </div>
+                                <div class="prompt-card p-4">
+                                    <h4 class="font-semibold">Contoh Penggunaan dalam Skenario</h4>
+                                    <p class="text-sm mb-2 text-secondary">Setelah Anda memiliki "Character Sheet", Anda hanya perlu menambah deskripsi adegan atau aksi. Selalu sertakan "Character Sheet" lengkap di awal.</p>
+                                    <p class="font-mono p-3 rounded-md text-sm">**(character sheet: ...detail lengkap Aria...)** sedang berdiri di atap gedung pencakar langit saat hujan di malam hari, memandang ke bawah ke jalanan kota neon.</p>
+                                    <p class="font-mono p-3 rounded-md text-sm mt-2">**(character sheet: ...detail lengkap Aria...)** sedang duduk di kafe yang remang-remang, melihat laptopnya dengan ekspresi fokus.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+                <article id="materi-4" class="card p-6 md:p-8">
                     <h2 class="text-3xl font-bold mb-4">Materi 4: Prompt Engineering untuk Lagu (SUNO AI)</h2>
                     <p class="mb-6 text-secondary">Membuat lagu dengan AI seperti SUNO adalah proses kreatif yang memadukan lirik dan deskripsi musik. Prompt yang baik adalah kunci untuk memandu AI menghasilkan lagu yang sesuai dengan visi Anda. Ada dua bagian utama dalam prompt SUNO: **Lirik** dan **Gaya Musik (Style of Music)**.</p>
                     <div class="space-y-8">
@@ -551,93 +647,6 @@ Hujan... dan kamu...
                                     <p class="font-mono p-3 rounded-md text-sm bg-tertiary">
 Indonesian Lo-Fi Chillhop, melancholic, rainy day vibe, soft female vocal, gentle piano melody, relaxed beat, warm analog texture, slow tempo, 90 BPM
                                     </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </article>
-                <article class="card p-6 md:p-8">
-                    <h2 class="text-3xl font-bold mb-4">Materi 2: Prompt Engineering untuk Video (Veo3)</h2>
-                    <p class="mb-6 text-secondary">Prompt yang baik bersifat deskriptif dan jelas. Untuk mendapatkan hasil maksimal dari Veo, mulailah dengan mengidentifikasi ide inti Anda, sempurnakan dengan kata kunci, dan gabungkan terminologi khusus video.</p>
-                     <div class="space-y-6">
-                        <div>
-                            <h3 class="text-xl font-semibold text-indigo-400">1. Elemen Dasar Penulisan Prompt</h3>
-                            <p class="mt-1 text-secondary">Prompt video yang komprehensif harus mencakup elemen-elemen berikut:</p>
-                            <ul class="list-disc list-inside mt-2 grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-2 text-secondary">
-                                <li><b>Subjek:</b> Objek, orang, atau pemandangan utama (misal: "sebuah mobil sport merah").</li>
-                                <li><b>Aksi:</b> Apa yang dilakukan subjek (misal: "melaju kencang di jalanan pesisir").</li>
-                                <li><b>Gaya:</b> Arahan kreatif atau estetika (misal: "gaya film fiksi ilmiah tahun 80-an", "animasi kartun").</li>
-                                <li><b>Posisi & Gerakan Kamera:</b> Kendalikan sudut pandang (misal: "aerial view", "eye-level", "dolly shot").</li>
-                                <li><b>Komposisi:</b> Bagaimana shot dibingkai (misal: "wide shot", "close-up", "single-shot").</li>
-                                <li><b>Fokus & Lensa:</b> Efek visual spesifik (misal: "shallow focus", "macro lens", "wide-angle lens").</li>
-                                <li><b>Suasana (Ambiance):</b> Bagaimana warna dan cahaya berkontribusi (misal: "nada biru dingin", "cahaya senja hangat").</li>
-                            </ul>
-                        </div>
-                        <div>
-                            <h3 class="text-xl font-semibold text-indigo-400">2. Prompting untuk Audio</h3>
-                             <p class="mt-1 text-secondary">Veo3 dapat menangkap isyarat audio untuk menghasilkan soundtrack yang sinkron.</p>
-                             <ul class="list-disc list-inside mt-2 space-y-1 text-secondary">
-                                 <li><b>Dialog:</b> Gunakan tanda kutip untuk ucapan spesifik. (Contoh: `Pria itu bergumam, "Ini pasti kuncinya."`).</li>
-                                 <li><b>Efek Suara (SFX):</b> Jelaskan suara secara eksplisit. (Contoh: "terdengar suara decitan ban yang nyaring dan deru mesin.").</li>
-                                 <li><b>Suara Sekitar (Ambient Noise):</b> Deskripsikan lanskap suara lingkungan. (Contoh: "Dengungan samar yang menakutkan bergema di latar belakang.").</li>
-                             </ul>
-                        </div>
-                        <div>
-                            <h3 class="text-xl font-semibold text-indigo-400">3. Menggunakan Gambar Referensi (Image-to-Video)</h3>
-                            <p class="mt-1 text-secondary">Anda dapat menganimasikan objek, menghidupkan gambar, dan menambahkan gerakan ke pemandangan dengan menggunakan gambar sebagai titik awal. Veo akan menggunakan foto tersebut sebagai frame pertama video Anda.</p>
-                        </div>
-                        <div>
-                            <h3 class="text-xl font-semibold text-indigo-400">4. Prompt Negatif</h3>
-                            <p class="mt-1 text-secondary">Tentukan elemen yang <strong>tidak</strong> Anda inginkan dalam video. Cara terbaik adalah dengan mendeskripsikan apa yang tidak ingin Anda lihat, bukan menggunakan bahasa instruktif.</p>
-                            <div class="grid md:grid-cols-2 gap-4 mt-2">
-                                <div class="negative-prompt-box">
-                                    <h4 class="font-semibold">❌ JANGAN GUNAKAN:</h4>
-                                    <p class="text-sm">Bahasa instruktif seperti "tidak ada" atau "jangan". Contoh: "tidak ada dinding".</p>
-                                </div>
-                                <div class="positive-prompt-box">
-                                    <h4 class="font-semibold">✅ GUNAKAN:</h4>
-                                    <p class="text-sm">Deskripsikan apa yang ingin dihindari. Contoh: "-negative_prompt 'dinding, bingkai, bangunan'".</p>
-                                </div>
-                             </div>
-                        </div>
-                        <h3 class="text-2xl font-bold mt-8 mb-4">Contoh Prompt Video: Dari Sederhana ke Detail</h3>
-                        <div class="space-y-4">
-                            <div class="prompt-card p-4">
-                                <h4 class="font-semibold">Contoh: Macan Tutul Salju</h4>
-                                <p class="text-sm mt-2 mb-1 text-secondary">Prompt Sederhana:</p>
-                                <p class="font-mono p-2 rounded-md text-xs">"Makhluk lucu dengan bulu seperti macan tutul salju sedang berjalan di hutan musim dingin, render gaya kartun 3D."</p>
-                                <p class="text-sm mt-3 mb-1 text-secondary">Prompt Detail (Hasil Lebih Baik):</p>
-                                <p class="font-mono p-2 rounded-md text-xs">"Buat adegan animasi 3D pendek dengan gaya kartun yang ceria. Makhluk lucu dengan bulu seperti macan tutul salju, mata besar yang ekspressif, dan bentuk bulat yang ramah, dengan gembira melompat-lompat melalui hutan musim dingin yang aneh. Adegan ini harus menampilkan pohon-pohon bulat yang tertutup salju, kepingan salju yang turun dengan lembut, dan sinar matahari hangat yang menyaring melalui cabang-cabang. Gerakan makhluk yang memantul dan senyum lebarnya harus menyampaikan kegembiraan murni."</p>
-                            </div>
-                             <div class="prompt-card p-4">
-                                <h4 class="font-semibold">Contoh: Adegan Sinematik</h4>
-                                <p class="text-sm mt-2 mb-1 text-secondary">Prompt Kurang Detail:</p>
-                                <p class="font-mono p-2 rounded-md text-xs">"Kamera dolly untuk menunjukkan close up seorang pria putus asa dengan jas hujan hijau. Dia sedang menelepon di telepon putar dinding dengan lampu neon hijau. Terlihat seperti adegan film."</p>
-                                <p class="text-sm mt-3 mb-1 text-secondary">Prompt Detail (Hasil Lebih Baik):</p>
-                                <p class="font-mono p-2 rounded-md text-xs">"Sebuah shot sinematik close-up mengikuti seorang pria putus asa dengan jas hujan hijau yang usang saat dia memutar telepon putar yang terpasang di dinding bata yang kotor, bermandikan cahaya menakutkan dari papan neon hijau. Kamera dolly masuk, memperlihatkan ketegangan di rahangnya dan keputusasaan yang terukir di wajahnya saat dia berjuang untuk menelepon. Kedalaman bidang yang dangkal berfokus pada alisnya yang berkerut dan telepon putar hitam, mengaburkan latar belakang menjadi lautan warna neon dan bayangan yang tidak jelas, menciptakan rasa urgensi dan isolasi."</p>
-                            </div>
-                        </div>
-                    </div>
-                </article>
-                 <article class="card p-6 md:p-8">
-                    <h2 class="text-3xl font-bold mb-4">Materi 3: Menciptakan Karakter yang Konsisten</h2>
-                    <p class="mb-6 text-secondary">Salah satu tantangan terbesar dalam AI generatif adalah menjaga agar karakter yang sama muncul secara konsisten di berbagai gambar. Kuncinya adalah membuat **"Character Sheet"**, sebuah prompt dasar super detail yang menjadi fondasi karakter Anda.</p>
-                    <div class="space-y-8">
-                        <div>
-                            <h3 class="text-2xl font-bold">Konsep "Character Sheet"</h3>
-                            <p class="mt-2 text-secondary">Anggap "Character Sheet" sebagai resep atau DNA dari karakter Anda. Semakin spesifik resep awalnya, semakin mudah bagi AI untuk 'mengingat' dan mereplikasi karakter tersebut di berbagai skenario. Prompt ini selalu digunakan sebagai bagian awal dari setiap prompt baru yang melibatkan karakter tersebut.</p>
-                            
-                            <div class="mt-4 space-y-6">
-                                <div class="prompt-card p-4">
-                                    <h4 class="font-semibold">Contoh "Character Sheet" yang Efektif</h4>
-                                    <p class="text-sm mb-2 text-secondary">Gunakan format `(character sheet: ...)` untuk membantu AI mengenali fondasi karakter Anda. Berikan detail sebanyak mungkin.</p>
-                                    <p class="font-mono p-3 rounded-md text-sm">(character sheet: seorang wanita bernama "Aria", 25 tahun, ras asia, rambut hitam panjang lurus dengan highlight ungu, mata coklat tajam, postur atletis. Pakaian khasnya adalah jaket kulit hitam di atas kaos band metal, celana kargo, dan sepatu boots tempur. Gaya visual: ilustrasi anime modern, pencahayaan sinematik, detail tinggi)</p>
-                                </div>
-                                <div class="prompt-card p-4">
-                                    <h4 class="font-semibold">Contoh Penggunaan dalam Skenario</h4>
-                                    <p class="text-sm mb-2 text-secondary">Setelah Anda memiliki "Character Sheet", Anda hanya perlu menambah deskripsi adegan atau aksi. Selalu sertakan "Character Sheet" lengkap di awal.</p>
-                                    <p class="font-mono p-3 rounded-md text-sm">**(character sheet: ...detail lengkap Aria...)** sedang berdiri di atap gedung pencakar langit saat hujan di malam hari, memandang ke bawah ke jalanan kota neon.</p>
-                                    <p class="font-mono p-3 rounded-md text-sm mt-2">**(character sheet: ...detail lengkap Aria...)** sedang duduk di kafe yang remang-remang, melihat laptopnya dengan ekspresi fokus.</p>
                                 </div>
                             </div>
                         </div>
