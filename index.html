@@ -2531,7 +2531,7 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
                     const parsedResponse = JSON.parse(response);
 
                     if (parsedResponse.lirik && parsedResponse.gaya && parsedResponse.judul_lagu) {
-                        elements.outputLirik.value = parsedResponse.lirik;
+                        elements.outputLirik.value = parsedResponse.lirik.replace(/\\n/g, '\n');
                         elements.outputGaya.value = parsedResponse.gaya;
                         renderJudulLagu(parsedResponse.judul_lagu);
                         generateAlternativePrompt(); // Generate the alternative prompt
@@ -2631,7 +2631,7 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
                     const parsedResponse = JSON.parse(response);
 
                     if (part === 'lirik' && parsedResponse.lirik) {
-                        elements.outputLirik.value = parsedResponse.lirik;
+                        elements.outputLirik.value = parsedResponse.lirik.replace(/\\n/g, '\n');
                     } else if (part === 'gaya' && parsedResponse.gaya) {
                         elements.outputGaya.value = parsedResponse.gaya;
                     } else if (part === 'judul' && parsedResponse.judul_lagu) {
