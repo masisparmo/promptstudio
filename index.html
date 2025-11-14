@@ -1093,6 +1093,20 @@ Indonesian Lo-Fi Chillhop, melancholic, rainy day vibe, soft female vocal, gentl
     </div>
 
     <script>
+    function formatLyrics(text) {
+        if (!text) return "";
+
+        // 1. Ganti literal '\n' menjadi karakter newline yang sebenarnya.
+        let formattedText = text.replace(/\\n/g, '\n');
+
+        // 2. Pastikan ada newline SEBELUM tag struktur
+        formattedText = formattedText.replace(/(?<!\s)(\[|\()(Verse|Chorus|Bridge|Intro|Outro|Pre-Chorus|Hook|Guitar Solo|Instrumental)/gi, '\n$1$2');
+
+        // 3. Pastikan ada newline SETELAH tag struktur, sebelum lirik dimulai
+        formattedText = formattedText.replace(/((\[|\()(?:Verse|Chorus|Bridge|Intro|Outro|Pre-Chorus|Hook|Guitar Solo|Instrumental)[\w\s-]*?(?:\]|\)))\s*([^\s\n])/gi, '$1\n$3');
+
+        return formattedText;
+    }
     document.addEventListener('DOMContentLoaded', () => {
         
         let userApiKey = null;
@@ -1269,6 +1283,7 @@ Indonesian Lo-Fi Chillhop, melancholic, rainy day vibe, soft female vocal, gentl
                 elements.judulLaguList.appendChild(container);
             });
         }
+
         // --- Functions ---
         const applyTheme = (theme) => {
             if (theme === 'dark') {
@@ -2531,7 +2546,7 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
                     const parsedResponse = JSON.parse(response);
 
                     if (parsedResponse.lirik && parsedResponse.gaya && parsedResponse.judul_lagu) {
-                        elements.outputLirik.value = parsedResponse.lirik.replace(/\\n/g, '\n');
+                        elements.outputLirik.value = formatLyrics(parsedResponse.lirik);
                         elements.outputGaya.value = parsedResponse.gaya;
                         renderJudulLagu(parsedResponse.judul_lagu);
                         generateAlternativePrompt(); // Generate the alternative prompt
@@ -2631,7 +2646,7 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
                     const parsedResponse = JSON.parse(response);
 
                     if (part === 'lirik' && parsedResponse.lirik) {
-                        elements.outputLirik.value = parsedResponse.lirik.replace(/\\n/g, '\n');
+                        elements.outputLirik.value = formatLyrics(parsedResponse.lirik);
                     } else if (part === 'gaya' && parsedResponse.gaya) {
                         elements.outputGaya.value = parsedResponse.gaya;
                     } else if (part === 'judul' && parsedResponse.judul_lagu) {
