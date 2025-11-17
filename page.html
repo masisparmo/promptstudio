@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="id" class="dark"> <!-- Default ke 'id' dan 'dark' -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prompt Studio - Revolusikan Alur Kerja AI Anda</title>
+    
+    <!-- Memuat Tailwind CSS Library DAHULU -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Konfigurasi Tailwind SETELAH library dimuat -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class', // Mengaktifkan mode gelap berdasarkan class 'dark' di <html>
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        // Kustomisasi warna agar konsisten
+                        gray: {
+                            50: '#F9FAFB',
+                            100: '#F3F4F6',
+                            200: '#E5E7EB',
+                            300: '#D1D5DB',
+                            400: '#9CA3AF',
+                            500: '#6B7280',
+                            600: '#4B5563',
+                            700: '#374151',
+                            800: '#1F2937',
+                            900: '#111827',
+                            950: '#030712',
+                        },
+                        purple: {
+                            400: '#c084fc',
+                            600: '#9333ea',
+                            700: '#7e22ce',
+                        }
+                    },
+                    // Efek bayangan untuk tombol dan kartu
+                    boxShadow: {
+                        'lg-purple': '0 10px 15px -3px rgba(147, 51, 234, 0.2), 0 4px 6px -2px rgba(147, 51, 234, 0.1)',
+                    },
+                    // Animasi
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: 0, transform: 'translateY(10px)' },
+                            '100%': { opacity: 1, transform: 'translateY(0)' },
+                        }
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-out forwards',
+                    }
+                }
+            }
+        };
+    </script>
+    
+    <!-- Google Font: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Menerapkan font Inter ke seluruh halaman */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Style untuk tombol bahasa yang aktif */
+        .lang-btn-active {
+            font-weight: 700;
+            color: #9333ea; /* dark:text-purple-400 */
+        }
+        .dark .lang-btn-active {
+            color: #c084fc;
+        }
+        /* Style untuk tombol bahasa yang non-aktif */
+        .lang-btn-inactive {
+            color: #6B7280; /* dark:text-gray-400 */
+        }
+        .dark .lang-btn-inactive {
+            color: #9CA3AF;
+        }
+        .lang-btn-inactive:hover {
+            color: #111827; /* dark:hover:text-white */
+        }
+        .dark .lang-btn-inactive:hover {
+            color: #F9FAFB;
+        }
+    </style>
+</head>
+<body class="bg-white text-gray-900 dark:bg-gray-950 dark:text-white antialiased transition-colors duration-200">
+
+    <!-- Navigasi Header -->
+    <header class="fixed top-0 left-0 right-0 z-50 bg-white/70 dark:bg-gray-950/70 backdrop-blur-lg border-b border-gray-200/50 dark:border-gray-800/50">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <!-- Logo -->
+            <a href="#" class="text-2xl font-bold tracking-tight whitespace-nowrap flex-shrink-0">
+                <span class="text-gray-900 dark:text-white">Prompt</span>
+                <span class="text-purple-600 dark:text-purple-400">Studio</span>
+            </a>
+            
+            <!-- Tombol Menu Burger (Hanya Mobile) -->
+            <div class="md:hidden">
+                <button id="menu-toggle-btn" class="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg p-1.5" aria-label="Toggle menu">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16m-7 6h7"></path>
+                    </svg>
+                </button>
+            </div>
+            
+            <!-- Menu Desktop (Tersembunyi di Mobile) -->
+            <div class="hidden md:flex items-center space-x-4">
+                <a href="#fitur" class="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors text-sm font-medium whitespace-nowrap" data-key="navFitur">Fitur</a>
+                <a href="#kasus-penggunaan" class="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors text-sm font-medium whitespace-nowrap" data-key="navUseCases">Kasus Penggunaan</a>
+                
+                <!-- Toggles (Desktop) -->
+                <div class="flex items-center space-x-3 pl-2">
+                    <!-- Language Toggle -->
+                    <div class="text-sm font-medium">
+                        <button id="lang-id-btn" class="lang-btn-active" aria-label="Ganti ke Bahasa Indonesia">ID</button>
+                        <span class="text-gray-300 dark:text-gray-700">|</span>
+                        <button id="lang-en-btn" class="lang-btn-inactive" aria-label="Switch to English">EN</button>
+                    </div>
+
+                    <!-- Theme Toggle -->
+                    <button id="theme-toggle" class="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg p-1.5 transition-colors" aria-label="Toggle dark/light mode">
+                        <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                        <svg id="theme-toggle-light-icon" class="hidden w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" stroke-width="2">
+                           <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707m9.05 4.95a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                    </button>
+                </div>
+
+                <a href="https://promptstudio.isparmo.com" 
+                   class="bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium py-2 px-4 rounded-lg transition-colors shadow-lg shadow-purple-600/30 whitespace-nowrap"
+                   data-key="navLogin">
+                   Masuk ke Aplikasi
+                </a>
+            </div>
+        </nav>
+        
+        <!-- Menu Mobile (Dropdown) -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white/90 dark:bg-gray-950/90 backdrop-blur-lg border-t border-gray-200 dark:border-gray-800">
+            <div class="container mx-auto px-6 py-4 flex flex-col space-y-4">
+                <a href="#fitur" class="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white" data-key="navFitur">Fitur</a>
+                <a href="#kasus-penggunaan" class="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white" data-key="navUseCases">Kasus Penggunaan</a>
+                
+                <!-- Toggles (Mobile) -->
+                <div class="flex justify-between items-center pt-4 border-t border-gray-200 dark:border-gray-700">
+                    <!-- Language Toggle -->
+                    <div class="text-sm font-medium">
+                        <button id="lang-id-btn-mobile" class="lang-btn-active" aria-label="Ganti ke Bahasa Indonesia">ID</button>
+                        <span class="text-gray-300 dark:text-gray-700">|</span>
+                        <button id="lang-en-btn-mobile" class="lang-btn-inactive" aria-label="Switch to English">EN</button>
+                    </div>
+
+                    <!-- Theme Toggle -->
+                    <button id="theme-toggle-mobile" class="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg p-1.5 transition-colors" aria-label="Toggle dark/light mode">
+                        <svg id="theme-toggle-dark-icon-mobile" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                        <svg id="theme-toggle-light-icon-mobile" class="hidden w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" stroke-width="2">
+                           <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707m9.05 4.95a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                    </button>
+                </div>
+
+                <a href="https://promptstudio.isparmo.com" 
+                   class="w-full text-center bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium py-2 px-4 rounded-lg transition-colors shadow-lg shadow-purple-600/30 whitespace-nowrap"
+                   data-key="navLogin">
+                   Masuk ke Aplikasi
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Bagian Hero -->
+        <section class="pt-32 pb-20 text-center container mx-auto px-6">
+            <h1 class="text-4xl md:text-6xl font-extrabold mb-6 animate-fade-in" data-key="heroTitle">
+                Revolusikan Cara Anda<br>Berinteraksi dengan <span class="text-purple-600 dark:text-purple-400">AI</span>
+            </h1>
+            <p class="text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mb-10" style="animation-delay: 0.2s;" data-key="heroSubtitle">
+                Prompt Studio adalah satu-satunya platform yang Anda butuhkan untuk mengatur, menguji, dan berkolaborasi pada semua prompt AI Anda.
+            </p>
+            <div class="flex justify-center space-x-4" style="animation-delay: 0.4s;">
+                <a href="https://promptstudio.isparmo.com" 
+                   class="bg-purple-600 hover:bg-purple-700 text-white font-medium py-3 px-6 rounded-lg transition-colors shadow-lg shadow-purple-600/30 text-lg"
+                   data-key="heroCtaPrimary">
+                   Gunakan Gratis Sekarang
+                </a>
+                <a href="#fitur" 
+                   class="bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 font-medium py-3 px-6 rounded-lg transition-colors text-lg"
+                   data-key="heroCtaSecondary">
+                   Lihat Fitur
+                </a>
+            </div>
+        </section>
+
+        <!-- Bagian Masalah -->
+        <section class="py-20 bg-gray-50 dark:bg-gray-900">
+            <div class="container mx-auto px-6">
+                <div class="text-center max-w-3xl mx-auto">
+                    <h2 class="text-3xl font-bold mb-4" data-key="problemTitle">Merasa Frustrasi dengan AI?</h2>
+                    <p class="text-lg text-gray-600 dark:text-gray-300 mb-12" data-key="problemSubtitle">
+                        Anda tidak sendirian. Mengelola prompt AI bisa menjadi mimpi buruk. Tim terpencar, hasil tidak konsisten, dan alur kerja berantakan.
+                    </p>
+                </div>
+                <div class="grid md:grid-cols-3 gap-8 text-center">
+                    <!-- Masalah 1 -->
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+                        <svg class="w-12 h-12 text-purple-600 dark:text-purple-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                        <h3 class="text-xl font-semibold mb-2" data-key="problem1Title">Hasil Inkonsisten</h3>
+                        <p class="text-gray-600 dark:text-gray-300" data-key="problem1Desc">Prompt yang sama memberikan hasil yang berbeda setiap saat. Sulit untuk mendapatkan *output* berkualitas tinggi secara konsisten.</p>
+                    </div>
+                    <!-- Masalah 2 -->
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+                        <svg class="w-12 h-12 text-purple-600 dark:text-purple-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                        <h3 class="text-xl font-semibold mb-2" data-key="problem2Title">Pustaka yang Berantakan</h3>
+                        <p class="text-gray-600 dark:text-gray-300" data-key="problem2Desc">Prompt disimpan di Google Docs, Notes, Spreadsheet, atau Slack. Tidak ada "satu sumber kebenaran" yang terpusat.</p>
+                    </div>
+                    <!-- Masalah 3 -->
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+                        <svg class="w-12 h-12 text-purple-600 dark:text-purple-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                        <h3 class="text-xl font-semibold mb-2" data-key="problem3Title">Kolaborasi Sulit</h3>
+                        <p class="text-gray-600 dark:text-gray-300" data-key="problem3Desc">Tim Anda tidak dapat berbagi, memberi *feedback*, atau membangun di atas prompt terbaik yang sudah ada dengan mudah.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bagian Solusi -->
+        <section class="py-20 container mx-auto px-6">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div class="pr-0 md:pr-10">
+                    <span class="text-purple-600 dark:text-purple-400 font-semibold" data-key="solutionTag">SOLUSINYA</span>
+                    <h2 class="text-3xl md:text-4xl font-bold mt-2 mb-6" data-key="solutionTitle">Ubah <span class="text-gray-400 dark:text-gray-500 line-through">Kekacauan</span> Menjadi Keajaiban</h2>
+                    <p class="text-lg text-gray-600 dark:text-gray-300" data-key="solutionDesc">
+                        Prompt Studio adalah <em class="italic text-gray-800 dark:text-gray-200">control center</em> Anda. Kami mengubah <em class="italic text-gray-800 dark:text-gray-200">prompt engineering</em> dari seni yang rumit menjadi alur kerja yang sistematis.
+                    </p>
+                </div>
+                
+                <div class="space-y-6">
+                    <!-- Fitur 1 -->
+                    <div class="flex items-start space-x-4" id="fitur">
+                        <div class="flex-shrink-0 w-10 h-10 bg-purple-100 dark:bg-purple-900/50 text-purple-600 dark:text-purple-400 rounded-lg flex items-center justify-center">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h7"></path></svg>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold mb-1" data-key="feature1Title">Pustaka Prompt Terpusat</h3>
+                            <p class="text-gray-600 dark:text-gray-300" data-key="feature1Desc">Ucapkan selamat tinggal pada spreadsheet. Simpan, beri tag, dan cari semua prompt Anda di satu tempat yang aman.</p>
+                        </div>
+                    </div>
+                    <!-- Fitur 2 -->
+                    <div class="flex items-start space-x-4">
+                        <div class="flex-shrink-0 w-10 h-10 bg-purple-100 dark:bg-purple-900/50 text-purple-600 dark:text-purple-400 rounded-lg flex items-center justify-center">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold mb-1" data-key="feature2Title">Editor & Arena Pengujian</h3>
+                            <p class="text-gray-600 dark:text-gray-300" data-key="feature2Desc">Tulis prompt dengan variabel dinamis. Uji prompt Anda secara berdampingan di berbagai model AI (seperti GPT, Claude, Gemini) untuk melihat mana yang memberikan hasil terbaik <em class="italic text-gray-800 dark:text-gray-200">sebelum</em> Anda menerapkannya.</p>
+                        </div>
+                    </div>
+                    <!-- Fitur 3 -->
+                    <div class="flex items-start space-x-4">
+                        <div class="flex-shrink-0 w-10 h-10 bg-purple-100 dark:bg-purple-900/50 text-purple-600 dark:text-purple-400 rounded-lg flex items-center justify-center">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold mb-1" data-key="feature3Title">Folder Tim & Kolaborasi</h3>
+                            <p class="text-gray-600 dark:text-gray-300" data-key="feature3Desc">Bagikan *template* prompt terbaik Anda dengan tim. Berikan komentar, iterasi, dan pastikan semua orang menggunakan versi yang paling *update*.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Bagian Kasus Penggunaan -->
+        <section class="py-20 bg-gray-50 dark:bg-gray-900" id="kasus-penggunaan">
+            <div class="container mx-auto px-6">
+                <div class="text-center max-w-3xl mx-auto">
+                    <h2 class="text-3xl font-bold mb-4" data-key="useCasesTitle">Dibuat untuk Alur Kerja Modern</h2>
+                    <p class="text-lg text-gray-600 dark:text-gray-300 mb-12" data-key="useCasesSubtitle">
+                        Baik Anda seorang marketer, developer, atau kreator, Prompt Studio menghemat waktu Anda berjam-jam setiap minggunya.
+                    </p>
+                </div>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <!-- Kasus 1: Marketer -->
+                    <div class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg">
+                        <h3 class="text-2xl font-semibold mb-3" data-key="useCase1Title">Untuk Marketer</h3>
+                        <p class="text-gray-600 dark:text-gray-300" data-key="useCase1Desc">
+                            Buat <em class="italic text-gray-800 dark:text-gray-200">copy</em> iklan, postingan media sosial, dan email kampanye yang konsisten dengan <em class="italic text-gray-800 dark:text-gray-200">brand voice</em> Anda. Simpan templat terbaik Anda dan bagikan dengan tim.
+                        </p>
+                    </div>
+                    <!-- Kasus 2: Developer -->
+                    <div class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg">
+                        <h3 class="text-2xl font-semibold mb-3" data-key="useCase2Title">Untuk Developer</h3>
+                        <p class="text-gray-600 dark:text-gray-300" data-key="useCase2Desc">
+                            Uji coba dan optimalkan prompt untuk aplikasi Anda. Gunakan Arena Pengujian untuk membandingkan model dan temukan <em class="italic text-gray-800 dark:text-gray-200">output</em> yang paling akurat sebelum di-push ke <em class="italic text-gray-800 dark:text-gray-200">production</em>.
+                        </p>
+                    </div>
+                    <!-- Kasus 3: Kreator -->
+                    <div class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg">
+                        <h3 class="text-2xl font-semibold mb-3" data-key="useCase3Title">Untuk Penulis & Kreator</h3>
+                        <p class="text-gray-600 dark:text-gray-300" data-key="useCase3Desc">
+                            Susun draf artikel, skrip, atau ide <em class="italic text-gray-800 dark:text-gray-200">brainstorming</em>. Simpan variasi prompt favorit Anda untuk menghasilkan ide-ide segar dengan cepat, semuanya dalam <em class="italic text-gray-800 dark:text-gray-200">gaya</em> Anda.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bagian Testimoni -->
+        <section class="py-20 container mx-auto px-6">
+            <div class="max-w-3xl mx-auto text-center">
+                <h2 class="text-3xl font-bold mb-12" data-key="testimonialTitle">Apa Kata Pengguna Kami</h2>
+                
+                <div class="bg-gray-50 dark:bg-gray-800 p-8 rounded-lg shadow-md relative">
+                    <svg class="w-16 h-16 text-purple-200 dark:text-purple-900/50 absolute top-4 left-4 -z-10" fill="currentColor" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M25.312 2c-3.125 0-5.625 2.5-5.625 5.625 0 1.25 0.375 2.375 1.062 3.312-3.187 2.687-5 6.437-5 10.5 0 7.437 6.062 13.5 13.5 13.5s13.5-6.062 13.5-13.5c0-7.062-5.5-12.875-12.438-13.437zM6.812 2c-3.125 0-5.625 2.5-5.625 5.625 0 1.25 0.375 2.375 1.062 3.312-3.187 2.687-5 6.437-5 10.5 0 7.437 6.062 13.5 13.5 13.5s13.5-6.062 13.5-13.5c0-7.062-5.5-12.875-12.438-13.437z"></path></svg>
+                    <p class="text-2xl font-medium italic text-gray-700 dark:text-gray-200 mb-6" data-key="testimonialQuote">
+                        "Prompt Studio mengubah cara tim kami bekerja. Dulu kami berantakan, sekarang kami 10x lebih efisien. Saya tidak bisa membayangkan kembali ke era spreadsheet."
+                    </p>
+                    <p class="text-lg font-semibold" data-key="testimonialName">Sarah L., Head of Marketing</p>
+                    <p class="text-gray-600 dark:text-gray-400" data-key="testimonialRole">Startup Teknologi</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bagian CTA (Call to Action) Final -->
+        <section class="py-24 bg-purple-600 dark:bg-purple-700">
+            <div class="container mx-auto px-6 text-center text-white">
+                <h2 class="text-4xl font-extrabold mb-6" data-key="ctaTitle">Siap Mengontrol AI Anda?</h2>
+                <p class="text-xl text-purple-100 dark:text-purple-200 max-w-2xl mx-auto mb-10" data-key="ctaSubtitle">
+                    Berhentilah membuang waktu. Mulai bangun pustaka prompt yang lebih cerdas, lebih cepat, dan kolaboratif hari ini.
+                </p>
+                <a href="https://promptstudio.isparmo.com" 
+                   class="bg-white hover:bg-gray-100 text-purple-700 font-bold py-3 px-8 rounded-lg transition-colors shadow-2xl text-lg"
+                   data-key="ctaButton">
+                   Mulai Gratis (Tanpa Kartu Kredit)
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="py-12 bg-gray-50 dark:bg-gray-900">
+        <div class="container mx-auto px-6 text-center">
+            <p class="text-gray-500 dark:text-gray-400" data-key="footerText">
+                &copy; <span id="footer-year">2024</span> Prompt Studio. Semua Hak Dilindungi.
+            </p>
+        </div>
+    </footer>
+    
+    <script>
+        // --- 1. KAMUS TRANSLASI ---
+        const translations = {
+            'id': {
+                'navFitur': 'Fitur',
+                'navUseCases': 'Kasus Penggunaan',
+                'navLogin': 'Masuk ke Aplikasi',
+                'heroTitle': 'Revolusikan Cara Anda<br>Berinteraksi dengan <span class="text-purple-600 dark:text-purple-400">AI</span>',
+                'heroSubtitle': 'Prompt Studio adalah satu-satunya platform yang Anda butuhkan untuk mengatur, menguji, dan berkolaborasi pada semua prompt AI Anda.',
+                'heroCtaPrimary': 'Gunakan Gratis Sekarang',
+                'heroCtaSecondary': 'Lihat Fitur',
+                'problemTitle': 'Merasa Frustrasi dengan AI?',
+                'problemSubtitle': 'Anda tidak sendirian. Mengelola prompt AI bisa menjadi mimpi buruk. Tim terpencar, hasil tidak konsisten, dan alur kerja berantakan.',
+                'problem1Title': 'Hasil Inkonsisten',
+                'problem1Desc': 'Prompt yang sama memberikan hasil yang berbeda setiap saat. Sulit untuk mendapatkan *output* berkualitas tinggi secara konsisten.',
+                'problem2Title': 'Pustaka yang Berantakan',
+                'problem2Desc': 'Prompt disimpan di Google Docs, Notes, Spreadsheet, atau Slack. Tidak ada "satu sumber kebenaran" yang terpusat.',
+                'problem3Title': 'Kolaborasi Sulit',
+                'problem3Desc': 'Tim Anda tidak dapat berbagi, memberi *feedback*, atau membangun di atas prompt terbaik yang sudah ada dengan mudah.',
+                'solutionTag': 'SOLUSINYA',
+                'solutionTitle': 'Ubah <span class="text-gray-400 dark:text-gray-500 line-through">Kekacauan</span> Menjadi Keajaiban',
+                'solutionDesc': 'Prompt Studio adalah <em class="italic text-gray-800 dark:text-gray-200">control center</em> Anda. Kami mengubah <em class="italic text-gray-800 dark:text-gray-200">prompt engineering</em> dari seni yang rumit menjadi alur kerja yang sistematis.',
+                'feature1Title': 'Pustaka Prompt Terpusat',
+                'feature1Desc': 'Ucapkan selamat tinggal pada spreadsheet. Simpan, beri tag, dan cari semua prompt Anda di satu tempat yang aman.',
+                'feature2Title': 'Editor & Arena Pengujian',
+                'feature2Desc': 'Tulis prompt dengan variabel dinamis. Uji prompt Anda secara berdampingan di berbagai model AI (seperti GPT, Claude, Gemini) untuk melihat mana yang memberikan hasil terbaik <em class="italic text-gray-800 dark:text-gray-200">sebelum</em> Anda menerapkannya.',
+                'feature3Title': 'Folder Tim & Kolaborasi',
+                'feature3Desc': 'Bagikan *template* prompt terbaik Anda dengan tim. Berikan komentar, iterasi, dan pastikan semua orang menggunakan versi yang paling *update*.',
+                'useCasesTitle': 'Dibuat untuk Alur Kerja Modern',
+                'useCasesSubtitle': 'Baik Anda seorang marketer, developer, atau kreator, Prompt Studio menghemat waktu Anda berjam-jam setiap minggunya.',
+                'useCase1Title': 'Untuk Marketer',
+                'useCase1Desc': 'Buat <em class="italic text-gray-800 dark:text-gray-200">copy</em> iklan, postingan media sosial, dan email kampanye yang konsisten dengan <em class="italic text-gray-800 dark:text-gray-200">brand voice</em> Anda. Simpan templat terbaik Anda dan bagikan dengan tim.',
+                'useCase2Title': 'Untuk Developer',
+                'useCase2Desc': 'Uji coba dan optimalkan prompt untuk aplikasi Anda. Gunakan Arena Pengujian untuk membandingkan model dan temukan <em class="italic text-gray-800 dark:text-gray-200">output</em> yang paling akurat sebelum di-push ke <em class="italic text-gray-800 dark:text-gray-200">production</em>.',
+                'useCase3Title': 'Untuk Penulis & Kreator',
+                'useCase3Desc': 'Susun draf artikel, skrip, atau ide <em class="italic text-gray-800 dark:text-gray-200">brainstorming</em>. Simpan variasi prompt favorit Anda untuk menghasilkan ide-ide segar dengan cepat, semuanya dalam <em class="italic text-gray-800 dark:text-gray-200">gaya</em> Anda.',
+                'testimonialTitle': 'Apa Kata Pengguna Kami',
+                'testimonialQuote': '"Prompt Studio mengubah cara tim kami bekerja. Dulu kami berantakan, sekarang kami 10x lebih efisien. Saya tidak bisa membayangkan kembali ke era spreadsheet."',
+                'testimonialName': 'Sarah L., Head of Marketing',
+                'testimonialRole': 'Startup Teknologi',
+                'ctaTitle': 'Siap Mengontrol AI Anda?',
+                'ctaSubtitle': 'Berhentilah membuang waktu. Mulai bangun pustaka prompt yang lebih cerdas, lebih cepat, dan kolaboratif hari ini.',
+                'ctaButton': 'Mulai Gratis (Tanpa Kartu Kredit)',
+                'footerText': '&copy; <span id="footer-year">2024</span> Prompt Studio. Semua Hak Dilindungi.'
+            },
+            'en': {
+                'navFitur': 'Features',
+                'navUseCases': 'Use Cases',
+                'navLogin': 'Enter App',
+                'heroTitle': 'Revolutionize How You<br>Interact with <span class="text-purple-600 dark:text-purple-400">AI</span>',
+                'heroSubtitle': 'Prompt Studio is the single source of truth you need to organize, test, and collaborate on all your AI prompts.',
+                'heroCtaPrimary': 'Get Started for Free',
+                'heroCtaSecondary': 'See Features',
+                'problemTitle': 'Frustrated with AI?',
+                'problemSubtitle': 'You\'re not alone. Managing AI prompts can be a nightmare. Scattered teams, inconsistent results, and a chaotic workflow.',
+                'problem1Title': 'Inconsistent Results',
+                'problem1Desc': 'The same prompt gives different results every time. It\'s hard to get high-quality output consistently.',
+                'problem2Title': 'Messy Libraries',
+                'problem2Desc': 'Prompts are saved in Google Docs, Notes, Spreadsheets, or Slack. There is no centralized "source of truth".',
+                'problem3Title': 'Difficult Collaboration',
+                'problem3Desc': 'Your team can\'t easily share, give feedback, or build upon the best existing prompts.',
+                'solutionTag': 'THE SOLUTION',
+                'solutionTitle': 'Turn <span class="text-gray-400 dark:text-gray-500 line-through">Chaos</span> Into Magic',
+                'solutionDesc': 'Prompt Studio is your <em class="italic text-gray-800 dark:text-gray-200">control center</em>. We turn <em class="italic text-gray-800 dark:text-gray-200">prompt engineering</em> from a complex art into a systematic workflow.',
+                'feature1Title': 'Centralized Prompt Library',
+                'feature1Desc': 'Say goodbye to spreadsheets. Store, tag, and search all your prompts in one secure place.',
+                'feature2Title': 'Editor & Testing Arena',
+                'feature2Desc': 'Write prompts with dynamic variables. Test your prompts side-by-side across different AI models (like GPT, Claude, Gemini) to see what gives the best results <em class="italic text-gray-800 dark:text-gray-200">before</em> you deploy.',
+                'feature3Title': 'Team Folders & Collaboration',
+                'feature3Desc': 'Share your best prompt templates with your team. Leave comments, iterate, and ensure everyone is using the most *updated* version.',
+                'useCasesTitle': 'Built for Modern Workflows',
+                'useCasesSubtitle': 'Whether you are a marketer, developer, or creator, Prompt Studio saves you hours every week.',
+                'useCase1Title': 'For Marketers',
+                'useCase1Desc': 'Create ad <em class="italic text-gray-800 dark:text-gray-200">copy</em>, social media posts, and email campaigns that are consistent with your <em class="italic text-gray-800 dark:text-gray-200">brand voice</em>. Save your best templates and share them with the team.',
+                'useCase2Title': 'For Developers',
+                'useCase2Desc': 'Test and optimize prompts for your application. Use the Testing Arena to compare models and find the most accurate <em class="italic text-gray-800 dark:text-gray-200">output</em> before pushing to <em class="italic text-gray-800 dark:text-gray-200">production</em>.',
+                'useCase3Title': 'For Writers & Creators',
+                'useCase3Desc': 'Draft articles, scripts, or <em class="italic text-gray-800 dark:text-gray-200">brainstorming</em> ideas. Save your favorite prompt variations to quickly generate fresh ideas, all in your <em class="italic text-gray-800 dark:text-gray-200">style</em>.',
+                'testimonialTitle': 'What Our Users Say',
+                'testimonialQuote': '"Prompt Studio changed how our team works. We were a mess, now we are 10x more efficient. I can\'t imagine going back to the spreadsheet era."',
+                'testimonialName': 'Sarah L., Head of Marketing',
+                'testimonialRole': 'Tech Startup',
+                'ctaTitle': 'Ready to Take Control of Your AI?',
+                'ctaSubtitle': 'Stop wasting time. Start building a smarter, faster, and collaborative prompt library today.',
+                'ctaButton': 'Start Free (No Credit Card)',
+                'footerText': '&copy; <span id="footer-year">2024</span> Prompt Studio. All Rights Reserved.'
+            }
+        };
+
+        // --- 2. LOGIKA TOGGLE BAHASA ---
+        const langIdBtn = document.getElementById('lang-id-btn');
+        const langEnBtn = document.getElementById('lang-en-btn');
+        const langIdBtnMobile = document.getElementById('lang-id-btn-mobile');
+        const langEnBtnMobile = document.getElementById('lang-en-btn-mobile');
+
+        function setLanguage(lang) {
+            // Ganti semua teks berdasarkan 'data-key'
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const key = el.getAttribute('data-key');
+                if (key && translations[lang][key]) {
+                    el.innerHTML = translations[lang][key];
+                }
+            });
+
+            // Ganti bahasa di <html> tag
+            document.documentElement.lang = lang;
+
+            // Update style tombol desktop
+            if (lang === 'id') {
+                langIdBtn.className = 'lang-btn-active';
+                langEnBtn.className = 'lang-btn-inactive';
+            } else {
+                langIdBtn.className = 'lang-btn-inactive';
+                langEnBtn.className = 'lang-btn-active';
+            }
+            
+            // Update style tombol mobile
+            if (lang === 'id') {
+                langIdBtnMobile.className = 'lang-btn-active';
+                langEnBtnMobile.className = 'lang-btn-inactive';
+            } else {
+                langIdBtnMobile.className = 'lang-btn-inactive';
+                langEnBtnMobile.className = 'lang-btn-active';
+            }
+
+            // Simpan preferensi
+            localStorage.setItem('language', lang);
+        }
+
+        // Tambah event listener ke tombol desktop
+        langIdBtn.addEventListener('click', () => setLanguage('id'));
+        langEnBtn.addEventListener('click', () => setLanguage('en'));
+        
+        // Tambah event listener ke tombol mobile
+        langIdBtnMobile.addEventListener('click', () => {
+            setLanguage('id');
+            mobileMenu.classList.add('hidden'); // Tutup menu setelah klik
+        });
+        langEnBtnMobile.addEventListener('click', () => {
+            setLanguage('en');
+            mobileMenu.classList.add('hidden'); // Tutup menu setelah klik
+        });
+
+        // --- 3. LOGIKA TOGGLE TEMA (GELAP/TERANG) ---
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const darkIcon = document.getElementById('theme-toggle-dark-icon');
+        const lightIcon = document.getElementById('theme-toggle-light-icon');
+        
+        const themeToggleBtnMobile = document.getElementById('theme-toggle-mobile');
+        const darkIconMobile = document.getElementById('theme-toggle-dark-icon-mobile');
+        const lightIconMobile = document.getElementById('theme-toggle-light-icon-mobile');
+
+        function updateThemeIcon(isDark) {
+            // Update ikon desktop
+            if (isDark) {
+                darkIcon.classList.remove('hidden');
+                lightIcon.classList.add('hidden');
+            } else {
+                darkIcon.classList.add('hidden');
+                lightIcon.classList.remove('hidden');
+            }
+            // Update ikon mobile
+            if (isDark) {
+                darkIconMobile.classList.remove('hidden');
+                lightIconMobile.classList.add('hidden');
+            } else {
+                darkIconMobile.classList.add('hidden');
+                lightIconMobile.classList.remove('hidden');
+            }
+        }
+
+        function setTheme(isDark) {
+            if (isDark) {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            }
+            updateThemeIcon(isDark);
+        }
+
+        // Event listener untuk tombol tema desktop
+        themeToggleBtn.addEventListener('click', () => {
+            const isDark = document.documentElement.classList.contains('dark');
+            setTheme(!isDark);
+        });
+        
+        // Event listener untuk tombol tema mobile
+        themeToggleBtnMobile.addEventListener('click', () => {
+            const isDark = document.documentElement.classList.contains('dark');
+            setTheme(!isDark);
+        });
+        
+        // --- 4. LOGIKA TOGGLE MENU MOBILE ---
+        const menuToggleBtn = document.getElementById('menu-toggle-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        menuToggleBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+        
+        // Tutup menu mobile jika link di dalamnya diklik
+        document.querySelectorAll('#mobile-menu a[href^="#"]').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        // --- 5. INISIALISASI SAAT HALAMAN DIMUAT ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // Atur tahun di footer
+            document.getElementById('footer-year').textContent = new Date().getFullYear();
+
+            // Atur tema saat memuat
+            const savedTheme = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (savedTheme) {
+                setTheme(savedTheme === 'dark');
+            } else {
+                setTheme(prefersDark); // Default ke preferensi sistem
+            }
+
+            // Atur bahasa saat memuat
+            const savedLang = localStorage.getItem('language');
+            const browserLang = navigator.language.split('-')[0];
+            if (savedLang) {
+                setLanguage(savedLang);
+            } else if (browserLang === 'en') {
+                setLanguage('en');
+            } else {
+                setLanguage('id'); // Default ke Bahasa Indonesia
+            }
+        });
+
+    </script>
+</body>
+</html>
