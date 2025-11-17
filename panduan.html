@@ -118,10 +118,12 @@
 <body class="antialiased">
 
     <div class="container mx-auto p-4 md:p-8 max-w-4xl">
-        <header class="relative text-center py-6 mb-12 border-b border-border-color">
-            <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight">Panduan Prompt Studio</h1>
-            <p class="mt-2 text-lg text-secondary">Cara mudah membuat perintah (prompt) untuk AI Gambar & Video</p>
-            <div class="absolute top-full right-0 mt-2 flex items-center gap-2">
+        <header class="flex flex-col md:flex-row md:justify-between md:items-center text-center md:text-left py-6 mb-12 border-b border-border-color">
+            <div>
+                <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight">Panduan Prompt Studio</h1>
+                <p class="mt-2 text-lg text-secondary">Cara mudah membuat perintah (prompt) untuk AI Gambar & Video</p>
+            </div>
+            <div class="mt-4 md:mt-0 flex items-center justify-center gap-2">
                  <a href="https://promptstudio.isparmo.com/" title="Kembali ke Aplikasi" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">
                      <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
@@ -210,6 +212,35 @@
                     <li>
                         <strong>Lihat Hasil Prompt:</strong> Sama seperti gambar, prompt video Anda akan muncul di kotak "Hasil Prompt" di sebelah kanan dan siap untuk disalin atau disempurnakan.
                     </li>
+                </ol>
+
+                <h3 class="mt-8">C. Membuat Prompt Lagu (untuk SUNO AI)</h3>
+                <p>Pilih tab <strong>Lagu (SUNO)</strong>. Desainer ini dirancang khusus untuk membantu Anda menciptakan lirik dan gaya musik yang siap digunakan pada platform AI musik seperti SUNO.</p>
+                 <ol class="list-decimal list-inside space-y-4 pl-4">
+                    <li>
+                        <strong>Isi Detail Lagu:</strong> Formulir ini akan memandu Anda dalam menentukan setiap elemen musik.
+                        <ul>
+                            <li><strong>Tema Lagu:</strong> Ini adalah ide utama atau cerita dari lagu Anda. Jadilah deskriptif. (Contoh: <em>perasaan rindu saat hujan di malam hari, semangat meraih mimpi di kota besar</em>).</li>
+                            <li><strong>Bahasa:</strong> Pilih bahasa utama untuk lirik lagu Anda. Jika bahasa yang Anda inginkan tidak ada di daftar, pilih "Lainnya..." dan ketik sendiri.</li>
+                            <li><strong>Vokalis:</strong> Tentukan jenis suara yang Anda inginkan. Jika Anda memilih <strong>"Instrumental"</strong>, maka AI tidak akan membuat lirik, melainkan puisi, dan Anda akan diminta untuk memilih alat musik utama.</li>
+                            <li><strong>Genre Utama & Kombinasi:</strong> Pilih genre dasar lagu Anda. Anda bisa mengetik untuk mencari dari daftar lengkap atau memasukkan genre custom Anda sendiri. Gunakan genre kombinasi untuk menciptakan suara yang unik (Contoh: Genre Utama: <em>Indie Rock</em>, Genre Kombinasi: <em>Shoegaze</em>).</li>
+                            <li><strong>Input Lainnya:</strong> Berikan detail tambahan untuk mengarahkan AI. (Contoh: <em>tempo ceria, 120 BPM, nuansa melankolis</em>).</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <strong>Buat Prompt Lagu:</strong> Setelah semua detail terisi, klik tombol besar <strong>"BUAT PROMPT LAGU"</strong>. AI akan mulai bekerja untuk menghasilkan semua komponen yang Anda butuhkan.
+                    </li>
+                    <li>
+                        <strong>Analisa Hasil:</strong> Di sebelah kanan, Anda akan melihat beberapa kotak output:
+                        <ul>
+                            <li><strong>Hasil: Lirik (atau Puisi):</strong> Di sini akan muncul lirik lengkap dengan struktur seperti [Verse] dan [Chorus]. Jika Anda memilih mode Instrumental, di sini akan muncul puisi yang sesuai tema.</li>
+                            <li><strong>Prompt Alternatif:</strong> Ini adalah prompt ringkas yang menggabungkan semua input Anda, cocok untuk digunakan di beberapa platform AI lain.</li>
+                            <li><strong>Hasil: Gaya (Styles):</strong> Ini adalah bagian terpenting untuk SUNO. Isinya adalah daftar kata kunci yang mendeskripsikan musiknya, siap untuk disalin.</li>
+                            <li><strong>Hasil: 5 Alternatif Judul Lagu:</strong> AI akan memberikan lima ide judul yang bisa Anda gunakan.</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <strong>Gunakan & Kembangkan:</strong> Setiap kotak output memiliki tombol <strong>"SALIN"</strong>. Anda bisa menyalin Lirik dan Gaya secara terpisah dan menempelkannya ke SUNO. Jika tidak puas, gunakan tombol <strong>"RE-GENERATE"</strong> pada setiap bagian untuk membuat versi baru tanpa mengubah bagian lainnya.</li>
                 </ol>
             </div>
             <div class="card">
