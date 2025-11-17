@@ -361,7 +361,7 @@
     
     <!-- Main Application -->
     <div id="main-app" class="container mx-auto p-4 md:p-8">
-        <header class="flex justify-between items-center mb-8">
+        <header class="flex flex-col md:flex-row justify-between items-center mb-8">
             <div class="w-12 h-12"></div>
             <div class="flex-grow text-center">
                  <h1 class="text-4xl md:text-5xl font-bold tracking-tight">
@@ -375,12 +375,15 @@
             </button>
         </header>
 
-        <div class="flex justify-center mb-8 bg-secondary rounded-lg p-1.5 shadow-md max-w-md mx-auto">
-            <button id="tab-belajar" class="tab-button active w-1/2 py-2 px-4 rounded-md">
+        <div class="flex justify-center mb-8 bg-secondary rounded-lg p-1.5 shadow-md max-w-lg mx-auto">
+            <button id="tab-belajar" class="tab-button active w-1/3 py-2 px-4 rounded-md">
                 PANDUAN PROMPT
             </button>
-            <button id="tab-desainer" class="tab-button w-1/2 py-2 px-4 rounded-md">
+            <button id="tab-desainer" class="tab-button w-1/3 py-2 px-4 rounded-md">
                 DESAINER PROMPT
+            </button>
+            <button id="tab-riwayat" class="tab-button w-1/3 py-2 px-4 rounded-md">
+                RIWAYAT
             </button>
         </div>
 
@@ -813,6 +816,13 @@ Indonesian Lo-Fi Chillhop, melancholic, rainy day vibe, soft female vocal, gentl
                                  </div>
                              </div>
                              <div id="video-designer-form" class="designer-form space-y-5">
+                                 <button id="import-from-image-btn" class="btn btn-secondary w-full !justify-start text-sm py-2 px-3">
+                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M4.646 9.646a.5.5 0 0 1 .708 0L8 12.293l2.646-2.647a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 0 1 0-.708z"/>
+                                        <path fill-rule="evenodd" d="M8 3a.5.5 0 0 1 .5.5v8.793a.5.5 0 0 1-1 0V3.5A.5.5 0 0 1 8 3z"/>
+                                      </svg>
+                                      <span>Ambil Data dari Desainer Gambar</span>
+                                 </button>
                                  <div class="space-y-3">
                                      <label class="block text-sm font-medium text-secondary">Opsional: Upload Gambar Referensi (Image-to-Video)</label>
                                      <div id="drop-zone-video" class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-dashed rounded-md cursor-pointer transition-colors border-border-color hover:border-accent-color">
@@ -983,9 +993,12 @@ Indonesian Lo-Fi Chillhop, melancholic, rainy day vibe, soft female vocal, gentl
                                 </div>
                              </div>
                              <div id="lagu-output-section" class="hidden space-y-4">
-                                <button id="buat-prompt-lagu-button" class="btn btn-primary w-full">
-                                    <span>BUAT PROMPT LAGU</span>
-                                </button>
+                                <div class="flex gap-2">
+                                    <button id="buat-prompt-lagu-button" class="btn btn-primary w-full">
+                                        <span>BUAT PROMPT LAGU</span>
+                                    </button>
+                                    <button id="save-lagu-prompt-button" class="btn btn-secondary px-4">SIMPAN</button>
+                                </div>
                                 <div>
                                     <div class="flex justify-between items-center mb-2">
                                         <label for="output-lirik" class="text-sm font-medium text-secondary">Hasil: Lirik</label>
@@ -1028,6 +1041,7 @@ Indonesian Lo-Fi Chillhop, melancholic, rainy day vibe, soft female vocal, gentl
                                  <div class="flex justify-between items-center mb-2">
                                      <h3 class="text-lg font-semibold">Hasil Prompt:</h3>
                                      <div class="flex flex-wrap justify-end gap-2">
+                                        <button id="save-prompt-button" class="btn btn-secondary px-3 py-1.5 text-xs">SIMPAN</button>
                                         <button id="show-json-button" class="btn btn-secondary px-3 py-1.5 text-xs">TAMPILKAN JSON</button>
                                         <button id="enhance-prompt-button" class="btn btn-primary px-3 py-1.5 text-xs">
                                              <span id="enhance-prompt-text">SEMPURNAKAN PROMPT</span>
@@ -1058,10 +1072,27 @@ Indonesian Lo-Fi Chillhop, melancholic, rainy day vibe, soft female vocal, gentl
                      </div>
                 </div>
             </section>
+            <section id="content-riwayat" class="content-section card p-6 md:p-8">
+                <div>
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-3xl font-bold">Riwayat Prompt</h2>
+                    </div>
+                    <div class="flex flex-col sm:flex-row gap-2 mb-4 border-b border-border-color pb-4">
+                        <button id="export-prompts-button" class="btn btn-secondary w-full sm:w-auto">Ekspor Semua</button>
+                        <label for="import-prompts-input" class="btn btn-primary w-full sm:w-auto cursor-pointer">
+                            Impor
+                            <input type="file" id="import-prompts-input" class="hidden" accept=".dps">
+                        </label>
+                    </div>
+                    <div id="prompt-history-list" class="flex-1 overflow-y-auto space-y-3 pr-2">
+                        <!-- Saved prompts will be listed here -->
+                    </div>
+                </div>
+            </section>
         </main>
         
         <footer class="text-center mt-12 text-secondary text-sm">
-            <p>&copy; 2025 Prompt Engineering Studio. Oleh ISPARMO Powered by AI.</p>
+            <p class="mt-2">&copy; 2025 Prompt Engineering Studio. Oleh ISPARMO Powered by AI.</p>
         </footer>
     </div>
 
@@ -1109,6 +1140,25 @@ Indonesian Lo-Fi Chillhop, melancholic, rainy day vibe, soft female vocal, gentl
     }
     document.addEventListener('DOMContentLoaded', () => {
         
+        let db;
+        const dbRequest = indexedDB.open('PromptStudioDB', 1);
+
+        dbRequest.onupgradeneeded = (event) => {
+            const db = event.target.result;
+            if (!db.objectStoreNames.contains('prompts')) {
+                db.createObjectStore('prompts', { keyPath: 'id', autoIncrement: true });
+            }
+        };
+
+        dbRequest.onsuccess = (event) => {
+            db = event.target.result;
+            console.log("Database 'PromptStudioDB' opened successfully.");
+        };
+
+        dbRequest.onerror = (event) => {
+            console.error("Error opening IndexedDB:", event.target.errorCode);
+        };
+
         let userApiKey = null;
         let apiMode = 'shared';
         let uploadedImageBase64 = null;
@@ -1133,11 +1183,13 @@ Indonesian Lo-Fi Chillhop, melancholic, rainy day vibe, soft female vocal, gentl
             darkIcon: document.getElementById('theme-icon-dark'),
             mainTabButtons: {
                 belajar: document.getElementById('tab-belajar'),
-                desainer: document.getElementById('tab-desainer')
+                desainer: document.getElementById('tab-desainer'),
+                riwayat: document.getElementById('tab-riwayat')
             },
             contentSections: {
                 belajar: document.getElementById('content-belajar'),
-                desainer: document.getElementById('content-desainer')
+                desainer: document.getElementById('content-desainer'),
+                riwayat: document.getElementById('content-riwayat')
             },
             designerTabImage: document.getElementById('designer-tab-image'),
             designerTabVideo: document.getElementById('designer-tab-video'),
@@ -1249,6 +1301,12 @@ Indonesian Lo-Fi Chillhop, melancholic, rainy day vibe, soft female vocal, gentl
             genreUtamaResults: document.getElementById('genre-utama-results'),
             genreKombinasiSearch: document.getElementById('genre-kombinasi-search'),
             genreKombinasiResults: document.getElementById('genre-kombinasi-results'),
+            importFromImageBtn: document.getElementById('import-from-image-btn'),
+            savePromptButton: document.getElementById('save-prompt-button'),
+            saveLaguPromptButton: document.getElementById('save-lagu-prompt-button'),
+            promptHistoryList: document.getElementById('prompt-history-list'),
+            exportPromptsButton: document.getElementById('export-prompts-button'),
+            importPromptsInput: document.getElementById('import-prompts-input'),
         };
 
         function renderJudulLagu(titles = []) {
@@ -1302,6 +1360,10 @@ Indonesian Lo-Fi Chillhop, melancholic, rainy day vibe, soft female vocal, gentl
             elements.mainTabButtons[tabName].classList.add('active');
             Object.values(elements.contentSections).forEach(section => section.classList.remove('active'));
             elements.contentSections[tabName].classList.add('active');
+
+            if (tabName === 'riwayat') {
+                renderSavedPrompts();
+            }
         }
         const genreLagu = {
             "MODERN POP, R&B, & HIP-HOP": [
@@ -1508,6 +1570,9 @@ Indonesian Lo-Fi Chillhop, melancholic, rainy day vibe, soft female vocal, gentl
 
             elements.imagePreviewContainer.classList.toggle('hidden', tab !== 'image' || !uploadedImageBase64);
             elements.videoPreviewContainer.classList.toggle('hidden', tab !== 'video' || !videoRefImageFile);
+
+            // Bug Fix: Pastikan 'Character Sheet' hanya tampil di tab Gambar saat mode 'karakter' aktif
+            elements.characterOutputSection.classList.toggle('hidden', tab !== 'image' || elements.tujuanGambarEl.value !== 'karakter');
 
             const isLaguTab = tab === 'lagu';
 
@@ -2246,8 +2311,368 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
             }
         }
 
+        function importFromImageDesigner() {
+            const tujuanGambar = elements.tujuanGambarEl.value;
+
+            if (tujuanGambar === 'karakter') {
+                // Ambil dari mode Karakter
+                const characterSheet = elements.characterSheetOutputEl.value;
+                const scenario = elements.characterScenarioInputEl.value;
+
+                elements.subjekVideoSubjectEl.value = characterSheet || '';
+                elements.subjekVideoActionEl.value = scenario || '';
+                elements.latarBelakangVideoEl.value = ''; // Reset karena skenario mungkin sudah mencakupnya
+                elements.gayaVideoEl.value = elements.charStyleEl.value || '';
+
+            } else {
+                // Ambil dari mode standar
+                const subjek = elements.produkGambarEl.value;
+                const gaya = elements.gayaGambarEl.value;
+                const latar = elements.latarBelakangGambarEl.value;
+                const detail = elements.detailGambarEl.value;
+
+                elements.subjekVideoSubjectEl.value = subjek || '';
+                elements.subjekVideoActionEl.value = detail || '';
+                elements.latarBelakangVideoEl.value = latar || '';
+                elements.gayaVideoEl.value = gaya || '';
+            }
+
+            // Perbarui prompt video setelah impor
+            generateVideoPrompt();
+
+            // Beri notifikasi visual singkat pada tombol
+            const btn = elements.importFromImageBtn;
+            const originalText = btn.querySelector('span').textContent;
+            btn.querySelector('span').textContent = 'Data Berhasil Diambil!';
+            btn.classList.add('bg-green-500', 'text-white');
+
+            setTimeout(() => {
+                btn.querySelector('span').textContent = originalText;
+                btn.classList.remove('bg-green-500', 'text-white');
+            }, 2000);
+        }
+
+        function saveCurrentPrompt() {
+            if (!db) {
+                alert("Database tidak siap. Mohon coba lagi sesaat.");
+                return;
+            }
+
+            const now = new Date();
+            const pad = (num) => num.toString().padStart(2, '0');
+            const date = `${pad(now.getDate())}${pad(now.getMonth() + 1)}${now.getFullYear().toString().slice(-2)}`;
+            const time = `${pad(now.getHours())}${pad(now.getMinutes())}`;
+
+            let type = '';
+            let data = {};
+
+            if (elements.designerTabImage.classList.contains('active')) {
+                type = 'gambar';
+                data = generatePromptObject();
+            } else if (elements.designerTabVideo.classList.contains('active')) {
+                type = 'video';
+                data = generatePromptObject();
+            } else if (elements.designerTabLagu.classList.contains('active')) {
+                type = 'lagu';
+                // Logic to gather song data
+                 data = {
+                    mode: 'lagu',
+                    lirik: elements.outputLirik.value,
+                    gaya: elements.outputGaya.value,
+                    judul: Array.from(elements.judulLaguList.querySelectorAll('input')).map(input => input.value),
+                    prompt_alternatif: elements.outputAlternatif.value
+                };
+            }
+
+            if (Object.keys(data).length === 0) {
+                alert("Tidak ada data untuk disimpan.");
+                return;
+            }
+
+            const filename = `${type}_${date}-${time}.dps`;
+            const promptToSave = {
+                filename: filename,
+                type: type,
+                timestamp: now.toISOString(),
+                data: data
+            };
+
+            const transaction = db.transaction(['prompts'], 'readwrite');
+            const objectStore = transaction.objectStore('prompts');
+            const request = objectStore.add(promptToSave);
+
+            request.onsuccess = () => {
+                const btn = elements.savePromptButton;
+                const originalText = btn.textContent;
+                btn.textContent = 'TERSMPAN!';
+                btn.classList.add('bg-green-500', 'text-white');
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.classList.remove('bg-green-500', 'text-white');
+                }, 2000);
+            };
+
+            request.onerror = (event) => {
+                console.error("Gagal menyimpan prompt:", event.target.errorCode);
+                alert("Gagal menyimpan prompt. Lihat konsol untuk detail.");
+            };
+        }
+        function loadPromptToDesigner(id) {
+            if (!db) return;
+            const transaction = db.transaction(['prompts'], 'readonly');
+            const objectStore = transaction.objectStore('prompts');
+            const request = objectStore.get(id);
+
+            request.onsuccess = (e) => {
+                const prompt = e.target.result;
+                if (!prompt) {
+                    alert("Gagal memuat prompt. Mungkin sudah dihapus.");
+                    return;
+                }
+
+                // Pindah ke tab desainer
+                showTab('desainer');
+
+                const { type, data } = prompt;
+
+                // Pindah ke sub-tab desainer yang benar dan isi data
+                switch (type) {
+                    case 'gambar':
+                        switchDesignerTab('image');
+                        // Logika untuk mengisi form gambar
+                        elements.tujuanGambarEl.value = data.form_type;
+                        handleTujuanGambarChange(); // Penting untuk menyesuaikan UI form
+
+                        if (data.form_type === 'karakter') {
+                             Object.keys(data.fields).forEach(key => {
+                                const elementKey = {
+                                    nama_karakter: 'charNameEl',
+                                    ciri_fisik: 'charPhysicEl',
+                                    pakaian_khas: 'charAttireEl',
+                                    gaya_artistik: 'charStyleEl',
+                                }[key];
+                                if (elementKey && elements[elementKey]) {
+                                    elements[elementKey].value = data.fields[key];
+                                }
+                            });
+                        } else {
+                            Object.keys(data.fields).forEach(key => {
+                                const elementKey = {
+                                    objek_utama: 'produkGambarEl',
+                                    gaya_visual: 'gayaGambarEl',
+                                    latar_belakang: 'latarBelakangGambarEl',
+                                    detail_tambahan: 'detailGambarEl',
+                                    jenis_kemasan: 'jenisKemasanEl',
+                                }[key];
+                                if (elementKey && elements[elementKey]) {
+                                    elements[elementKey].value = data.fields[key];
+                                }
+                            });
+                        }
+                        break;
+                    case 'video':
+                        switchDesignerTab('video');
+                        // Logika untuk mengisi form video
+                        Object.keys(data.fields).forEach(key => {
+                             const elementKey = {
+                                subjek: 'subjekVideoSubjectEl',
+                                aksi: 'subjekVideoActionEl',
+                                latar_belakang: 'latarBelakangVideoEl',
+                                gaya_kamera_suasana: 'gayaVideoEl',
+                                audio: 'audioVideoEl',
+                                prompt_negatif: 'negatifVideoEl',
+                            }[key];
+                            if (elementKey && elements[elementKey]) {
+                                elements[elementKey].value = data.fields[key];
+                            }
+                        });
+                        break;
+                    case 'lagu':
+                        switchDesignerTab('lagu');
+                        // Logika untuk mengisi form lagu, jika ada
+                        elements.outputLirik.value = data.lirik || '';
+                        elements.outputGaya.value = data.gaya || '';
+                        elements.outputAlternatif.value = data.prompt_alternatif || '';
+                        if (data.judul && data.judul.length > 0) {
+                            renderJudulLagu(data.judul);
+                        }
+                        break;
+                }
+
+                // Perbarui output prompt utama
+                updateGeneratedPrompt();
+
+                 // Beri notifikasi singkat
+                const btn = document.querySelector(`.use-prompt-btn[data-id="${id}"]`);
+                if(btn) {
+                    btn.textContent = 'DIMUAT!';
+                    setTimeout(() => { btn.textContent = 'GUNAKAN'; }, 2000);
+                }
+            };
+
+            request.onerror = (e) => {
+                alert("Gagal mengambil data prompt dari database.");
+            };
+        }
+
+        function renderSavedPrompts() {
+            if (!db) return;
+            const transaction = db.transaction(['prompts'], 'readonly');
+            const objectStore = transaction.objectStore('prompts');
+            const request = objectStore.getAll();
+
+            request.onsuccess = (event) => {
+                const prompts = event.target.result;
+                elements.promptHistoryList.innerHTML = ''; // Clear existing list
+
+                if (prompts.length === 0) {
+                    elements.promptHistoryList.innerHTML = `<p class="text-secondary text-center">Belum ada prompt yang disimpan.</p>`;
+                    return;
+                }
+
+                prompts.reverse().forEach(prompt => {
+                    const div = document.createElement('div');
+                    div.className = 'p-3 bg-tertiary rounded-lg flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3';
+
+                    const textContent = `
+                        <div class="flex-1">
+                            <p class="font-semibold text-primary">${prompt.filename}</p>
+                            <p class="text-xs text-secondary">Disimpan pada: ${new Date(prompt.timestamp).toLocaleString()}</p>
+                        </div>
+                    `;
+
+                    const buttonsContent = `
+                        <div class="flex gap-2 w-full sm:w-auto">
+                            <button data-id="${prompt.id}" class="btn btn-primary !px-3 !py-1.5 text-xs w-1/3 sm:w-auto use-prompt-btn">Gunakan</button>
+                            <button data-id="${prompt.id}" class="btn btn-secondary !px-3 !py-1.5 text-xs w-1/3 sm:w-auto download-prompt-btn">Unduh</button>
+                            <button data-id="${prompt.id}" class="btn !bg-red-600 !hover:bg-red-700 !text-white !border-red-800 !px-3 !py-1.5 text-xs w-1/3 sm:w-auto delete-prompt-btn">Hapus</button>
+                        </div>
+                    `;
+
+                    div.innerHTML = textContent + buttonsContent;
+                    elements.promptHistoryList.appendChild(div);
+                });
+            };
+
+             request.onerror = (event) => {
+                console.error("Gagal mengambil riwayat prompt:", event.target.errorCode);
+                elements.promptHistoryList.innerHTML = `<p class="text-red-500 text-center">Gagal memuat riwayat.</p>`;
+            };
+        }
+
+
         // --- Event Listeners ---
         function setupEventListeners() {
+            elements.promptHistoryList.addEventListener('click', (event) => {
+                const target = event.target;
+                const id = parseInt(target.getAttribute('data-id'));
+
+                if (target.classList.contains('use-prompt-btn')) {
+                    loadPromptToDesigner(id);
+                }
+
+                if (target.classList.contains('delete-prompt-btn')) {
+                    if (confirm('Apakah Anda yakin ingin menghapus prompt ini?')) {
+                        const transaction = db.transaction(['prompts'], 'readwrite');
+                        const objectStore = transaction.objectStore('prompts');
+                        const request = objectStore.delete(id);
+                        request.onsuccess = () => renderSavedPrompts();
+                    }
+                }
+
+                if (target.classList.contains('download-prompt-btn')) {
+                    const transaction = db.transaction(['prompts'], 'readonly');
+                    const objectStore = transaction.objectStore('prompts');
+                    const request = objectStore.get(id);
+
+                    request.onsuccess = (e) => {
+                        const prompt = e.target.result;
+                        if (prompt) {
+                            // Buat nama file baru sesuai format yang diminta
+                            const now = new Date(prompt.timestamp);
+                            const pad = (num) => num.toString().padStart(2, '0');
+                            const date = `${pad(now.getDate())}${pad(now.getMonth() + 1)}${now.getFullYear().toString().slice(-2)}`;
+                            const time = `${pad(now.getHours())}${pad(now.getMinutes())}`;
+                            const filename = `${prompt.type}_${date}-${time}.dps`;
+
+                            const blob = new Blob([JSON.stringify(prompt.data, null, 2)], { type: 'application/json' });
+                            const url = URL.createObjectURL(blob);
+                            const a = document.createElement('a');
+                            a.href = url;
+                            a.download = filename; // Gunakan nama file baru
+                            document.body.appendChild(a);
+                            a.click();
+                            document.body.removeChild(a);
+                            URL.revokeObjectURL(url);
+                        }
+                    };
+                }
+            });
+
+            elements.exportPromptsButton.addEventListener('click', () => {
+                const transaction = db.transaction(['prompts'], 'readonly');
+                const objectStore = transaction.objectStore('prompts');
+                const request = objectStore.getAll();
+
+                request.onsuccess = (event) => {
+                    const prompts = event.target.result;
+
+                    // Buat nama file baru sesuai format yang diminta
+                    const now = new Date();
+                    const pad = (num) => num.toString().padStart(2, '0');
+                    const date = `${pad(now.getDate())}${pad(now.getMonth() + 1)}${now.getFullYear().toString().slice(-2)}`;
+                    const filename = `data-prompt_${date}.dps`;
+
+                    const blob = new Blob([JSON.stringify(prompts, null, 2)], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = filename;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                };
+            });
+
+            elements.importPromptsInput.addEventListener('change', (event) => {
+                const file = event.target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    if (confirm('Ini akan menimpa semua prompt yang ada. Lanjutkan?')) {
+                        try {
+                            const prompts = JSON.parse(e.target.result);
+                            const transaction = db.transaction(['prompts'], 'readwrite');
+                            const objectStore = transaction.objectStore('prompts');
+
+                            // Clear existing prompts before importing
+                            objectStore.clear();
+
+                            prompts.forEach(prompt => {
+                                // Ensure the imported object doesn't have an ID to avoid key conflicts
+                                delete prompt.id;
+                                objectStore.add(prompt);
+                            });
+
+                            transaction.oncomplete = () => {
+                                renderSavedPrompts();
+                                alert(`${prompts.length} prompt berhasil diimpor!`);
+                            };
+                        } catch (err) {
+                            alert('File tidak valid atau rusak.');
+                            console.error("Error parsing imported file:", err);
+                        }
+                    }
+                };
+                reader.readAsText(file);
+                // Reset input value to allow re-importing the same file
+                event.target.value = '';
+            });
+
+            elements.savePromptButton.addEventListener('click', saveCurrentPrompt);
+            elements.saveLaguPromptButton.addEventListener('click', saveCurrentPrompt);
             elements.useSharedEnvBtn.addEventListener('click', () => {
                 window.open('https://g.co/gemini/share/ec7fc3fd066b', '_blank');
             });
@@ -2278,6 +2703,7 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
 
             elements.mainTabButtons.belajar.addEventListener('click', () => showTab('belajar'));
             elements.mainTabButtons.desainer.addEventListener('click', () => showTab('desainer'));
+            elements.mainTabButtons.riwayat.addEventListener('click', () => showTab('riwayat'));
             
             elements.designerTabImage.addEventListener('click', () => switchDesignerTab('image'));
             elements.designerTabVideo.addEventListener('click', () => switchDesignerTab('video'));
@@ -2318,6 +2744,8 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
 
             elements.backToTujuanButton.addEventListener('click', backToDefault);
             elements.backToTujuanButtonChar.addEventListener('click', backToDefault);
+
+            elements.importFromImageBtn.addEventListener('click', importFromImageDesigner);
 
 
             elements.copyButton.addEventListener('click', () => {
@@ -2700,6 +3128,63 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
             elements.clearAllButton.addEventListener('click', clearAllInputs);
         }
        
+       function clearAllInputs() {
+            // 1. Reset all form inputs and textareas
+            elements.allFormInputs.forEach(el => {
+                if (el.tagName === 'SELECT') {
+                    el.selectedIndex = 0;
+                } else if (el.type !== 'file') {
+                    el.value = '';
+                }
+            });
+             document.getElementById('bahasa-lagu-lainnya').classList.add('hidden');
+
+            // 2. Reset specific textareas and outputs
+            ['imageAnalysisResult', 'videoImageAnalysisResult', 'outputPromptEl', 'jsonOutputPrompt', 'characterSheetOutputEl', 'characterScenarioInputEl', 'compositionDetailsEl', 'outputLirik', 'outputGaya', 'outputAlternatif'].forEach(id => {
+                if (elements[id]) elements[id].value = '';
+            });
+            renderJudulLagu([]);
+
+            // 3. Clear image state variables
+            uploadedImageBase64 = null;
+            composeImage1Base64 = null;
+            composeImage2Base64 = null;
+            characterRefImageBase64 = null;
+            videoRefImageFile = null;
+            videoRefImageBase64 = null;
+
+            // 4. Reset file input elements
+            ['imageUploadEl', 'imageUploadCompose1', 'imageUploadCompose2', 'imageUploadChar', 'imageUploadVideoEl'].forEach(id => {
+                if(elements[id]) elements[id].value = '';
+            });
+
+            // Reset instrument UI
+            document.getElementById('instrument-selection-container').classList.add('hidden');
+            document.getElementById('alat-musik-lainnya').classList.add('hidden');
+            const lirikLabel = document.querySelector('label[for="output-lirik"]');
+            if (lirikLabel) lirikLabel.textContent = 'Hasil: Lirik';
+
+            // 5. Hide all preview containers
+            ['imagePreviewContainer', 'compositionPreviewContainer', 'characterPreviewContainer', 'videoPreviewContainer', 'jsonOutputContainer'].forEach(id => {
+                 if(elements[id]) elements[id].classList.add('hidden');
+            });
+
+            // 6. Reset image sources
+            ['uploadedImagePreview', 'uploadedComposePreview1', 'uploadedComposePreview2', 'uploadedCharPreview', 'uploadedVideoPreview'].forEach(id => {
+                if(elements[id]) elements[id].src = '';
+            });
+
+            // Also hide the parent wrappers for compose previews
+            if (elements.uploadedComposePreview1.parentElement) elements.uploadedComposePreview1.parentElement.classList.add('hidden');
+            if (elements.uploadedComposePreview2.parentElement) elements.uploadedComposePreview2.parentElement.classList.add('hidden');
+
+            // 7. Reset UI states and re-generate prompts
+            elements.showJsonButton.textContent = 'TAMPILKAN JSON';
+            handleTujuanGambarChange(); // This will reset form structure, labels and visibility
+
+            // We don't need an alert if the UI provides clear visual feedback
+        }
+
        function clearAllInputs() {
             // 1. Reset all form inputs and textareas
             elements.allFormInputs.forEach(el => {
