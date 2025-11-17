@@ -813,6 +813,13 @@ Indonesian Lo-Fi Chillhop, melancholic, rainy day vibe, soft female vocal, gentl
                                  </div>
                              </div>
                              <div id="video-designer-form" class="designer-form space-y-5">
+                                 <button id="import-from-image-btn" class="btn btn-secondary w-full !justify-start text-sm py-2 px-3">
+                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M4.646 9.646a.5.5 0 0 1 .708 0L8 12.293l2.646-2.647a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 0 1 0-.708z"/>
+                                        <path fill-rule="evenodd" d="M8 3a.5.5 0 0 1 .5.5v8.793a.5.5 0 0 1-1 0V3.5A.5.5 0 0 1 8 3z"/>
+                                      </svg>
+                                      <span>Ambil Data dari Desainer Gambar</span>
+                                 </button>
                                  <div class="space-y-3">
                                      <label class="block text-sm font-medium text-secondary">Opsional: Upload Gambar Referensi (Image-to-Video)</label>
                                      <div id="drop-zone-video" class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-dashed rounded-md cursor-pointer transition-colors border-border-color hover:border-accent-color">
@@ -1249,6 +1256,7 @@ Indonesian Lo-Fi Chillhop, melancholic, rainy day vibe, soft female vocal, gentl
             genreUtamaResults: document.getElementById('genre-utama-results'),
             genreKombinasiSearch: document.getElementById('genre-kombinasi-search'),
             genreKombinasiResults: document.getElementById('genre-kombinasi-results'),
+            importFromImageBtn: document.getElementById('import-from-image-btn'),
         };
 
         function renderJudulLagu(titles = []) {
@@ -1508,6 +1516,9 @@ Indonesian Lo-Fi Chillhop, melancholic, rainy day vibe, soft female vocal, gentl
 
             elements.imagePreviewContainer.classList.toggle('hidden', tab !== 'image' || !uploadedImageBase64);
             elements.videoPreviewContainer.classList.toggle('hidden', tab !== 'video' || !videoRefImageFile);
+
+            // Bug Fix: Pastikan 'Character Sheet' hanya tampil di tab Gambar saat mode 'karakter' aktif
+            elements.characterOutputSection.classList.toggle('hidden', tab !== 'image' || elements.tujuanGambarEl.value !== 'karakter');
 
             const isLaguTab = tab === 'lagu';
 
@@ -2246,6 +2257,47 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
             }
         }
 
+        function importFromImageDesigner() {
+            const tujuanGambar = elements.tujuanGambarEl.value;
+
+            if (tujuanGambar === 'karakter') {
+                // Ambil dari mode Karakter
+                const characterSheet = elements.characterSheetOutputEl.value;
+                const scenario = elements.characterScenarioInputEl.value;
+
+                elements.subjekVideoSubjectEl.value = characterSheet || '';
+                elements.subjekVideoActionEl.value = scenario || '';
+                elements.latarBelakangVideoEl.value = ''; // Reset karena skenario mungkin sudah mencakupnya
+                elements.gayaVideoEl.value = elements.charStyleEl.value || '';
+
+            } else {
+                // Ambil dari mode standar
+                const subjek = elements.produkGambarEl.value;
+                const gaya = elements.gayaGambarEl.value;
+                const latar = elements.latarBelakangGambarEl.value;
+                const detail = elements.detailGambarEl.value;
+
+                elements.subjekVideoSubjectEl.value = subjek || '';
+                elements.subjekVideoActionEl.value = detail || '';
+                elements.latarBelakangVideoEl.value = latar || '';
+                elements.gayaVideoEl.value = gaya || '';
+            }
+
+            // Perbarui prompt video setelah impor
+            generateVideoPrompt();
+
+            // Beri notifikasi visual singkat pada tombol
+            const btn = elements.importFromImageBtn;
+            const originalText = btn.querySelector('span').textContent;
+            btn.querySelector('span').textContent = 'Data Berhasil Diambil!';
+            btn.classList.add('bg-green-500', 'text-white');
+
+            setTimeout(() => {
+                btn.querySelector('span').textContent = originalText;
+                btn.classList.remove('bg-green-500', 'text-white');
+            }, 2000);
+        }
+
         // --- Event Listeners ---
         function setupEventListeners() {
             elements.useSharedEnvBtn.addEventListener('click', () => {
@@ -2318,6 +2370,8 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
 
             elements.backToTujuanButton.addEventListener('click', backToDefault);
             elements.backToTujuanButtonChar.addEventListener('click', backToDefault);
+
+            elements.importFromImageBtn.addEventListener('click', importFromImageDesigner);
 
 
             elements.copyButton.addEventListener('click', () => {
