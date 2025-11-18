@@ -2369,10 +2369,21 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
                 // Logic to gather song data
                  data = {
                     mode: 'lagu',
-                    lirik: elements.outputLirik.value,
-                    gaya: elements.outputGaya.value,
-                    judul: Array.from(elements.judulLaguList.querySelectorAll('input')).map(input => input.value),
-                    prompt_alternatif: elements.outputAlternatif.value
+                    inputs: {
+                        tema: document.getElementById('tema-lagu').value,
+                        bahasa: document.getElementById('bahasa-lagu').value,
+                        bahasa_lainnya: document.getElementById('bahasa-lagu-lainnya').value,
+                        vokalis: document.getElementById('vokalis-lagu').value,
+                        genre_utama: document.getElementById('genre-utama-search').value,
+                        genre_kombinasi: document.getElementById('genre-kombinasi-search').value,
+                        input_lainnya: document.getElementById('input-lainnya-lagu').value
+                    },
+                    outputs: {
+                        lirik: elements.outputLirik.value,
+                        gaya: elements.outputGaya.value,
+                        judul: Array.from(elements.judulLaguList.querySelectorAll('input')).map(input => input.value),
+                        prompt_alternatif: elements.outputAlternatif.value
+                    }
                 };
             }
 
@@ -2442,6 +2453,7 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
                                     ciri_fisik: 'charPhysicEl',
                                     pakaian_khas: 'charAttireEl',
                                     gaya_artistik: 'charStyleEl',
+                                    skenario: 'characterScenarioInputEl'
                                 }[key];
                                 if (elementKey && elements[elementKey]) {
                                     elements[elementKey].value = data.fields[key];
@@ -2481,12 +2493,38 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
                         break;
                     case 'lagu':
                         switchDesignerTab('lagu');
-                        // Logika untuk mengisi form lagu, jika ada
-                        elements.outputLirik.value = data.lirik || '';
-                        elements.outputGaya.value = data.gaya || '';
-                        elements.outputAlternatif.value = data.prompt_alternatif || '';
-                        if (data.judul && data.judul.length > 0) {
-                            renderJudulLagu(data.judul);
+
+                        // Backward compatibility for old data structure
+                        if (data.inputs && data.outputs) {
+                            // New structure
+                            document.getElementById('tema-lagu').value = data.inputs.tema || '';
+                            document.getElementById('bahasa-lagu').value = data.inputs.bahasa || 'Indonesia';
+                            document.getElementById('bahasa-lagu-lainnya').value = data.inputs.bahasa_lainnya || '';
+                            document.getElementById('vokalis-lagu').value = data.inputs.vokalis || 'Perempuan';
+                            document.getElementById('genre-utama-search').value = data.inputs.genre_utama || '';
+                            document.getElementById('genre-kombinasi-search').value = data.inputs.genre_kombinasi || '';
+                            document.getElementById('input-lainnya-lagu').value = data.inputs.input_lainnya || '';
+
+                            // Handle visibility for 'bahasa lainnya'
+                            const bahasaLaguSelect = document.getElementById('bahasa-lagu');
+                            const bahasaLaguLainnyaInput = document.getElementById('bahasa-lagu-lainnya');
+                            bahasaLaguLainnyaInput.classList.toggle('hidden', bahasaLaguSelect.value !== 'lainnya');
+
+
+                            elements.outputLirik.value = data.outputs.lirik || '';
+                            elements.outputGaya.value = data.outputs.gaya || '';
+                            elements.outputAlternatif.value = data.outputs.prompt_alternatif || '';
+                            if (data.outputs.judul && data.outputs.judul.length > 0) {
+                                renderJudulLagu(data.outputs.judul);
+                            }
+                        } else {
+                            // Old structure
+                            elements.outputLirik.value = data.lirik || '';
+                            elements.outputGaya.value = data.gaya || '';
+                            elements.outputAlternatif.value = data.prompt_alternatif || '';
+                            if (data.judul && data.judul.length > 0) {
+                                renderJudulLagu(data.judul);
+                            }
                         }
                         break;
                 }

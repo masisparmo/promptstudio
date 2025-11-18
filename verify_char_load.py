@@ -7,50 +7,74 @@ async def main():
         browser = await p.chromium.launch()
         page = await browser.new_page()
 
-        await page.goto("http://localhost:8000")
+        try:
+            await page.goto("http://localhost:8000")
 
-        # Handle Welcome Screen
-        await page.locator("#use-user-api-key").click()
-        await page.locator("#api-key-input").fill("DUMMY_API_KEY")
-        await page.locator("#start-with-api-key").click()
-        await expect(page.locator("#main-app")).to_be_visible()
+            # Handle Welcome Screen
+            await page.locator("#use-user-api-key").click()
+            await page.locator("#api-key-input").fill("DUMMY_API_KEY")
+            await page.locator("#start-with-api-key").click()
+            await expect(page.locator("#main-app")).to_be_visible()
 
-        # Navigate to the Character Designer
-        await page.locator("#tab-desainer").click()
-        await page.locator("#tujuan-gambar").select_option("karakter")
+            # --- Step 1: Create and Save a Character Prompt ---
+            await page.locator("#tab-desainer").click()
+            await page.locator("#designer-tab-image").click()
 
-        # Fill out the character form
-        await page.locator("#char-name").fill("Aria Test")
-        await page.locator("#char-physic").fill("Cybernetic eyes")
-        await page.locator("#char-attire").fill("Hacker gear")
-        await page.locator("#char-style").fill("Synthwave")
+            # Select "Buat Karakter Konsisten"
+            await page.locator("#tujuan-gambar").select_option("karakter")
+            await expect(page.locator("#character-creator-form")).to_be_visible()
+            print("Character creator form is visible.")
 
-        # Save the character prompt
-        await page.locator("#final-prompt-container #save-prompt-button").click()
+            # Fill the form
+            await page.locator("#char-name").fill("Aria Test")
+            await page.locator("#char-physic").fill("Rambut ungu, mata tajam")
+            await page.locator("#char-attire").fill("Jaket kulit hitam")
+            await page.locator("#char-style").fill("Gaya anime sinematik")
+            await page.locator("#character-scenario-input").fill("Berdiri di atap gedung")
+            print("Filled character form.")
 
-        # Navigate to history to verify
-        await page.locator("#tab-riwayat").click()
-        await expect(page.locator("#prompt-history-list")).not_to_be_empty()
-        await page.screenshot(path="verification/01_character_saved.png")
+            await page.screenshot(path="verification/char_01_before_save.png")
 
-        # Click the "Gunakan" button to load the character data
-        await page.locator(".use-prompt-btn").first.click()
+            # Save the prompt
+            await page.locator("#final-prompt-container #save-prompt-button").click()
+            print("Saved character prompt.")
 
-        # Assert that we are on the correct designer tab and form
-        await expect(page.locator("#designer-tab-image")).to_have_class("designer-tab-button active")
-        await expect(page.locator("#character-creator-form")).to_be_visible()
+            # --- Step 2: Load the Character Prompt from History ---
+            await page.locator("#tab-riwayat").click()
+            await expect(page.locator("#prompt-history-list")).to_contain_text("gambar_")
+            print("Navigated to history tab.")
+            await page.screenshot(path="verification/char_02_history_list.png")
 
-        # Assert that the form fields are correctly populated
-        await expect(page.locator("#char-name")).to_have_value("Aria Test")
-        await expect(page.locator("#char-physic")).to_have_value("Cybernetic eyes")
-        await expect(page.locator("#char-attire")).to_have_value("Hacker gear")
-        await expect(page.locator("#char-style")).to_have_value("Synthwave")
+            # Click the "Gunakan" button for the most recent prompt
+            await page.locator(".use-prompt-btn").first.click()
+            print("Clicked 'Gunakan' button.")
 
-        await page.screenshot(path="verification/02_character_loaded.png")
+            # --- Step 3: Verify the Data is Loaded Correctly ---
+            await expect(page.locator("#content-desainer")).to_be_visible()
+            await expect(page.locator("#designer-tab-image")).to_have_class("designer-tab-button active")
 
-        print("Verification successful: Character designer save and load functionality works correctly.")
+            # Verify the dropdown is set correctly
+            await expect(page.locator("#tujuan-gambar")).to_have_value("karakter")
+            await expect(page.locator("#character-creator-form")).to_be_visible()
+            print("Switched back to designer and character form is visible.")
 
-        await browser.close()
+            # Verify all fields are correctly populated
+            await expect(page.locator("#char-name")).to_have_value("Aria Test")
+            await expect(page.locator("#char-physic")).to_have_value("Rambut ungu, mata tajam")
+            await expect(page.locator("#char-attire")).to_have_value("Jaket kulit hitam")
+            await expect(page.locator("#char-style")).to_have_value("Gaya anime sinematik")
+            await expect(page.locator("#character-scenario-input")).to_have_value("Berdiri di atap gedung")
+            print("All character fields verified successfully.")
+
+            await page.screenshot(path="verification/char_03_load_success.png")
+
+            print("\nVerification successful: Save and Load for 'Karakter Konsisten' works as expected.")
+
+        except Exception as e:
+            print(f"\nAn error occurred during verification: {e}")
+            await page.screenshot(path="verification/char_error.png")
+        finally:
+            await browser.close()
 
 if __name__ == "__main__":
     asyncio.run(main())
