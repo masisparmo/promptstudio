@@ -5,15 +5,12 @@ def run():
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
         page = browser.new_page()
-        page.goto("http://localhost:8000/index.html")
+        # Use port 8004
+        page.goto("http://localhost:8004/index.html")
 
-        # Bypass Welcome Screen using Fake API Key
-        print("Bypassing welcome screen...")
-        if page.is_visible("#welcome-screen"):
-            page.click("#use-user-api-key")
-            page.fill("#api-key-input", "dummy_api_key_for_testing")
-            page.click("#start-with-api-key")
-            expect(page.locator("#main-app")).to_be_visible()
+        # Force main-app visibility
+        print("Setup environment...")
+        page.add_style_tag(content="#welcome-screen { display: none !important; } #main-app { display: block !important; }")
 
         # Inject data into IndexedDB
         prompt_data = {
@@ -30,9 +27,15 @@ def run():
             }
         }
 
-        print("Injecting test data into IndexedDB...")
+        print("Injecting DB data...")
         page.evaluate("""(promptData) => {
             const request = indexedDB.open('PromptStudioDB', 1);
+            request.onupgradeneeded = (e) => {
+                const db = e.target.result;
+                if (!db.objectStoreNames.contains('prompts')) {
+                    db.createObjectStore('prompts', { keyPath: 'id', autoIncrement: true });
+                }
+            };
             request.onsuccess = (event) => {
                 const db = event.target.result;
                 const transaction = db.transaction(['prompts'], 'readwrite');
@@ -41,15 +44,19 @@ def run():
             };
         }""", prompt_data)
 
-        page.wait_for_timeout(1000)
+        page.wait_for_timeout(2000)
 
         print("Switching to History tab...")
         page.click("#tab-riwayat")
 
+        # Wait for filename to appear first
         expect(page.locator("text=lagu_220524-1000.dps")).to_be_visible()
 
-        print("Taking screenshot of History tab...")
-        page.screenshot(path="/home/jules/verification/history_display.png")
+        # Wait for content to appear
+        expect(page.locator("text=Ini adalah lirik tes")).to_be_visible()
+
+        print("Taking screenshot...")
+        page.screenshot(path="/home/jules/verification/history_display_final_fixed.png")
 
         browser.close()
 
