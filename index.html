@@ -2637,7 +2637,8 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
                 const outputs = data.outputs || data; // handle new/old structure
                 if (outputs.lirik) promptString += `[LIRIK]\n${formatLyrics(outputs.lirik)}\n\n`;
                 if (outputs.gaya) promptString += `[GAYA]\n${outputs.gaya}\n\n`;
-                if (outputs.judul) promptString += `[JUDUL]\n${Array.isArray(outputs.judul) ? outputs.judul.join(', ') : outputs.judul}`;
+                if (outputs.judul) promptString += `[JUDUL]\n${Array.isArray(outputs.judul) ? outputs.judul.join(', ') : outputs.judul}\n\n`;
+                if (outputs.prompt_alternatif) promptString += `[PROMPT ALTERNATIF]\n${outputs.prompt_alternatif}`;
             } else {
                 promptString = data.prompt_string || "Tidak ada prompt output.";
             }
@@ -2701,42 +2702,20 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
 
                 prompts.reverse().forEach(prompt => {
                     const div = document.createElement('div');
-                    div.className = 'p-3 bg-tertiary rounded-lg flex flex-col sm:flex-row justify-between items-start gap-3 hover:bg-border-color transition-colors';
-
-                    // Extract content to display
-                    let contentPreview = '';
-                    const data = prompt.data;
-                    if (prompt.type === 'lagu') {
-                        // Handle song lyrics
-                        let lirik = '';
-                        if (data.outputs && data.outputs.lirik) {
-                            lirik = data.outputs.lirik;
-                        } else if (data.lirik) {
-                            lirik = data.lirik; // Backward compatibility
-                        }
-                        if (lirik) {
-                            contentPreview = formatLyrics(lirik);
-                        }
-                    } else {
-                        // Handle image/video prompts
-                        if (data.prompt_string) {
-                            contentPreview = data.prompt_string;
-                        }
-                    }
+                    div.className = 'p-3 bg-tertiary rounded-lg flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 hover:bg-border-color transition-colors';
 
                     const textContent = `
-                        <div class="flex-1 w-full">
-                            <div class="flex items-center gap-2 mb-1">
+                        <div class="flex-1">
+                            <div class="flex items-center gap-2">
                                 <p class="font-semibold text-primary">${prompt.filename}</p>
                                 <span class="text-[10px] px-1.5 py-0.5 rounded-full border border-secondary text-secondary uppercase">${prompt.type}</span>
                             </div>
-                            <p class="text-xs text-secondary mb-2">Disimpan pada: ${new Date(prompt.timestamp).toLocaleString()}</p>
-                            ${contentPreview ? `<div class="p-3 bg-primary-solid rounded-md border border-border-color text-xs font-mono whitespace-pre-wrap text-primary">${contentPreview}</div>` : ''}
+                            <p class="text-xs text-secondary">Disimpan pada: ${new Date(prompt.timestamp).toLocaleString()}</p>
                         </div>
                     `;
 
                     const buttonsContent = `
-                        <div class="flex gap-2 w-full sm:w-auto sm:self-start">
+                        <div class="flex gap-2 w-full sm:w-auto">
                              <button data-id="${prompt.id}" class="btn btn-secondary !px-3 !py-1.5 text-xs w-1/4 sm:w-auto preview-prompt-btn" title="Lihat Detail">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />

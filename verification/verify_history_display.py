@@ -5,7 +5,6 @@ def run():
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
         page = browser.new_page()
-        # Use port 8004
         page.goto("http://localhost:8004/index.html")
 
         # Force main-app visibility
@@ -22,7 +21,8 @@ def run():
                 "outputs": {
                     "lirik": "[Verse]\nIni adalah lirik tes.\nUntuk memastikan tampilan riwayat.",
                     "gaya": "Pop",
-                    "judul": ["Judul 1"]
+                    "judul": ["Judul 1"],
+                    "prompt_alternatif": "Buatkan lagu pop tentang tes sejarah."
                 }
             }
         }
@@ -49,14 +49,33 @@ def run():
         print("Switching to History tab...")
         page.click("#tab-riwayat")
 
-        # Wait for filename to appear first
+        # 1. Verify Inline Content is GONE
         expect(page.locator("text=lagu_220524-1000.dps")).to_be_visible()
+        expect(page.locator("text=Ini adalah lirik tes")).not_to_be_visible()
+        print("Verified: Inline content hidden.")
 
-        # Wait for content to appear
-        expect(page.locator("text=Ini adalah lirik tes")).to_be_visible()
+        # 2. Open Preview Modal
+        print("Opening preview modal...")
+        page.click(".preview-prompt-btn")
+        expect(page.locator("#preview-modal")).to_be_visible()
+
+        # 3. Verify Full Content in Modal
+        modal_content = page.locator("#preview-modal-body").text_content()
+
+        # Check for all parts
+        assert "[LIRIK]" in modal_content
+        assert "Ini adalah lirik tes" in modal_content
+        assert "[GAYA]" in modal_content
+        assert "Pop" in modal_content
+        assert "[JUDUL]" in modal_content
+        assert "Judul 1" in modal_content
+        assert "[PROMPT ALTERNATIF]" in modal_content
+        assert "Buatkan lagu pop tentang tes sejarah" in modal_content
+
+        print("Verified: Modal contains full output.")
 
         print("Taking screenshot...")
-        page.screenshot(path="/home/jules/verification/history_display_final_fixed.png")
+        page.screenshot(path="/home/jules/verification/history_preview_final.png")
 
         browser.close()
 
