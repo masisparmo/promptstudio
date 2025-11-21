@@ -1133,7 +1133,8 @@ Indonesian Lo-Fi Chillhop, melancholic, rainy day vibe, soft female vocal, gentl
             <div id="preview-modal-body" class="flex-1 p-6 overflow-y-auto space-y-4 text-sm">
                 <!-- Content will be injected here -->
             </div>
-            <div class="p-4 border-t border-border-color flex justify-end bg-tertiary rounded-b-lg">
+            <div class="p-4 border-t border-border-color flex justify-end bg-tertiary rounded-b-lg gap-2">
+                <button id="use-preview-btn" class="btn btn-primary text-sm">Gunakan</button>
                 <button id="close-preview-btn-secondary" class="btn btn-secondary text-sm">Tutup</button>
             </div>
         </div>
@@ -1319,6 +1320,7 @@ Indonesian Lo-Fi Chillhop, melancholic, rainy day vibe, soft female vocal, gentl
             closePreviewModal: document.getElementById('close-preview-modal'),
             closePreviewBtnSecondary: document.getElementById('close-preview-btn-secondary'),
             previewModalBody: document.getElementById('preview-modal-body'),
+            usePreviewBtn: document.getElementById('use-preview-btn'),
         };
 
         function renderJudulLagu(titles = []) {
@@ -2608,7 +2610,13 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
             }
 
             const keys = Object.keys(inputs);
-            if (keys.length === 0) {
+
+            // Add Aspect Ratio manually if present in root data
+            if (data.aspect_ratio) {
+                html += createRow("Aspek Rasio", data.aspect_ratio);
+            }
+
+            if (keys.length === 0 && !data.aspect_ratio) {
                 html += `<p class="italic text-secondary">Tidak ada data input tersimpan.</p>`;
             } else {
                 keys.forEach(key => {
@@ -2640,12 +2648,24 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
             return html;
         }
 
-        function togglePreviewModal(show, content = '') {
+        function togglePreviewModal(show, content = '', promptId = null) {
             const modal = elements.previewModal;
             const modalContent = modal.querySelector('div'); // The inner container
 
             if (show) {
                 elements.previewModalBody.innerHTML = content;
+
+                // Setup Use Button
+                if (promptId) {
+                    elements.usePreviewBtn.onclick = () => {
+                        loadPromptToDesigner(promptId);
+                        togglePreviewModal(false);
+                    };
+                    elements.usePreviewBtn.classList.remove('hidden');
+                } else {
+                    elements.usePreviewBtn.classList.add('hidden');
+                }
+
                 modal.classList.remove('hidden');
                 // Trigger reflow to enable transition
                 void modal.offsetWidth;
@@ -2659,6 +2679,7 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
                 setTimeout(() => {
                     modal.classList.add('hidden');
                     elements.previewModalBody.innerHTML = '';
+                    elements.usePreviewBtn.onclick = null; // Clear handler
                 }, 300); // Match transition duration
             }
         }
@@ -2739,7 +2760,7 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
                         const prompt = e.target.result;
                         if (prompt) {
                             const content = formatPromptDataForPreview(prompt);
-                            togglePreviewModal(true, content);
+                            togglePreviewModal(true, content, id);
                         }
                     };
                 }

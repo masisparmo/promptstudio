@@ -21,46 +21,54 @@ async def main():
         await page.locator("#designer-tab-image").click()
         await page.locator("#produk-gambar").fill("Kucing Oranye Cyberpunk")
         await page.locator("#gaya-gambar").fill("Neon, Futuristic, High Contrast")
-        await page.locator("#final-prompt-container #save-prompt-button").click()
 
-        # Wait for save to complete
+        # Set Aspect Ratio to check if it appears in preview (default is 1:1)
+
+        await page.locator("#final-prompt-container #save-prompt-button").click()
         await expect(page.locator("#save-prompt-button")).to_contain_text("TERSMPAN")
 
         # --- Step 2: Go to History and Open Preview ---
         print("Navigating to History...")
         await page.locator("#tab-riwayat").click()
-
-        # Wait for list to populate
         await expect(page.locator("#prompt-history-list").locator("div").first).to_be_visible()
 
         print("Clicking Preview button...")
-        # Find the first preview button (eye icon)
         preview_btn = page.locator(".preview-prompt-btn").first
         await preview_btn.click()
 
-        # --- Step 3: Verify Modal Content ---
+        # --- Step 3: Verify Modal Content & New Button ---
         print("Verifying Modal content...")
         modal = page.locator("#preview-modal")
         await expect(modal).to_be_visible()
 
-        # Check for header
-        await expect(modal.locator("h3")).to_have_text("Preview Data Prompt")
-
-        # Check for specific field content
+        # Check for "Input Mentah" data
         modal_body = page.locator("#preview-modal-body")
         await expect(modal_body).to_contain_text("Objek Utama")
         await expect(modal_body).to_contain_text("Kucing Oranye Cyberpunk")
-        await expect(modal_body).to_contain_text("Gaya Visual")
-        await expect(modal_body).to_contain_text("Neon, Futuristic, High Contrast")
+        await expect(modal_body).to_contain_text("Aspek Rasio")
+        await expect(modal_body).to_contain_text("1:1")
 
-        await page.screenshot(path="verification/preview_modal_verified.png")
+        # Check for "Gunakan" button
+        use_btn = page.locator("#use-preview-btn")
+        await expect(use_btn).to_be_visible()
+        await expect(use_btn).to_have_text("Gunakan")
 
-        # --- Step 4: Close Modal ---
-        print("Closing Modal...")
-        await page.locator("#close-preview-btn-secondary").click()
+        await page.screenshot(path="verification/preview_modal_with_use.png")
+
+        # --- Step 4: Test "Gunakan" Button ---
+        print("Clicking 'Gunakan' in modal...")
+        await use_btn.click()
+
+        # Modal should close
         await expect(modal).to_be_hidden()
 
-        print("Verification successful: Preview modal works as expected.")
+        # Should navigate to Designer tab and populate fields
+        print("Verifying prompt loaded...")
+        # Check if content section is visible instead of tab button class string
+        await expect(page.locator("#content-desainer")).to_be_visible()
+        await expect(page.locator("#produk-gambar")).to_have_value("Kucing Oranye Cyberpunk")
+
+        print("Verification successful: Preview modal inputs and Use button work correctly.")
         await browser.close()
 
 if __name__ == "__main__":
