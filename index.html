@@ -1938,7 +1938,7 @@ Indonesian Lo-Fi Chillhop, melancholic, rainy day vibe, soft female vocal, gentl
             if (apiMode === 'user' && !apiKey) {
                 throw new Error("API Key pengguna tidak valid atau tidak tersedia.");
             }
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
 
             const parts = [{ text: userQuery }];
             if (imageData && imageData.length > 0) {
@@ -2069,7 +2069,7 @@ Indonesian Lo-Fi Chillhop, melancholic, rainy day vibe, soft female vocal, gentl
                  elements.imageAnalysisResult.value = "Error: API Key pengguna tidak valid...";
                  return;
             }
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
             const payload = {
                 contents: [{ parts: [ { text: userPrompt }, { inlineData: { mimeType: "image/jpeg", data: uploadedImageBase64 } } ] }],
                 systemInstruction: { parts: [{ text: systemPrompt }] },
@@ -2121,7 +2121,7 @@ Indonesian Lo-Fi Chillhop, melancholic, rainy day vibe, soft female vocal, gentl
                 return;
             }
 
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
 
             const schema = {
                 type: "OBJECT",
@@ -2701,20 +2701,42 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
 
                 prompts.reverse().forEach(prompt => {
                     const div = document.createElement('div');
-                    div.className = 'p-3 bg-tertiary rounded-lg flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 hover:bg-border-color transition-colors';
+                    div.className = 'p-3 bg-tertiary rounded-lg flex flex-col sm:flex-row justify-between items-start gap-3 hover:bg-border-color transition-colors';
+
+                    // Extract content to display
+                    let contentPreview = '';
+                    const data = prompt.data;
+                    if (prompt.type === 'lagu') {
+                        // Handle song lyrics
+                        let lirik = '';
+                        if (data.outputs && data.outputs.lirik) {
+                            lirik = data.outputs.lirik;
+                        } else if (data.lirik) {
+                            lirik = data.lirik; // Backward compatibility
+                        }
+                        if (lirik) {
+                            contentPreview = formatLyrics(lirik);
+                        }
+                    } else {
+                        // Handle image/video prompts
+                        if (data.prompt_string) {
+                            contentPreview = data.prompt_string;
+                        }
+                    }
 
                     const textContent = `
-                        <div class="flex-1">
-                            <div class="flex items-center gap-2">
+                        <div class="flex-1 w-full">
+                            <div class="flex items-center gap-2 mb-1">
                                 <p class="font-semibold text-primary">${prompt.filename}</p>
                                 <span class="text-[10px] px-1.5 py-0.5 rounded-full border border-secondary text-secondary uppercase">${prompt.type}</span>
                             </div>
-                            <p class="text-xs text-secondary">Disimpan pada: ${new Date(prompt.timestamp).toLocaleString()}</p>
+                            <p class="text-xs text-secondary mb-2">Disimpan pada: ${new Date(prompt.timestamp).toLocaleString()}</p>
+                            ${contentPreview ? `<div class="p-3 bg-primary-solid rounded-md border border-border-color text-xs font-mono whitespace-pre-wrap text-primary">${contentPreview}</div>` : ''}
                         </div>
                     `;
 
                     const buttonsContent = `
-                        <div class="flex gap-2 w-full sm:w-auto">
+                        <div class="flex gap-2 w-full sm:w-auto sm:self-start">
                              <button data-id="${prompt.id}" class="btn btn-secondary !px-3 !py-1.5 text-xs w-1/4 sm:w-auto preview-prompt-btn" title="Lihat Detail">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
