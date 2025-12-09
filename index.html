@@ -2069,17 +2069,17 @@ Indonesian Lo-Fi Chillhop, melancholic, rainy day vibe, soft female vocal, gentl
                  elements.imageAnalysisResult.value = "Error: API Key pengguna tidak valid...";
                  return;
             }
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
-            const payload = {
-                contents: [{ parts: [ { text: userPrompt }, { inlineData: { mimeType: "image/jpeg", data: uploadedImageBase64 } } ] }],
-                systemInstruction: { parts: [{ text: systemPrompt }] },
-            };
+
             try {
-                const response = await fetch(apiUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                const result = await response.json();
-                if (result.candidates && result.candidates[0].content && result.candidates[0].content.parts[0].text) {
-                    const analysisText = result.candidates[0].content.parts[0].text;
+                const analysisText = await makeApiCallWithRetry(
+                    systemPrompt,
+                    userPrompt,
+                    false, // isJson
+                    null, // responseSchema
+                    [{ mimeType: "image/jpeg", data: uploadedImageBase64 }]
+                );
+
+                if (analysisText) {
                     elements.imageAnalysisResult.value = analysisText;
                     const subjectMatch = analysisText.match(/\*\*Subjek Utama:\*\*\s*([^\n]+)/i);
                     if (subjectMatch && subjectMatch[1]) {
@@ -2120,8 +2120,6 @@ Indonesian Lo-Fi Chillhop, melancholic, rainy day vibe, soft female vocal, gentl
                 elements.analyzeCharIcon.innerHTML = `🤖`;
                 return;
             }
-
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
 
             const schema = {
                 type: "OBJECT",
@@ -2177,8 +2175,24 @@ Indonesian Lo-Fi Chillhop, melancholic, rainy day vibe, soft female vocal, gentl
             elements.videoImageAnalysisResult.classList.remove('hidden');
             elements.videoImageAnalysisResult.value = "AI sedang menganalisa gambar Anda untuk diubah menjadi ide prompt video...";
             
-            const systemPrompt = `PENTING: Jawaban Anda HARUS dalam Bahasa Indonesia. Anda adalah seorang sutradara film dan analis visual. Diberikan sebuah gambar, tugas Anda adalah mengekstrak esensinya untuk diubah menjadi prompt video. Balas HANYA dengan format JSON yang ketat. JSON harus memiliki properti: "subject" (deskripsi subjek utama dalam 2-5 kata), "action" (deskripsi aksi atau suasana yang tersirat dalam gambar), "background" (deskripsi singkat dan jelas tentang latar belakang), dan "style" (deskripsi gaya visual, potensi gerakan kamera, sinematografi, dan pencahayaan).`;
-            const userPrompt = "Analisa gambar ini dan berikan hasilnya dalam format JSON sesuai instruksi sistem.";
+            const systemPrompt = `PENTING: Jawaban Anda HARUS dalam Bahasa Indonesia. Anda adalah seorang sutradara film dan pakar pemasaran video.
+
+            Tugas Anda: Analisa gambar yang diberikan.
+
+            KASUS 1: JIKA gambar adalah FLYER PROMOSI, POSTER PRODUK, atau IKLAN:
+            - "subject": Nama produk/jasa dan nilai jual utamanya.
+            - "action": Deskripsikan adegan iklan komersial yang dinamis (contoh: "reveal produk slow motion", "tipografi kinetik yang menampilkan fitur", "penggunaan gaya hidup").
+            - "background": Latar studio profesional atau lingkungan yang relevan dengan brand.
+            - "style": Estetika iklan komersial high-end, pencahayaan profesional, tajam 4k, mood energik atau elegan sesuai produk.
+
+            KASUS 2: JIKA gambar adalah PEMANDANGAN atau FOTO BIASA:
+            - "subject": Deskripsi subjek utama (2-5 kata).
+            - "action": Deskripsi aksi atau suasana yang tersirat.
+            - "background": Deskripsi latar belakang.
+            - "style": Deskripsi gaya visual, gerakan kamera, dan sinematografi.
+
+            Balas HANYA dengan format JSON yang ketat. JSON harus memiliki properti: "subject", "action", "background", dan "style".`;
+            const userPrompt = "Analisa gambar ini. Jika ini flyer/iklan, buatkan prompt untuk video komersial profesional. Jika bukan, buatkan deskripsi adegan biasa. Berikan output JSON.";
             
             const apiKey = apiMode === 'user' ? userApiKey : "";
             if (apiMode === 'user' && !apiKey) {
