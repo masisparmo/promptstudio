@@ -2069,17 +2069,17 @@ Indonesian Lo-Fi Chillhop, melancholic, rainy day vibe, soft female vocal, gentl
                  elements.imageAnalysisResult.value = "Error: API Key pengguna tidak valid...";
                  return;
             }
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
-            const payload = {
-                contents: [{ parts: [ { text: userPrompt }, { inlineData: { mimeType: "image/jpeg", data: uploadedImageBase64 } } ] }],
-                systemInstruction: { parts: [{ text: systemPrompt }] },
-            };
+
             try {
-                const response = await fetch(apiUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                const result = await response.json();
-                if (result.candidates && result.candidates[0].content && result.candidates[0].content.parts[0].text) {
-                    const analysisText = result.candidates[0].content.parts[0].text;
+                const analysisText = await makeApiCallWithRetry(
+                    systemPrompt,
+                    userPrompt,
+                    false, // isJson
+                    null, // responseSchema
+                    [{ mimeType: "image/jpeg", data: uploadedImageBase64 }]
+                );
+
+                if (analysisText) {
                     elements.imageAnalysisResult.value = analysisText;
                     const subjectMatch = analysisText.match(/\*\*Subjek Utama:\*\*\s*([^\n]+)/i);
                     if (subjectMatch && subjectMatch[1]) {
@@ -2120,8 +2120,6 @@ Indonesian Lo-Fi Chillhop, melancholic, rainy day vibe, soft female vocal, gentl
                 elements.analyzeCharIcon.innerHTML = `🤖`;
                 return;
             }
-
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
 
             const schema = {
                 type: "OBJECT",
