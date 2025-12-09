@@ -1736,6 +1736,7 @@ Indonesian Lo-Fi Chillhop, melancholic, rainy day vibe, soft female vocal, gentl
                 };
                 if (videoRefImageFile) {
                     promptData.fields.gambar_referensi = videoRefImageFile.name;
+                    promptData.fields.gambar_referensi_base64 = videoRefImageBase64;
                 }
             } else { // Image tab is active
                 promptData.mode = 'image';
@@ -1748,6 +1749,8 @@ Indonesian Lo-Fi Chillhop, melancholic, rainy day vibe, soft female vocal, gentl
                             detail_komposisi: elements.compositionDetailsEl.value,
                             gambar_referensi_1: composeImage1Base64 ? 'uploaded_image_1.jpg' : null,
                             gambar_referensi_2: composeImage2Base64 ? 'uploaded_image_2.jpg' : null,
+                            gambar_referensi_1_base64: composeImage1Base64,
+                            gambar_referensi_2_base64: composeImage2Base64,
                         };
                         break;
                     case 'karakter':
@@ -1758,6 +1761,7 @@ Indonesian Lo-Fi Chillhop, melancholic, rainy day vibe, soft female vocal, gentl
                             gaya_artistik: elements.charStyleEl.value,
                             skenario: elements.characterScenarioInputEl.value,
                             gambar_referensi: characterRefImageBase64 ? 'character_ref_image.jpg' : null,
+                            gambar_referensi_base64: characterRefImageBase64,
                         };
                         break;
                     default: // Standard image forms (produk, packaging, etc.)
@@ -1772,6 +1776,7 @@ Indonesian Lo-Fi Chillhop, melancholic, rainy day vibe, soft female vocal, gentl
                         }
                         if (uploadedImageBase64) {
                             promptData.fields.gambar_referensi = 'uploaded_image.jpg';
+                            promptData.fields.gambar_referensi_base64 = uploadedImageBase64;
                         }
                         break;
                 }
@@ -2495,6 +2500,24 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
                                     elements[elementKey].value = data.fields[key];
                                 }
                             });
+                            if (data.fields.gambar_referensi_base64) {
+                                characterRefImageBase64 = data.fields.gambar_referensi_base64;
+                                elements.uploadedCharPreview.src = `data:image/jpeg;base64,${characterRefImageBase64}`;
+                                elements.characterPreviewContainer.classList.remove('hidden');
+                            }
+                        } else if (data.form_type === 'gabungkan') {
+                             if (data.fields.detail_komposisi) elements.compositionDetailsEl.value = data.fields.detail_komposisi;
+
+                             if (data.fields.gambar_referensi_1_base64) {
+                                 composeImage1Base64 = data.fields.gambar_referensi_1_base64;
+                                 elements.uploadedComposePreview1.src = `data:image/jpeg;base64,${composeImage1Base64}`;
+                                 elements.uploadedComposePreview1.parentElement.classList.remove('hidden');
+                             }
+                             if (data.fields.gambar_referensi_2_base64) {
+                                 composeImage2Base64 = data.fields.gambar_referensi_2_base64;
+                                 elements.uploadedComposePreview2.src = `data:image/jpeg;base64,${composeImage2Base64}`;
+                                 elements.uploadedComposePreview2.parentElement.classList.remove('hidden');
+                             }
                         } else {
                             Object.keys(data.fields).forEach(key => {
                                 const elementKey = {
@@ -2508,6 +2531,11 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
                                     elements[elementKey].value = data.fields[key];
                                 }
                             });
+                            if (data.fields.gambar_referensi_base64) {
+                                uploadedImageBase64 = data.fields.gambar_referensi_base64;
+                                elements.uploadedImagePreview.src = `data:image/jpeg;base64,${uploadedImageBase64}`;
+                                elements.imagePreviewContainer.classList.remove('hidden');
+                            }
                         }
                         break;
                     case 'video':
@@ -2526,6 +2554,11 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
                                 elements[elementKey].value = data.fields[key];
                             }
                         });
+                        if (data.fields.gambar_referensi_base64) {
+                            videoRefImageBase64 = data.fields.gambar_referensi_base64;
+                            elements.uploadedVideoPreview.src = `data:image/jpeg;base64,${videoRefImageBase64}`;
+                            elements.videoPreviewContainer.classList.remove('hidden');
+                        }
                         break;
                     case 'lagu':
                         switchDesignerTab('lagu');
