@@ -188,10 +188,13 @@
             border-bottom-color: var(--accent-color);
         }
 
-        .content-section, .designer-form, #main-app, #api-key-section {
+        .content-section, .designer-form {
             display: none;
         }
-        .content-section.active, .designer-form.active, #main-app.active, #api-key-section.active {
+        .content-section.active, .designer-form.active {
+            display: block;
+        }
+        #main-app {
             display: block;
         }
 
@@ -315,49 +318,6 @@
     </style>
 </head>
 <body class="antialiased">
-    <!-- Welcome Screen -->
-    <div id="welcome-screen" class="min-h-screen flex flex-col items-center justify-center p-4">
-        <div class="text-center mb-8">
-            <h1 class="text-4xl md:text-5xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">
-                PROMPT STUDIO
-            </h1>
-            <p class="mt-2 text-lg text-slate-500 dark:text-slate-400">Pilih Lingkungan Untuk Menjalankan Aplikasi</p>
-        </div>
-        
-        <div class="w-full max-w-2xl grid md:grid-cols-2 gap-6">
-            <!-- Option 1: Shared Environment -->
-            <div class="card p-6 flex flex-col items-center text-center">
-                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-indigo-500 mb-4"><path d="M10 20.5c0 .83.67 1.5 1.5 1.5h1c.83 0 1.5-.67 1.5-1.5v-6c0-.83-.67-1.5-1.5-1.5h-1c-.83 0-1.5.67-1.5 1.5v6Z"/><path d="M18.5 22c.83 0 1.5-.67 1.5-1.5v-11c0-.83-.67-1.5-1.5-1.5h-1c-.83 0-1.5.67-1.5 1.5v11c0 .83.67 1.5 1.5 1.5h1Z"/><path d="M5.5 22c.83 0 1.5-.67 1.5-1.5V15c0-.83-.67-1.5-1.5-1.5h-1C3.67 13.5 3 14.17 3 15v5.5c0 .83.67 1.5 1.5 1.5h1Z"/><path d="m2 14 3-3 3 3"/><path d="M13 3 7.5 8.5"/><path d="m14 4 6 6"/><path d="M10.5 8.5 16 3"/></svg>
-                <h2 class="text-xl font-bold mb-2">Lingkungan Gemini</h2>
-                <p class="text-secondary mb-4 text-sm">Gunakan lingkungan Gemini milik Anda. Tidak perlu API Key.</p>
-                <button id="use-shared-env" class="btn btn-primary w-full">LANJUTKAN</button>
-            </div>
-            
-            <!-- Option 2: User API Key -->
-            <div class="card p-6 flex flex-col items-center text-center">
-                 <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-purple-500 mb-4"><path d="m15 12-8.373 8.373a1 1 0 1 1-1.414-1.414L12.172 12 5.213 5.043a1 1 0 1 1 1.414-1.414L15 12Z"/><path d="m3 12 2.394 2.394a1 1 0 0 0 1.414 0L9.121 12l-2.313-2.313a1 1 0 0 0-1.414 0L3 12Z"/></svg>
-                <h2 class="text-xl font-bold mb-2">Gunakan kode API Gemini</h2>
-                <p class="text-secondary mb-4 text-sm">Masukkan kode API Key Gemini milik Anda sendiri.</p>
-                <button id="use-user-api-key" class="btn btn-secondary w-full">MASUKKAN API KEY</button>
-            </div>
-        </div>
-
-        <!-- API Key Input Section -->
-        <div id="api-key-section" class="w-full max-w-lg mt-6">
-            <div class="card p-6">
-                <h3 class="text-lg font-semibold mb-4">Masukkan API Key Gemini Anda</h3>
-                <input type="password" id="api-key-input" class="form-input w-full p-2.5 mb-4" placeholder="AIzaSy...">
-                <button id="start-with-api-key" class="btn btn-primary w-full">MULAI STUDIO</button>
-                <div class="text-xs text-secondary mt-4">
-                    <p>
-                        Belum punya API Key? Dapatkan secara gratis dari 
-                        <a href="https://aistudio.google.com/app/apikey" target="_blank" class="font-semibold text-indigo-400 hover:underline">Google AI Studio</a>. 
-                        Cukup klik "Create API key in new project".
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
     
     <!-- Main Application -->
     <div id="main-app" class="container mx-auto p-4 md:p-8">
@@ -369,10 +329,18 @@
                 </h1>
                 <p class="mt-2 text-lg text-secondary">Cara Mudah Membuat Prompt Image, Video, Lagu</p>
             </div>
-            <button id="theme-toggle" class="p-2 rounded-full bg-tertiary hover:bg-border-color transition-colors w-12 h-12 flex items-center justify-center">
-                <svg id="theme-icon-light" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
-                <svg id="theme-icon-dark" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
-            </button>
+            <div class="flex items-center gap-2">
+                <button id="settings-button" class="p-2 rounded-full bg-tertiary hover:bg-border-color transition-colors w-12 h-12 flex items-center justify-center" title="Pengaturan API Key">
+                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                </button>
+                <button id="theme-toggle" class="p-2 rounded-full bg-tertiary hover:bg-border-color transition-colors w-12 h-12 flex items-center justify-center">
+                    <svg id="theme-icon-light" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                    <svg id="theme-icon-dark" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
+                </button>
+            </div>
         </header>
 
         <div class="flex justify-center mb-8 bg-secondary rounded-lg p-1.5 shadow-md max-w-lg mx-auto">
@@ -1096,7 +1064,7 @@ Indonesian Lo-Fi Chillhop, melancholic, rainy day vibe, soft female vocal, gentl
         </footer>
     </div>
 
-    <button id="assistant-button" class="hidden text-accent-text fixed bottom-8 right-8 rounded-full shadow-lg z-50 flex items-center justify-center w-14 h-14">
+    <button id="assistant-button" class="text-accent-text fixed bottom-8 right-8 rounded-full shadow-lg z-50 flex items-center justify-center w-14 h-14">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
           <path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.51c1.136-1.01 2.894-1.01 4.03 0 1.135 1.01.99 2.768-.336 3.878-1.325 1.11-2.438 2.388-2.438 3.96v.152" />
           <path stroke-linecap="round" stroke-linejoin="round" d="M12 18.75h.01" />
@@ -1119,6 +1087,36 @@ Indonesian Lo-Fi Chillhop, melancholic, rainy day vibe, soft female vocal, gentl
                         <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
                     </svg>
                 </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- API Key Modal -->
+    <div id="api-key-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm transition-opacity duration-300 opacity-0">
+        <div class="bg-secondary rounded-lg shadow-2xl w-full max-w-lg m-4 flex flex-col transform transition-transform duration-300 scale-95">
+             <div class="flex justify-between items-center p-4 border-b border-border-color rounded-t-lg bg-tertiary">
+                <h3 class="font-bold text-lg">Pengaturan API Key Gemini</h3>
+                <button id="close-api-key-modal" class="text-2xl font-bold leading-none text-secondary hover:text-primary">&times;</button>
+            </div>
+            <div class="p-6 space-y-4">
+                 <div>
+                    <label for="modal-api-key-input" class="block mb-2 text-sm font-medium text-secondary">Masukkan API Key Anda</label>
+                    <input type="password" id="modal-api-key-input" class="form-input w-full p-2.5" placeholder="AIzaSy...">
+                </div>
+                <div class="bg-tertiary p-4 rounded-md text-sm text-secondary space-y-2">
+                    <h4 class="font-bold text-primary">Cara Mendapatkan API Key Gratis:</h4>
+                    <ol class="list-decimal list-inside space-y-1">
+                        <li>Kunjungi <a href="https://aistudio.google.com/app/apikey" target="_blank" class="text-accent-color hover:underline">Google AI Studio</a>.</li>
+                        <li>Pastikan Anda login dengan akun Google Anda.</li>
+                        <li>Klik tombol <strong>"Create API key"</strong>.</li>
+                        <li>Pilih <strong>"Create API key in new project"</strong>.</li>
+                        <li>Salin kode yang muncul dan tempelkan di kotak di atas.</li>
+                    </ol>
+                </div>
+            </div>
+             <div class="p-4 border-t border-border-color flex justify-end bg-tertiary rounded-b-lg gap-2">
+                <button id="delete-api-key-btn" class="btn bg-red-600 hover:bg-red-700 text-white text-sm hidden">Hapus</button>
+                <button id="save-api-key-btn" class="btn btn-primary text-sm">Simpan</button>
             </div>
         </div>
     </div>
@@ -1168,8 +1166,7 @@ Indonesian Lo-Fi Chillhop, melancholic, rainy day vibe, soft female vocal, gentl
             console.error("Error opening IndexedDB:", event.target.errorCode);
         };
 
-        let userApiKey = null;
-        let apiMode = 'shared';
+        let userApiKey = localStorage.getItem('geminiApiKey');
         let uploadedImageBase64 = null;
         let composeImage1Base64 = null;
         let composeImage2Base64 = null;
@@ -1179,17 +1176,20 @@ Indonesian Lo-Fi Chillhop, melancholic, rainy day vibe, soft female vocal, gentl
         let selectedAspectRatio = '1:1';
         
         const elements = {
-            welcomeScreen: document.getElementById('welcome-screen'),
             mainApp: document.getElementById('main-app'),
-            useSharedEnvBtn: document.getElementById('use-shared-env'),
-            useUserApiKeyBtn: document.getElementById('use-user-api-key'),
-            apiKeySection: document.getElementById('api-key-section'),
-            apiKeyInput: document.getElementById('api-key-input'),
-            startWithApiKeyBtn: document.getElementById('start-with-api-key'),
             assistantButton: document.getElementById('assistant-button'),
+            settingsButton: document.getElementById('settings-button'),
             themeToggle: document.getElementById('theme-toggle'),
             lightIcon: document.getElementById('theme-icon-light'),
             darkIcon: document.getElementById('theme-icon-dark'),
+
+            // API Key Modal Elements
+            apiKeyModal: document.getElementById('api-key-modal'),
+            modalApiKeyInput: document.getElementById('modal-api-key-input'),
+            saveApiKeyBtn: document.getElementById('save-api-key-btn'),
+            deleteApiKeyBtn: document.getElementById('delete-api-key-btn'),
+            closeApiKeyModal: document.getElementById('close-api-key-modal'),
+
             mainTabButtons: {
                 belajar: document.getElementById('tab-belajar'),
                 desainer: document.getElementById('tab-desainer'),
@@ -1369,7 +1369,50 @@ Indonesian Lo-Fi Chillhop, melancholic, rainy day vibe, soft female vocal, gentl
             }
         };
 
+        function toggleApiKeyModal(show, returnToTab = null) {
+            const modal = elements.apiKeyModal;
+            const modalContent = modal.querySelector('div');
+
+            if (show) {
+                // Populate input if key exists
+                if (userApiKey) {
+                    elements.modalApiKeyInput.value = userApiKey;
+                    elements.deleteApiKeyBtn.classList.remove('hidden');
+                } else {
+                    elements.modalApiKeyInput.value = '';
+                    elements.deleteApiKeyBtn.classList.add('hidden');
+                }
+
+                modal.classList.remove('hidden');
+                void modal.offsetWidth; // Trigger reflow
+                modal.classList.remove('opacity-0');
+                modalContent.classList.remove('scale-95');
+                modalContent.classList.add('scale-100');
+
+                // Store state for return action if needed
+                modal.dataset.returnTab = returnToTab || '';
+            } else {
+                modal.classList.add('opacity-0');
+                modalContent.classList.remove('scale-100');
+                modalContent.classList.add('scale-95');
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                }, 300);
+            }
+        }
+
+        function checkApiKey(actionType) {
+            if (userApiKey) return true;
+
+            toggleApiKeyModal(true, actionType === 'tab-desainer' ? 'desainer' : actionType);
+            return false;
+        }
+
         function showTab(tabName) {
+            if (tabName === 'desainer' && !checkApiKey('tab-desainer')) {
+                return;
+            }
+
             Object.values(elements.mainTabButtons).forEach(button => button.classList.remove('active'));
             elements.mainTabButtons[tabName].classList.add('active');
             Object.values(elements.contentSections).forEach(section => section.classList.remove('active'));
@@ -1939,11 +1982,10 @@ Indonesian Lo-Fi Chillhop, melancholic, rainy day vibe, soft female vocal, gentl
         }
         
         async function makeApiCallWithRetry(systemPrompt, userQuery, isJson = false, responseSchema = null, imageData = null) {
-            const apiKey = apiMode === 'user' ? userApiKey : "";
-            if (apiMode === 'user' && !apiKey) {
-                throw new Error("API Key pengguna tidak valid atau tidak tersedia.");
+            if (!userApiKey) {
+                throw new Error("API Key tidak ditemukan. Mohon isi API Key di pengaturan.");
             }
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${userApiKey}`;
 
             const parts = [{ text: userQuery }];
             if (imageData && imageData.length > 0) {
@@ -2312,6 +2354,8 @@ Indonesian Lo-Fi Chillhop, melancholic, rainy day vibe, soft female vocal, gentl
         }
 
         async function handleSendMessage() {
+            if (!checkApiKey('assistant')) return;
+
             const message = elements.assistantInput.value.trim();
             if (!message) return;
             addMessageToChat(message, 'user');
@@ -2919,24 +2963,40 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
 
             elements.savePromptButton.addEventListener('click', saveCurrentPrompt);
             elements.saveLaguPromptButton.addEventListener('click', saveCurrentPrompt);
-            elements.useSharedEnvBtn.addEventListener('click', () => {
-                window.open('https://g.co/gemini/share/ec7fc3fd066b', '_blank');
+
+            elements.settingsButton.addEventListener('click', () => toggleApiKeyModal(true));
+            elements.closeApiKeyModal.addEventListener('click', () => {
+                toggleApiKeyModal(false);
+                if (elements.apiKeyModal.dataset.returnTab === 'desainer' && !userApiKey) {
+                    alert('Anda tidak bisa menggunakan fitur DESAINER PROMPT dan AHLI PROMPT tanpa API Key.');
+                }
             });
-            elements.useUserApiKeyBtn.addEventListener('click', () => {
-                elements.apiKeySection.classList.toggle('active');
-            });
-            elements.startWithApiKeyBtn.addEventListener('click', () => {
-                const key = elements.apiKeyInput.value.trim();
+
+            elements.saveApiKeyBtn.addEventListener('click', () => {
+                const key = elements.modalApiKeyInput.value.trim();
                 if (key) {
                     userApiKey = key;
-                    apiMode = 'user';
-                    elements.welcomeScreen.style.display = 'none';
-                    elements.mainApp.classList.add('active');
+                    localStorage.setItem('geminiApiKey', key);
+                    toggleApiKeyModal(false);
+                    // If we were trying to access a tab, go there now
+                    if (elements.apiKeyModal.dataset.returnTab === 'desainer') {
+                        showTab('desainer');
+                    }
                     elements.assistantButton.classList.remove('hidden');
                 } else {
-                    elements.apiKeyInput.focus();
-                    elements.apiKeyInput.classList.add('border-red-500', 'animate-pulse');
-                    setTimeout(() => elements.apiKeyInput.classList.remove('border-red-500', 'animate-pulse'), 2000);
+                    elements.modalApiKeyInput.focus();
+                    elements.modalApiKeyInput.classList.add('border-red-500');
+                    setTimeout(() => elements.modalApiKeyInput.classList.remove('border-red-500'), 2000);
+                }
+            });
+
+            elements.deleteApiKeyBtn.addEventListener('click', () => {
+                if (confirm('Apakah Anda yakin ingin menghapus API Key ini?')) {
+                    userApiKey = null;
+                    localStorage.removeItem('geminiApiKey');
+                    elements.modalApiKeyInput.value = '';
+                    elements.deleteApiKeyBtn.classList.add('hidden');
+                    alert('API Key berhasil dihapus.');
                 }
             });
 
@@ -3352,7 +3412,11 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
                 updateGeneratedPrompt();
             });
             
-            elements.assistantButton.addEventListener('click', toggleAssistant);
+            elements.assistantButton.addEventListener('click', () => {
+                if (checkApiKey('assistant')) {
+                    toggleAssistant();
+                }
+            });
             elements.closeAssistantModal.addEventListener('click', toggleAssistant);
 
             // Preview Modal Listeners
@@ -3517,6 +3581,10 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
            elements.uploadedComposePreview1.parentElement.classList.add('hidden');
            elements.uploadedComposePreview2.parentElement.classList.add('hidden');
            
+           if (userApiKey) {
+               elements.assistantButton.classList.remove('hidden');
+           }
+
            setupEventListeners();
        }
        
