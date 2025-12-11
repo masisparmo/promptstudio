@@ -624,7 +624,49 @@ Indonesian Lo-Fi Chillhop, melancholic, rainy day vibe, soft female vocal, gentl
                     </div>
                 </article>
             </section>
-            <section id="content-desainer" class="content-section">
+            <section id="content-desainer" class="content-section relative min-h-screen">
+                <!-- Login Gate Overlay -->
+                <div id="login-gate" class="absolute inset-0 z-10 flex items-center justify-center bg-primary/80 backdrop-blur-sm transition-opacity duration-300">
+                    <div class="bg-secondary p-8 rounded-xl shadow-2xl max-w-md w-full text-center border border-border-color">
+                        <div class="mb-6 flex justify-center">
+                            <div class="w-16 h-16 bg-accent-color rounded-full flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                </svg>
+                            </div>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-2 text-primary">Akses Desainer Prompt</h3>
+                        <p class="text-secondary mb-6">Masuk dengan akun Google Anda untuk mengakses fitur Desainer Prompt secara gratis.</p>
+
+                        <button id="google-login-btn" class="w-full flex items-center justify-center gap-3 bg-white text-gray-700 hover:bg-gray-50 font-medium py-3 px-4 rounded-lg border border-gray-300 transition-all shadow-sm hover:shadow-md">
+                            <svg class="w-5 h-5" viewBox="0 0 24 24">
+                                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                            </svg>
+                            <span>Masuk dengan Google</span>
+                        </button>
+                        <p class="mt-4 text-xs text-secondary">Akses Gratis • Aman • Terpantau</p>
+                    </div>
+                </div>
+
+                <!-- User Profile Header (Hidden by default) -->
+                <div id="user-profile-header" class="hidden mb-6 flex justify-between items-center bg-secondary p-4 rounded-lg border border-border-color">
+                    <div class="flex items-center gap-3">
+                        <img id="user-photo" src="" alt="User" class="w-10 h-10 rounded-full bg-tertiary">
+                        <div>
+                            <p id="user-name" class="font-bold text-sm text-primary">Nama Pengguna</p>
+                            <p id="user-email" class="text-xs text-secondary">email@example.com</p>
+                        </div>
+                    </div>
+                    <button id="logout-btn" class="text-sm text-red-500 hover:text-red-600 font-medium px-3 py-1 hover:bg-red-50 dark:hover:bg-red-900/20 rounded transition-colors">
+                        Keluar
+                    </button>
+                </div>
+
+                <!-- Protected Content Wrapper -->
+                <div id="designer-workspace" class="filter blur-md pointer-events-none transition-all duration-500">
                 <div class="card p-6 md:p-8">
                      <h2 class="text-3xl font-bold mb-2">Desainer Prompt</h2>
                      <p class="mb-6 text-secondary">Rancang prompt profesional untuk kebutuhan bisnis Anda. Pilih jenis output dan isi form di bawah ini.</p>
@@ -1039,6 +1081,7 @@ Indonesian Lo-Fi Chillhop, melancholic, rainy day vibe, soft female vocal, gentl
                         </div>
                      </div>
                 </div>
+                </div> <!-- End of #designer-workspace -->
             </section>
             <section id="content-riwayat" class="content-section card p-6 md:p-8">
                 <div>
@@ -1321,6 +1364,16 @@ Indonesian Lo-Fi Chillhop, melancholic, rainy day vibe, soft female vocal, gentl
             closePreviewBtnSecondary: document.getElementById('close-preview-btn-secondary'),
             previewModalBody: document.getElementById('preview-modal-body'),
             usePreviewBtn: document.getElementById('use-preview-btn'),
+
+            // Login Elements
+            loginGate: document.getElementById('login-gate'),
+            designerWorkspace: document.getElementById('designer-workspace'),
+            userProfileHeader: document.getElementById('user-profile-header'),
+            userPhoto: document.getElementById('user-photo'),
+            userName: document.getElementById('user-name'),
+            userEmail: document.getElementById('user-email'),
+            logoutBtn: document.getElementById('logout-btn'),
+            googleLoginBtn: document.getElementById('google-login-btn'),
         };
 
         function renderJudulLagu(titles = []) {
@@ -1409,9 +1462,9 @@ Indonesian Lo-Fi Chillhop, melancholic, rainy day vibe, soft female vocal, gentl
         }
 
         function showTab(tabName) {
-            if (tabName === 'desainer' && !checkApiKey('tab-desainer')) {
-                return;
-            }
+            // if (tabName === 'desainer' && !checkApiKey('tab-desainer')) {
+            //     return;
+            // }
 
             Object.values(elements.mainTabButtons).forEach(button => button.classList.remove('active'));
             elements.mainTabButtons[tabName].classList.add('active');
@@ -3561,6 +3614,78 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
             // We don't need an alert if the UI provides clear visual feedback
         }
 
+        // --- Login & Session Logic ---
+        // TODO: Masukkan URL Web App dari Google Apps Script di sini setelah deploy
+        const GOOGLE_SCRIPT_URL = "";
+
+        function checkLoginState() {
+            const user = JSON.parse(localStorage.getItem('promptStudioUser'));
+
+            if (user) {
+                // User Logged In
+                elements.loginGate.classList.add('hidden');
+                elements.designerWorkspace.classList.remove('filter', 'blur-md', 'pointer-events-none');
+
+                elements.userProfileHeader.classList.remove('hidden');
+                elements.userName.textContent = user.name;
+                elements.userEmail.textContent = user.email;
+                elements.userPhoto.src = user.photo || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.name);
+            } else {
+                // User Logged Out
+                elements.loginGate.classList.remove('hidden');
+                elements.designerWorkspace.classList.add('filter', 'blur-md', 'pointer-events-none');
+                elements.userProfileHeader.classList.add('hidden');
+            }
+        }
+
+        function mockGoogleLogin() {
+            // Simulasi Login Google (Karena tidak punya Client ID asli di environment ini)
+            const name = prompt("Simulasi Login Google: Masukkan Nama Anda", "Pengguna Baru");
+            if (!name) return;
+            const email = prompt("Masukkan Email Anda", "user@gmail.com");
+            if (!email) return;
+
+            const userData = {
+                name: name,
+                email: email,
+                photo: null,
+                loginTime: new Date().toISOString()
+            };
+
+            localStorage.setItem('promptStudioUser', JSON.stringify(userData));
+            checkLoginState();
+
+            // Kirim data ke backend (Placeholder)
+            sendDataToGAS(userData);
+        }
+
+        function logout() {
+            if(confirm("Apakah Anda yakin ingin keluar?")) {
+                localStorage.removeItem('promptStudioUser');
+                checkLoginState();
+            }
+        }
+
+        async function sendDataToGAS(userData) {
+            if (!GOOGLE_SCRIPT_URL) {
+                console.log("GOOGLE_SCRIPT_URL belum diatur. Data user:", userData);
+                return;
+            }
+
+            try {
+                // Gunakan no-cors agar tidak error CORS (response opaque)
+                await fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(userData)
+                });
+                console.log("Data dikirim ke Google Sheet");
+            } catch (error) {
+                console.error("Gagal kirim data ke GAS:", error);
+            }
+        }
+
        // --- Initial Setup ---
        function init() {
            const savedTheme = localStorage.getItem('theme') || 'dark';
@@ -3586,6 +3711,13 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
            }
 
            setupEventListeners();
+
+           // Initialize Login State
+           checkLoginState();
+
+           // Attach Login Listeners
+           elements.googleLoginBtn.addEventListener('click', mockGoogleLogin);
+           elements.logoutBtn.addEventListener('click', logout);
        }
        
        init();
