@@ -180,6 +180,7 @@ document.addEventListener('DOMContentLoaded', () => {
         closePreviewBtnSecondary: document.getElementById('close-preview-btn-secondary'),
         previewModalBody: document.getElementById('preview-modal-body'),
         usePreviewBtn: document.getElementById('use-preview-btn'),
+        audioUpload: document.getElementById('audio-upload'),
     };
 
     function renderJudulLagu(titles = []) {
@@ -1163,6 +1164,85 @@ document.addEventListener('DOMContentLoaded', () => {
            reader.readAsDataURL(file);
        }
    }
+
+    function handleAudioUpload(file) {
+        if (!file) return;
+
+        if (!file.type.startsWith('audio/')) {
+            alert('Mohon upload file audio (MP3/WAV).');
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const base64Data = e.target.result.split(',')[1];
+            analyzeAudioWithGemini(base64Data, file.type);
+        };
+        reader.readAsDataURL(file);
+    }
+
+    async function analyzeAudioWithGemini(base64Data, mimeType) {
+        const temaLaguEl = document.getElementById('tema-lagu');
+
+        // Disable UI
+        if (elements.buatPromptLaguButton) elements.buatPromptLaguButton.disabled = true;
+        elements.outputLirik.value = "🎧 AI sedang mendengarkan lagu dan mengekstrak lirik...";
+        temaLaguEl.value = "Menganalisa...";
+        elements.genreUtamaSearch.value = "Menganalisa...";
+
+        const systemPrompt = `PENTING: Jawaban Anda HARUS dalam Bahasa Indonesia. Anda adalah seorang pakar musik dan transkriber audio profesional.
+        Tugas Anda:
+        1. Transkripsikan lirik lagu dari file audio yang diberikan dengan sangat akurat. Jika audio adalah instrumental, tulis "[Instrumental]".
+        2. Analisa genre musik utama dari lagu tersebut.
+        3. Tentukan tema atau suasana utama dari lagu tersebut dalam beberapa kata.
+
+        Jawab HANYA dalam format JSON berikut:
+        {
+            "lirik": "Teks lirik lengkap...",
+            "genre": "Genre musik (contoh: Pop, Rock, Jazz)",
+            "tema": "Tema lagu (contoh: Kesedihan, Semangat Pagi)"
+        }`;
+
+        const userPrompt = "Analisa file audio ini dan ekstrak datanya sesuai instruksi.";
+
+        const schema = {
+            type: "OBJECT",
+            properties: {
+                "lirik": { "type": "STRING" },
+                "genre": { "type": "STRING" },
+                "tema": { "type": "STRING" }
+            },
+            required: ["lirik", "genre", "tema"]
+        };
+
+        try {
+            // Pass audio data. makeApiCallWithRetry generic 'imageData' param handles this structure
+            const jsonText = await makeApiCallWithRetry(
+                systemPrompt,
+                userPrompt,
+                true,
+                schema,
+                [{ mimeType: mimeType, data: base64Data }]
+            );
+
+            const result = JSON.parse(jsonText);
+
+            if (result) {
+                elements.outputLirik.value = formatLyrics(result.lirik);
+                temaLaguEl.value = result.tema || '';
+                elements.genreUtamaSearch.value = result.genre || '';
+            }
+
+        } catch (error) {
+            console.error(error);
+            elements.outputLirik.value = "Gagal menganalisa audio: " + error.message;
+            temaLaguEl.value = "";
+            elements.genreUtamaSearch.value = "";
+        } finally {
+            if (elements.buatPromptLaguButton) elements.buatPromptLaguButton.disabled = false;
+            elements.audioUpload.value = '';
+        }
+    }
 
    function toggleAssistant() {
         const isHidden = elements.assistantModal.classList.contains('hidden');
@@ -2261,6 +2341,7 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
 
         elements.imageUploadVideoEl.addEventListener('change', (event) => { handleVideoFileSelect(event.target.files[0]); });
         elements.dropZoneVideo.addEventListener('drop', (e) => { e.preventDefault(); handleVideoFileSelect(e.dataTransfer.files[0]); });
+        elements.audioUpload.addEventListener('change', (event) => handleAudioUpload(event.target.files[0]));
         elements.removeVideoButton.addEventListener('click', () => {
             videoRefImageFile = null;
             videoRefImageBase64 = null;
