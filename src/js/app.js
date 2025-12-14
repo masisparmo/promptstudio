@@ -1,8 +1,7 @@
 function formatLyrics(text) {
     if (!text) return "";
-    // API sekarang diharapkan mengembalikan string dengan \\n.
-    // Tugas fungsi ini hanya untuk mengubahnya menjadi karakter newline yang sebenarnya.
-    return text.replace(/\\n/g, '\n');
+        // Pastikan literal \n diubah menjadi newline, dan hapus tanda kutip ganda di awal/akhir jika ada
+        return text.replace(/\\n/g, '\n').replace(/^"|"$/g, '');
 }
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -1196,9 +1195,15 @@ document.addEventListener('DOMContentLoaded', () => {
         2. Analisa genre musik utama dari lagu tersebut.
         3. Tentukan tema atau suasana utama dari lagu tersebut dalam beberapa kata.
 
+        INSTRUKSI FORMAT LIRIK (SANGAT PENTING):
+        - Pisahkan setiap baris lirik dengan karakter newline (\\n).
+        - Pisahkan setiap bait (stanza) dengan DUA karakter newline (\\n\\n).
+        - Sertakan label bagian lagu dalam kurung siku seperti [Verse 1], [Chorus], [Bridge], [Outro] di baris tersendiri.
+        - Jangan menulis lirik sebagai satu paragraf panjang.
+
         Jawab HANYA dalam format JSON berikut:
         {
-            "lirik": "Teks lirik lengkap...",
+            "lirik": "Teks lirik lengkap dengan format baris dan bait...",
             "genre": "Genre musik (contoh: Pop, Rock, Jazz)",
             "tema": "Tema lagu (contoh: Kesedihan, Semangat Pagi)"
         }`;
