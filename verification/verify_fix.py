@@ -3,6 +3,7 @@ import os
 import http.server
 import socketserver
 import threading
+import re
 from playwright.sync_api import sync_playwright, expect
 
 # Function to find a free port
@@ -26,7 +27,7 @@ def start_server():
 server_thread = threading.Thread(target=start_server, daemon=True)
 server_thread.start()
 
-def verify_bug_reproduction():
+def verify_fix():
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
         context = browser.new_context()
@@ -36,7 +37,7 @@ def verify_bug_reproduction():
             # 1. Load the app
             page.goto(f"http://localhost:{PORT}/index.html")
 
-            # 2. Set a dummy API key to bypass the first check
+            # 2. Set a dummy API key
             page.evaluate("localStorage.setItem('geminiApiKey', 'dummy_key')")
             page.reload()
 
@@ -44,7 +45,7 @@ def verify_bug_reproduction():
             page.get_by_role("button", name="DESAINER PROMPT").click()
             page.get_by_role("button", name="Video (Veo3)").click()
 
-            # 4. Upload a dummy image to the Video Designer
+            # 4. Upload a dummy image
             if not os.path.exists("dummy.jpg"):
                 with open("dummy.jpg", "wb") as f:
                     f.write(b'\xFF\xD8\xFF\xE0\x00\x10\x4A\x46\x49\x46\x00\x01\x01\x01\x00\x48\x00\x48\x00\x00\xFF\xDB\x00\x43\x00\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xC0\x00\x11\x08\x00\x10\x00\x10\x03\x01\x22\x00\x02\x11\x01\x03\x11\x01\xFF\xC4\x00\x15\x00\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x08\xFF\xDA\x00\x0C\x03\x01\x00\x02\x11\x03\x11\x00\x3F\x00\xBF\x00\xFF\xD9')
@@ -55,32 +56,24 @@ def verify_bug_reproduction():
             expect(page.locator("#uploaded-video-preview")).to_be_visible()
 
             # 5. Click "Analisa Gambar & Isi Form"
-            # Prepare to catch page errors
-            error_caught = False
-            def handle_page_error(error):
-                nonlocal error_caught
-                print(f"Page error caught: {error}")
-                if "apiMode is not defined" in str(error):
-                    error_caught = True
-
-            page.on("pageerror", handle_page_error)
-
             page.get_by_role("button", name="ANALISA GAMBAR & ISI FORM").click()
 
-            # Wait a bit for the error to propagate
-            page.wait_for_timeout(2000)
+            # 6. Expect the loading state or result text area to be visible and contain something (or at least NOT crash)
+            # The result textarea is #video-image-analysis-result. It should become visible.
+            result_area = page.locator("#video-image-analysis-result")
+            expect(result_area).to_be_visible()
 
-            if error_caught:
-                print("SUCCESS: Reproduction confirmed. 'apiMode is not defined' error was caught.")
-            else:
-                print("FAILURE: Could not reproduce the error.")
-                page.screenshot(path="repro_fail.png")
+            # Use regex to check for value because it is a textarea
+            expect(result_area).to_have_value(re.compile(r"Maaf, terjadi kesalahan"))
+
+            print("SUCCESS: The analysis function ran and handled the API error gracefully.")
+            page.screenshot(path="verification/verification.png")
 
         except Exception as e:
-            print(f"An exception occurred during test: {e}")
-            page.screenshot(path="repro_exception.png")
+            print(f"FAILED: An exception occurred: {e}")
+            page.screenshot(path="verification/verify_fail.png")
         finally:
             browser.close()
 
 if __name__ == "__main__":
-    verify_bug_reproduction()
+    verify_fix()
