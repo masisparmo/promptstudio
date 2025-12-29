@@ -970,9 +970,8 @@ document.addEventListener('DOMContentLoaded', () => {
         elements.imageAnalysisResult.value = "AI sedang menganalisa gambar Anda, mohon tunggu...";
         const systemPrompt = "PENTING: Jawaban Anda HARUS dalam Bahasa Indonesia. Anda adalah seorang ahli art director. Analisa gambar yang diberikan. Balas HANYA dengan format ini: '### Analisis Gambar\\n**Subjek Utama:** [Sebutkan subjek utama secara singkat]\\n**Deskripsi:** [Jelaskan gambar secara detail dalam satu paragraf]'. Jangan tambahkan apapun di luar format ini.";
         const userPrompt = "Analisa gambar ini sesuai format yang diperintahkan.";
-        const apiKey = apiMode === 'user' ? userApiKey : "";
-        if (apiMode === 'user' && !apiKey) {
-             elements.imageAnalysisResult.value = "Error: API Key pengguna tidak valid...";
+        if (!userApiKey) {
+             elements.imageAnalysisResult.value = "Error: API Key pengguna tidak valid. Mohon isi API Key di pengaturan.";
              return;
         }
 
@@ -1018,9 +1017,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const systemPrompt = `PENTING: Jawaban Anda HARUS dalam Bahasa Indonesia. Anda adalah seorang analis karakter dan art director yang sangat detail. Diberikan sebuah gambar, tugas Anda adalah menganalisanya dan mengembalikan deskripsi karakter dalam format JSON yang ketat. Jangan menambahkan teks atau penjelasan lain di luar JSON. JSON harus memiliki properti berikut: "name" (saran nama atau deskripsi singkat, misal: "prajurit wanita futuristik"), "physic" (deskripsi detail tentang wajah, rambut, mata, dan postur tubuh), "attire" (deskripsi detail tentang pakaian dan aksesoris yang dikenakan), dan "style" (deskripsi gaya artistik gambar, misal: "fotorealistis, pencahayaan dramatis" atau "ilustrasi anime 2D").`;
         const userPrompt = "Analisa karakter dalam gambar ini dan berikan hasilnya dalam format JSON sesuai instruksi.";
 
-        const apiKey = apiMode === 'user' ? userApiKey : "";
-        if (apiMode === 'user' && !apiKey) {
-            alert("API Key tidak valid.");
+        if (!userApiKey) {
+            alert("API Key tidak valid. Mohon isi API Key di pengaturan.");
              elements.analyzeCharButton.disabled = false;
             elements.analyzeCharText.textContent = 'ANALISA KARAKTER & ISI FORM';
             elements.analyzeCharIcon.innerHTML = `🤖`;
@@ -1100,9 +1098,8 @@ document.addEventListener('DOMContentLoaded', () => {
         Balas HANYA dengan format JSON yang ketat. JSON harus memiliki properti: "subject", "action", "background", dan "style".`;
         const userPrompt = "Analisa gambar ini. Jika ini flyer/iklan, buatkan prompt untuk video komersial profesional. Jika bukan, buatkan deskripsi adegan biasa. Berikan output JSON.";
 
-        const apiKey = apiMode === 'user' ? userApiKey : "";
-        if (apiMode === 'user' && !apiKey) {
-            alert("API Key tidak valid.");
+        if (!userApiKey) {
+            alert("API Key tidak valid. Mohon isi API Key di pengaturan.");
             elements.analyzeVideoImageButton.disabled = false;
             elements.analyzeVideoImageButton.innerHTML = `<span id="analyze-video-image-text">ANALISA GAMBAR & ISI FORM</span>`;
             return;
