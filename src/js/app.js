@@ -695,7 +695,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const promptObject = generatePromptObject();
-        const jsonString = JSON.stringify(promptObject, null, 2); // Pretty print with 2 spaces
+
+        // Buat deep copy untuk dimodifikasi sebelum ditampilkan
+        const promptObjectForDisplay = JSON.parse(JSON.stringify(promptObject));
+
+        // Hapus field base64 yang panjang dari tampilan
+        if (promptObjectForDisplay.fields) {
+            delete promptObjectForDisplay.fields.gambar_referensi_base64;
+            delete promptObjectForDisplay.fields.gambar_referensi_1_base64;
+            delete promptObjectForDisplay.fields.gambar_referensi_2_base64;
+        }
+
+        const jsonString = JSON.stringify(promptObjectForDisplay, null, 2); // Pretty print with 2 spaces
         elements.jsonOutputPrompt.value = jsonString;
         elements.jsonOutputContainer.classList.remove('hidden');
         elements.showJsonButton.textContent = 'SEMBUNYIKAN JSON';
