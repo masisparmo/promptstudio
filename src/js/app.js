@@ -1960,26 +1960,19 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
             }
 
             const systemPrompt = `Anda adalah ahli Reverse Engineering Prompt kelas dunia.
-Tugas: Analisa detail visual, gaya, pencahayaan, dan komposisi dari media yang diberikan (Gambar atau Video).
-Tujuan: Hasilkan prompt yang sangat presisi agar user bisa men-generate ulang visual yang sama persis menggunakan AI Generative (seperti Midjourney, Veo, atau Gemini).
+Tugas: Analisa detail visual, gaya, pencahayaan, dan komposisi dari media yang diberikan.
+Tujuan: Hasilkan prompt yang presisi namun SINGKAT dan PADAT (Concise). Jangan bertele-tele.
 
 Instruksi Output:
-Berikan respons HANYA dalam format JSON valid dengan struktur berikut (tanpa markdown formatting \`\`\`json):
-{
-  "english_prompt": "Detailed prompt in English...",
-  "indonesian_prompt": "Prompt detail dalam Bahasa Indonesia...",
-  "analysis_data": {
-    "subject": "...",
-    "action": "...",
-    "environment": "...",
-    "style": "...",
-    "lighting_camera": "..."
-  }
-}`;
+1. "english_prompt": Prompt dalam bahasa Inggris. Maksimal 150 kata.
+2. "indonesian_prompt": Prompt dalam bahasa Indonesia. Maksimal 150 kata.
+3. "analysis_data": Analisis teknis singkat.
+
+Berikan respons HANYA dalam format JSON valid.`;
 
             const userQuery = activeAnalisaMode === 'image'
-                ? "Analisa gambar ini dan buatkan prompt-nya."
-                : "Analisa rangkaian frame video ini dan buatkan prompt video yang detail.";
+                ? "Analisa gambar ini. Buatkan prompt yang akurat tapi ringkas."
+                : "Analisa video ini. Buatkan prompt video yang akurat tapi ringkas.";
 
             const schema = {
                 type: "OBJECT",
@@ -2000,12 +1993,36 @@ Berikan respons HANYA dalam format JSON valid dengan struktur berikut (tanpa mar
                 required: ["english_prompt", "indonesian_prompt", "analysis_data"]
             };
 
-            const resultJson = await makeApiCallWithRetry(systemPrompt, userQuery, true, schema, imageData);
-            const result = JSON.parse(resultJson);
+            let resultJson = await makeApiCallWithRetry(systemPrompt, userQuery, true, schema, imageData);
 
-            elements.outAnalisaEnglish.value = result.english_prompt;
-            elements.outAnalisaIndonesia.value = result.indonesian_prompt;
-            elements.outAnalisaJson.value = JSON.stringify(result.analysis_data, null, 2);
+            // Cleaning JSON string
+            resultJson = resultJson.replace(/```json\n?|\n?```/g, '').trim();
+
+            let result;
+            try {
+                result = JSON.parse(resultJson);
+            } catch (parseError) {
+                console.error("JSON Parse Error:", parseError, resultJson);
+                // Attempt simplistic repair if truncated
+                if (parseError.message.includes("Unterminated string") || parseError.message.includes("End of data")) {
+                     try {
+                        // Very naive repair: try closing the structure
+                        result = JSON.parse(resultJson + '"}');
+                     } catch (e2) {
+                         try {
+                             result = JSON.parse(resultJson + '}');
+                         } catch (e3) {
+                             throw new Error("Gagal memproses respon dari AI (Respon terpotong/tidak valid). Coba kurangi durasi video atau coba lagi.");
+                         }
+                     }
+                } else {
+                    throw new Error("Format JSON dari AI tidak valid.");
+                }
+            }
+
+            elements.outAnalisaEnglish.value = result.english_prompt || "Gagal memuat prompt.";
+            elements.outAnalisaIndonesia.value = result.indonesian_prompt || "Gagal memuat prompt.";
+            elements.outAnalisaJson.value = JSON.stringify(result.analysis_data || {}, null, 2);
 
             elements.analisaResultContainer.classList.remove('hidden');
 
