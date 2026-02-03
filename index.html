@@ -367,6 +367,7 @@
                         <li><a href="#materi-2" class="hover:underline">Materi 2: Prompt Engineering untuk Video (Veo3)</a></li>
                         <li><a href="#materi-3" class="hover:underline">Materi 3: Menciptakan Karakter yang Konsisten</a></li>
                         <li><a href="#materi-4" class="hover:underline">Materi 4: Prompt Engineering untuk Lagu (SUNO AI)</a></li>
+                        <li><a href="#materi-5" class="hover:underline">Materi 5: Analisa Prompt (Reverse Engineering)</a></li>
                     </ul>
                 </div>
                 <article id="materi-1" class="card p-6 md:p-8">
@@ -521,6 +522,84 @@
                                     <p class="font-mono p-3 rounded-md text-sm mt-2">**(character sheet: ...detail lengkap Aria...)** sedang duduk di kafe yang remang-remang, melihat laptopnya dengan ekspresi fokus.</p>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </article>
+                <article id="materi-5" class="card p-6 md:p-8">
+                    <h2 class="text-3xl font-bold mb-4">Materi 5: Analisa Prompt (Reverse Engineering)</h2>
+                    <p class="mb-6 text-secondary">Fitur <strong>Analisa Prompt</strong> (Reverse Engineering) memungkinkan Anda untuk "membongkar" rahasia di balik sebuah gambar atau video. Dengan mengupload file referensi, AI akan menganalisis elemen visualnya dan menghasilkan prompt teks yang sangat detail. Ini adalah cara tercepat untuk belajar gaya baru atau mereplikasi estetika tertentu.</p>
+                    <div class="space-y-8">
+                        <div>
+                            <h3 class="text-2xl font-bold">Mengapa Menggunakan Analisa Prompt?</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                                <div class="prompt-card p-4">
+                                    <h4 class="font-semibold">🔍 Dekonstruksi Gaya</h4>
+                                    <p class="text-sm text-secondary">Bingung bagaimana cara mendeskripsikan gaya visual tertentu? Biarkan AI yang menuliskannya untuk Anda, mulai dari teknik pencahayaan hingga palet warna.</p>
+                                </div>
+                                <div class="prompt-card p-4">
+                                    <h4 class="font-semibold">📝 Belajar Kosakata Prompt</h4>
+                                    <p class="text-sm text-secondary">Temukan kata kunci teknis (seperti <em>"chiaroscuro lighting"</em> atau <em>"dolly zoom"</em>) yang mungkin belum Anda ketahui sebelumnya.</p>
+                                </div>
+                                <div class="prompt-card p-4">
+                                    <h4 class="font-semibold">⚡ Percepatan Alur Kerja</h4>
+                                    <p class="text-sm text-secondary">Alih-alih menulis dari nol, gunakan hasil analisa sebagai kerangka awal (template) yang bisa Anda modifikasi.</p>
+                                </div>
+                                <div class="prompt-card p-4">
+                                    <h4 class="font-semibold">🤖 Format Terstruktur (JSON)</h4>
+                                    <p class="text-sm text-secondary">Dapatkan data terstruktur yang memisahkan subjek, gaya, dan teknis untuk penggunaan programatik atau pengarsipan.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h3 class="text-2xl font-bold mt-4">Fitur Utama</h3>
+                            <div class="mt-4 space-y-6">
+                                <div>
+                                    <h4 class="text-xl font-semibold text-indigo-400 mb-2">1. Analisa Gambar (Image Analysis)</h4>
+                                    <p class="text-secondary mb-2">AI akan memindai gambar statis untuk mengidentifikasi subjek utama, latar belakang, komposisi, dan nuansa artistik.</p>
+                                    <ul class="list-disc list-inside text-sm text-secondary space-y-1">
+                                        <li><strong>Detail Subjek:</strong> Pose, ekspresi, pakaian, dan fitur fisik.</li>
+                                        <li><strong>Teknis Kamera:</strong> Jenis lensa, bukaan (aperture), dan sudut pengambilan.</li>
+                                        <li><strong>Gaya Seni:</strong> Apakah itu fotorealistis, lukisan minyak, anime, atau render 3D.</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h4 class="text-xl font-semibold text-indigo-400 mb-2">2. Analisa Video (Video Analysis)</h4>
+                                    <p class="text-secondary mb-2">Analisa video bekerja dengan mengekstrak frame kunci setiap 2 detik. Ini memungkinkan AI untuk memahami konteks waktu dan pergerakan.</p>
+                                    <ul class="list-disc list-inside text-sm text-secondary space-y-1">
+                                        <li><strong>Dinamika Gerakan:</strong> Mendeteksi aksi subjek dan pergerakan kamera (panning, tilting, tracking).</li>
+                                        <li><strong>Transisi & Waktu:</strong> Bagaimana pencahayaan atau suasana berubah sepanjang klip.</li>
+                                        <li><strong>Batasan:</strong> Mendukung video hingga durasi 1 menit untuk analisa mendalam.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h3 class="text-2xl font-bold mt-4">Cara Menggunakan</h3>
+                            <ol class="list-decimal list-inside mt-4 space-y-4 text-secondary">
+                                <li class="pl-2">
+                                    <span class="font-semibold text-primary">Pilih Tab "ANALISA":</span>
+                                    <br>Buka menu Analisa di bagian atas aplikasi.
+                                </li>
+                                <li class="pl-2">
+                                    <span class="font-semibold text-primary">Upload Media:</span>
+                                    <br>Pilih sub-tab "Analisa Gambar" atau "Analisa Video". Upload file Anda (JPG/PNG untuk gambar, MP4 untuk video).
+                                </li>
+                                <li class="pl-2">
+                                    <span class="font-semibold text-primary">Klik "Analisa Sekarang":</span>
+                                    <br>Tunggu beberapa saat sementara AI memproses visual Anda.
+                                </li>
+                                <li class="pl-2">
+                                    <span class="font-semibold text-primary">Dapatkan Hasil:</span>
+                                    <br>Hasil akan muncul dalam 3 tab:
+                                    <ul class="list-disc list-inside ml-6 mt-2 text-sm">
+                                        <li><strong>English:</strong> Prompt standar industri yang siap digunakan di Midjourney, Stable Diffusion, atau Gemini.</li>
+                                        <li><strong>Indonesia:</strong> Versi terjemahan untuk pemahaman konteks yang lebih mudah.</li>
+                                        <li><strong>JSON:</strong> Format data mentah yang berisi pemisahan elemen secara detail.</li>
+                                    </ul>
+                                </li>
+                            </ol>
                         </div>
                     </div>
                 </article>
