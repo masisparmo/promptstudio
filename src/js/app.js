@@ -1960,19 +1960,19 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
             }
 
             const systemPrompt = `Anda adalah ahli Reverse Engineering Prompt kelas dunia.
-Tugas: Analisa detail visual, gaya, pencahayaan, dan komposisi dari media yang diberikan.
-Tujuan: Hasilkan prompt yang presisi namun SINGKAT dan PADAT (Concise). Jangan bertele-tele.
+Tugas: Analisa secara MENDALAM detail visual, gaya, pencahayaan, komposisi, pose, posisi subjek, dan elemen teknis lainnya dari media yang diberikan.
+Tujuan: Hasilkan prompt yang SANGAT DETAIL dan DESKRIPTIF agar user bisa meniru hasil gambar/video semirip mungkin.
 
 Instruksi Output:
-1. "english_prompt": Prompt dalam bahasa Inggris. Maksimal 150 kata.
-2. "indonesian_prompt": Prompt dalam bahasa Indonesia. Maksimal 150 kata.
-3. "analysis_data": Analisis teknis singkat.
+1. "english_prompt": Prompt dalam bahasa Inggris. Harus detail dan lengkap.
+2. "indonesian_prompt": Prompt dalam bahasa Indonesia. Harus detail dan lengkap.
+3. "analysis_data": Analisis teknis mendalam.
 
 Berikan respons HANYA dalam format JSON valid.`;
 
             const userQuery = activeAnalisaMode === 'image'
-                ? "Analisa gambar ini. Buatkan prompt yang akurat tapi ringkas."
-                : "Analisa video ini. Buatkan prompt video yang akurat tapi ringkas.";
+                ? "Analisa gambar ini secara mendalam. Buatkan prompt yang sangat detail mencakup pose, posisi, dan elemen visual lainnya."
+                : "Analisa video ini secara mendalam. Buatkan prompt video yang sangat detail mencakup pergerakan, pose, posisi, dan elemen visual lainnya.";
 
             const schema = {
                 type: "OBJECT",
