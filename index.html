@@ -343,14 +343,17 @@
             </div>
         </header>
 
-        <div class="flex justify-center mb-8 bg-secondary rounded-lg p-1.5 shadow-md max-w-lg mx-auto">
-            <button id="tab-belajar" class="tab-button active w-1/3 py-2 px-4 rounded-md">
-                PANDUAN PROMPT
+        <div class="flex justify-center mb-8 bg-secondary rounded-lg p-1.5 shadow-md max-w-2xl mx-auto">
+            <button id="tab-belajar" class="tab-button active flex-1 py-2 px-4 rounded-md text-sm md:text-base">
+                PANDUAN
             </button>
-            <button id="tab-desainer" class="tab-button w-1/3 py-2 px-4 rounded-md">
-                DESAINER PROMPT
+            <button id="tab-desainer" class="tab-button flex-1 py-2 px-4 rounded-md text-sm md:text-base">
+                DESAINER
             </button>
-            <button id="tab-riwayat" class="tab-button w-1/3 py-2 px-4 rounded-md">
+            <button id="tab-analisa" class="tab-button flex-1 py-2 px-4 rounded-md text-sm md:text-base">
+                ANALISA
+            </button>
+            <button id="tab-riwayat" class="tab-button flex-1 py-2 px-4 rounded-md text-sm md:text-base">
                 RIWAYAT
             </button>
         </div>
@@ -623,6 +626,88 @@ Indonesian Lo-Fi Chillhop, melancholic, rainy day vibe, soft female vocal, gentl
                         </div>
                     </div>
                 </article>
+            </section>
+            <section id="content-analisa" class="content-section card p-6 md:p-8">
+                <h2 class="text-3xl font-bold mb-4">Analisa Prompt (Reverse Engineering)</h2>
+                <p class="mb-6 text-secondary">Upload gambar atau video untuk mendapatkan prompt detail dalam Bahasa Inggris, Indonesia, dan format JSON.</p>
+
+                <!-- Mode Selector -->
+                <div class="flex border-b border-border-color mb-6">
+                    <button id="analisa-tab-image" class="designer-tab-button active">
+                         <span class="mr-2">🖼️</span> Analisa Gambar
+                    </button>
+                    <button id="analisa-tab-video" class="designer-tab-button">
+                         <span class="mr-2">🎥</span> Analisa Video
+                    </button>
+                </div>
+
+                <!-- Input Area -->
+                <div class="space-y-6">
+                     <!-- Image Upload -->
+                    <div id="analisa-image-input" class="block">
+                         <label class="block text-sm font-medium text-secondary mb-2">Upload Gambar (JPG, PNG)</label>
+                         <div id="drop-zone-analisa-image" class="flex justify-center px-6 pt-5 pb-6 border-2 border-dashed rounded-md cursor-pointer transition-colors border-border-color hover:border-accent-color">
+                             <div class="space-y-1 text-center">
+                                 <svg class="mx-auto h-12 w-12 text-secondary" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true"><path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                                 <div class="flex text-sm text-secondary">
+                                     <label for="analisa-upload-image" class="relative cursor-pointer rounded-md font-medium text-indigo-400 hover:text-indigo-500"><span>UPLOAD GAMBAR</span><input id="analisa-upload-image" type="file" class="sr-only" accept="image/*"></label>
+                                 </div>
+                             </div>
+                         </div>
+                    </div>
+
+                    <!-- Video Upload -->
+                    <div id="analisa-video-input" class="hidden">
+                         <label class="block text-sm font-medium text-secondary mb-2">Upload Video (MP4, Max 1 Menit)</label>
+                         <div id="drop-zone-analisa-video" class="flex justify-center px-6 pt-5 pb-6 border-2 border-dashed rounded-md cursor-pointer transition-colors border-border-color hover:border-accent-color">
+                             <div class="space-y-1 text-center">
+                                 <svg class="mx-auto h-12 w-12 text-secondary" stroke="currentColor" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
+                                 <div class="flex text-sm text-secondary">
+                                     <label for="analisa-upload-video" class="relative cursor-pointer rounded-md font-medium text-indigo-400 hover:text-indigo-500"><span>UPLOAD VIDEO</span><input id="analisa-upload-video" type="file" class="sr-only" accept="video/mp4,video/webm"></label>
+                                 </div>
+                             </div>
+                         </div>
+                    </div>
+
+                    <!-- Preview Container -->
+                    <div id="analisa-preview-container" class="hidden p-4 border border-border-color rounded-lg bg-bg-tertiary text-center">
+                        <img id="analisa-image-preview" class="max-h-64 mx-auto rounded-lg shadow-md hidden">
+                        <video id="analisa-video-preview" class="max-h-64 mx-auto rounded-lg shadow-md hidden" controls></video>
+                        <button id="analisa-reset-btn" class="mt-2 text-sm text-red-500 hover:text-red-700 font-semibold">Hapus & Upload Ulang</button>
+                    </div>
+
+                    <button id="btn-do-analisa" class="btn btn-primary w-full text-lg py-3">
+                        ANALISA SEKARANG
+                    </button>
+                </div>
+
+                <!-- Result Area -->
+                <div id="analisa-result-container" class="hidden mt-8 space-y-4">
+                     <div class="flex justify-center bg-secondary rounded-lg p-1.5 shadow-sm max-w-md mx-auto mb-4">
+                        <button id="res-tab-english" class="tab-button active flex-1 py-1.5 px-3 rounded-md text-sm">English</button>
+                        <button id="res-tab-indonesia" class="tab-button flex-1 py-1.5 px-3 rounded-md text-sm">Indonesia</button>
+                        <button id="res-tab-json" class="tab-button flex-1 py-1.5 px-3 rounded-md text-sm">JSON</button>
+                    </div>
+
+                    <div id="res-content-english" class="block">
+                         <div class="relative">
+                             <textarea id="out-analisa-english" rows="10" class="form-input w-full p-3 pr-24 preserve-whitespace font-mono text-sm" readonly></textarea>
+                             <button class="copy-btn absolute top-2 right-2 btn btn-secondary px-3 py-1 text-xs" data-target="out-analisa-english">SALIN</button>
+                         </div>
+                    </div>
+                    <div id="res-content-indonesia" class="hidden">
+                         <div class="relative">
+                             <textarea id="out-analisa-indonesia" rows="10" class="form-input w-full p-3 pr-24 preserve-whitespace font-mono text-sm" readonly></textarea>
+                             <button class="copy-btn absolute top-2 right-2 btn btn-secondary px-3 py-1 text-xs" data-target="out-analisa-indonesia">SALIN</button>
+                         </div>
+                    </div>
+                    <div id="res-content-json" class="hidden">
+                         <div class="relative">
+                             <textarea id="out-analisa-json" rows="10" class="form-input w-full p-3 pr-24 preserve-whitespace font-mono text-xs" readonly></textarea>
+                             <button class="copy-btn absolute top-2 right-2 btn btn-secondary px-3 py-1 text-xs" data-target="out-analisa-json">SALIN</button>
+                         </div>
+                    </div>
+                </div>
             </section>
             <section id="content-desainer" class="content-section">
                 <div class="card p-6 md:p-8">
