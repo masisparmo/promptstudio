@@ -33,6 +33,11 @@ document.addEventListener('DOMContentLoaded', () => {
     let videoRefImageBase64 = null;
     let selectedAspectRatio = '1:1';
 
+    // State untuk Analisa Prompt
+    let analisaImageBase64 = null;
+    let analisaVideoFile = null;
+    let activeAnalisaMode = 'image';
+
     const elements = {
         mainApp: document.getElementById('main-app'),
         assistantButton: document.getElementById('assistant-button'),
@@ -51,13 +56,40 @@ document.addEventListener('DOMContentLoaded', () => {
         mainTabButtons: {
             belajar: document.getElementById('tab-belajar'),
             desainer: document.getElementById('tab-desainer'),
+            analisa: document.getElementById('tab-analisa'),
             riwayat: document.getElementById('tab-riwayat')
         },
         contentSections: {
             belajar: document.getElementById('content-belajar'),
             desainer: document.getElementById('content-desainer'),
+            analisa: document.getElementById('content-analisa'),
             riwayat: document.getElementById('content-riwayat')
         },
+        // Analisa Elements
+        analisaTabImage: document.getElementById('analisa-tab-image'),
+        analisaTabVideo: document.getElementById('analisa-tab-video'),
+        analisaImageInput: document.getElementById('analisa-image-input'),
+        analisaVideoInput: document.getElementById('analisa-video-input'),
+        analisaUploadImage: document.getElementById('analisa-upload-image'),
+        analisaUploadVideo: document.getElementById('analisa-upload-video'),
+        dropZoneAnalisaImage: document.getElementById('drop-zone-analisa-image'),
+        dropZoneAnalisaVideo: document.getElementById('drop-zone-analisa-video'),
+        analisaPreviewContainer: document.getElementById('analisa-preview-container'),
+        analisaImagePreview: document.getElementById('analisa-image-preview'),
+        analisaVideoPreview: document.getElementById('analisa-video-preview'),
+        analisaResetBtn: document.getElementById('analisa-reset-btn'),
+        btnDoAnalisa: document.getElementById('btn-do-analisa'),
+        analisaResultContainer: document.getElementById('analisa-result-container'),
+        resTabEnglish: document.getElementById('res-tab-english'),
+        resTabIndonesia: document.getElementById('res-tab-indonesia'),
+        resTabJson: document.getElementById('res-tab-json'),
+        resContentEnglish: document.getElementById('res-content-english'),
+        resContentIndonesia: document.getElementById('res-content-indonesia'),
+        resContentJson: document.getElementById('res-content-json'),
+        outAnalisaEnglish: document.getElementById('out-analisa-english'),
+        outAnalisaIndonesia: document.getElementById('out-analisa-indonesia'),
+        outAnalisaJson: document.getElementById('out-analisa-json'),
+
         designerTabImage: document.getElementById('designer-tab-image'),
         designerTabVideo: document.getElementById('designer-tab-video'),
         designerTabLagu: document.getElementById('designer-tab-lagu'),
@@ -268,7 +300,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function showTab(tabName) {
-        if (tabName === 'desainer' && !checkApiKey('tab-desainer')) {
+        if ((tabName === 'desainer' || tabName === 'analisa') && !checkApiKey(tabName)) {
             return;
         }
 
@@ -1787,6 +1819,222 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
     }
 
 
+    function switchAnalisaMode(mode) {
+        activeAnalisaMode = mode;
+        if (mode === 'image') {
+            elements.analisaTabImage.classList.add('active');
+            elements.analisaTabVideo.classList.remove('active');
+            elements.analisaImageInput.classList.remove('hidden');
+            elements.analisaVideoInput.classList.add('hidden');
+        } else {
+            elements.analisaTabImage.classList.remove('active');
+            elements.analisaTabVideo.classList.add('active');
+            elements.analisaImageInput.classList.add('hidden');
+            elements.analisaVideoInput.classList.remove('hidden');
+        }
+    }
+
+    function handleAnalisaFile(file, type) {
+        if (!file) return;
+
+        // Reset previous data
+        analisaImageBase64 = null;
+        analisaVideoFile = null;
+        elements.analisaPreviewContainer.classList.add('hidden');
+        elements.analisaImagePreview.classList.add('hidden');
+        elements.analisaVideoPreview.classList.add('hidden');
+        elements.analisaVideoPreview.removeAttribute('src'); // Stop previous video
+
+        if (type === 'image') {
+            if (!file.type.startsWith('image/')) { alert('Mohon upload file gambar.'); return; }
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                analisaImageBase64 = e.target.result.split(',')[1];
+                elements.analisaImagePreview.src = e.target.result;
+                elements.analisaImagePreview.classList.remove('hidden');
+                elements.analisaPreviewContainer.classList.remove('hidden');
+            };
+            reader.readAsDataURL(file);
+        } else if (type === 'video') {
+            if (!file.type.startsWith('video/')) { alert('Mohon upload file video.'); return; }
+
+            const url = URL.createObjectURL(file);
+            const video = document.createElement('video');
+            video.preload = 'metadata';
+            video.src = url;
+
+            video.onloadedmetadata = function() {
+                if (video.duration > 60) {
+                    alert("Durasi video maksimal 1 menit.");
+                    URL.revokeObjectURL(url);
+                    return;
+                }
+
+                analisaVideoFile = file;
+                elements.analisaVideoPreview.src = url;
+                elements.analisaVideoPreview.classList.remove('hidden');
+                elements.analisaPreviewContainer.classList.remove('hidden');
+            };
+        }
+    }
+
+    function resetAnalisa() {
+        analisaImageBase64 = null;
+        analisaVideoFile = null;
+        elements.analisaUploadImage.value = '';
+        elements.analisaUploadVideo.value = '';
+        elements.analisaPreviewContainer.classList.add('hidden');
+        elements.analisaImagePreview.src = '';
+        elements.analisaVideoPreview.src = '';
+        elements.analisaResultContainer.classList.add('hidden');
+    }
+
+    async function extractFramesFromVideo(videoFile) {
+        return new Promise((resolve, reject) => {
+            const video = document.createElement('video');
+            video.preload = 'auto';
+            video.src = URL.createObjectURL(videoFile);
+            video.muted = true;
+
+            const frames = [];
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+
+            video.onloadeddata = async () => {
+                const duration = video.duration;
+                const interval = 2; // Extract every 2 seconds
+                let currentTime = 0;
+
+                canvas.width = video.videoWidth || 640;
+                canvas.height = video.videoHeight || 360;
+
+                const captureFrame = () => {
+                    return new Promise(res => {
+                        video.currentTime = currentTime;
+                        video.onseeked = () => {
+                            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                            const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
+                            frames.push({
+                                mimeType: 'image/jpeg',
+                                data: dataUrl.split(',')[1]
+                            });
+                            res();
+                        };
+                    });
+                };
+
+                while (currentTime < duration && currentTime <= 60) {
+                    await captureFrame();
+                    currentTime += interval;
+                }
+                resolve(frames);
+            };
+
+            video.onerror = (e) => reject("Gagal memuat video");
+        });
+    }
+
+    async function runPromptAnalysis() {
+        if (activeAnalisaMode === 'image' && !analisaImageBase64) {
+            alert("Upload gambar dulu."); return;
+        }
+        if (activeAnalisaMode === 'video' && !analisaVideoFile) {
+             alert("Upload video dulu."); return;
+        }
+
+        if (!checkApiKey('analisa')) return;
+
+        elements.btnDoAnalisa.disabled = true;
+        elements.btnDoAnalisa.innerHTML = `<span class="loader"></span> MENGANALISA...`;
+        elements.analisaResultContainer.classList.add('hidden');
+
+        try {
+            let imageData = [];
+            if (activeAnalisaMode === 'image') {
+                imageData.push({ mimeType: 'image/jpeg', data: analisaImageBase64 });
+            } else {
+                elements.btnDoAnalisa.innerHTML = `<span class="loader"></span> MENGEKSTRAK FRAME...`;
+                imageData = await extractFramesFromVideo(analisaVideoFile);
+                if(imageData.length === 0) throw new Error("Gagal mengekstrak frame video.");
+                elements.btnDoAnalisa.innerHTML = `<span class="loader"></span> MENGANALISA AI...`;
+            }
+
+            const systemPrompt = `Anda adalah ahli Reverse Engineering Prompt kelas dunia.
+Tugas: Analisa secara MENDALAM detail visual, gaya, pencahayaan, komposisi, pose, posisi subjek, dan elemen teknis lainnya dari media yang diberikan.
+Tujuan: Hasilkan prompt yang SANGAT DETAIL dan DESKRIPTIF agar user bisa meniru hasil gambar/video semirip mungkin.
+
+Instruksi Output:
+1. "english_prompt": Prompt dalam bahasa Inggris. Harus detail dan lengkap.
+2. "indonesian_prompt": Prompt dalam bahasa Indonesia. Harus detail dan lengkap.
+3. "analysis_data": Analisis teknis mendalam.
+
+Berikan respons HANYA dalam format JSON valid.`;
+
+            const userQuery = activeAnalisaMode === 'image'
+                ? "Analisa gambar ini secara mendalam. Buatkan prompt yang sangat detail mencakup pose, posisi, dan elemen visual lainnya."
+                : "Analisa video ini secara mendalam. Buatkan prompt video yang sangat detail mencakup pergerakan, pose, posisi, dan elemen visual lainnya.";
+
+            const schema = {
+                type: "OBJECT",
+                properties: {
+                    "english_prompt": { "type": "STRING" },
+                    "indonesian_prompt": { "type": "STRING" },
+                    "analysis_data": {
+                        "type": "OBJECT",
+                        "properties": {
+                            "subject": { "type": "STRING" },
+                            "action": { "type": "STRING" },
+                            "environment": { "type": "STRING" },
+                            "style": { "type": "STRING" },
+                            "lighting_camera": { "type": "STRING" }
+                        }
+                    }
+                },
+                required: ["english_prompt", "indonesian_prompt", "analysis_data"]
+            };
+
+            let resultJson = await makeApiCallWithRetry(systemPrompt, userQuery, true, schema, imageData);
+
+            // Cleaning JSON string
+            resultJson = resultJson.replace(/```json\n?|\n?```/g, '').trim();
+
+            let result;
+            try {
+                result = JSON.parse(resultJson);
+            } catch (parseError) {
+                console.error("JSON Parse Error:", parseError, resultJson);
+                // Attempt simplistic repair if truncated
+                if (parseError.message.includes("Unterminated string") || parseError.message.includes("End of data")) {
+                     try {
+                        // Very naive repair: try closing the structure
+                        result = JSON.parse(resultJson + '"}');
+                     } catch (e2) {
+                         try {
+                             result = JSON.parse(resultJson + '}');
+                         } catch (e3) {
+                             throw new Error("Gagal memproses respon dari AI (Respon terpotong/tidak valid). Coba kurangi durasi video atau coba lagi.");
+                         }
+                     }
+                } else {
+                    throw new Error("Format JSON dari AI tidak valid.");
+                }
+            }
+
+            elements.outAnalisaEnglish.value = result.english_prompt || "Gagal memuat prompt.";
+            elements.outAnalisaIndonesia.value = result.indonesian_prompt || "Gagal memuat prompt.";
+            elements.outAnalisaJson.value = JSON.stringify(result.analysis_data || {}, null, 2);
+
+            elements.analisaResultContainer.classList.remove('hidden');
+
+        } catch (e) {
+            alert("Gagal melakukan analisa: " + e.message);
+            console.error(e);
+        } finally {
+            elements.btnDoAnalisa.disabled = false;
+            elements.btnDoAnalisa.innerHTML = "ANALISA SEKARANG";
+        }
+    }
+
     // --- Event Listeners ---
     function setupEventListeners() {
         elements.promptHistoryList.addEventListener('click', (event) => {
@@ -1919,8 +2167,9 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
         elements.settingsButton.addEventListener('click', () => toggleApiKeyModal(true));
         elements.closeApiKeyModal.addEventListener('click', () => {
             toggleApiKeyModal(false);
-            if (elements.apiKeyModal.dataset.returnTab === 'desainer' && !userApiKey) {
-                alert('Anda tidak bisa menggunakan fitur DESAINER PROMPT dan AHLI PROMPT tanpa API Key.');
+            const returnTab = elements.apiKeyModal.dataset.returnTab;
+            if ((returnTab === 'desainer' || returnTab === 'analisa') && !userApiKey) {
+                alert('Anda tidak bisa menggunakan fitur ini tanpa API Key.');
             }
         });
 
@@ -1931,8 +2180,11 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
                 localStorage.setItem('geminiApiKey', key);
                 toggleApiKeyModal(false);
                 // If we were trying to access a tab, go there now
-                if (elements.apiKeyModal.dataset.returnTab === 'desainer') {
+                const returnTab = elements.apiKeyModal.dataset.returnTab;
+                if (returnTab === 'desainer') {
                     showTab('desainer');
+                } else if (returnTab === 'analisa') {
+                    showTab('analisa');
                 }
                 elements.assistantButton.classList.remove('hidden');
             } else {
@@ -1961,7 +2213,56 @@ Ketika menjawab pertanyaan pengguna, berikan jawaban yang praktis, mendalam, dan
 
         elements.mainTabButtons.belajar.addEventListener('click', () => showTab('belajar'));
         elements.mainTabButtons.desainer.addEventListener('click', () => showTab('desainer'));
+        elements.mainTabButtons.analisa.addEventListener('click', () => showTab('analisa'));
         elements.mainTabButtons.riwayat.addEventListener('click', () => showTab('riwayat'));
+
+        // Analisa Listeners
+        elements.analisaTabImage.addEventListener('click', () => switchAnalisaMode('image'));
+        elements.analisaTabVideo.addEventListener('click', () => switchAnalisaMode('video'));
+
+        elements.analisaUploadImage.addEventListener('change', (e) => handleAnalisaFile(e.target.files[0], 'image'));
+        elements.dropZoneAnalisaImage.addEventListener('drop', (e) => { e.preventDefault(); handleAnalisaFile(e.dataTransfer.files[0], 'image'); });
+
+        elements.analisaUploadVideo.addEventListener('change', (e) => handleAnalisaFile(e.target.files[0], 'video'));
+        elements.dropZoneAnalisaVideo.addEventListener('drop', (e) => { e.preventDefault(); handleAnalisaFile(e.dataTransfer.files[0], 'video'); });
+
+        elements.analisaResetBtn.addEventListener('click', resetAnalisa);
+        elements.btnDoAnalisa.addEventListener('click', runPromptAnalysis);
+
+        // Result Tabs
+        const switchResultTab = (tab) => {
+            ['English', 'Indonesia', 'Json'].forEach(t => {
+                const btn = elements[`resTab${t}`];
+                const content = elements[`resContent${t}`];
+                if (tab === t) {
+                    btn.classList.add('active');
+                    content.classList.remove('hidden');
+                    content.classList.add('block');
+                } else {
+                    btn.classList.remove('active');
+                    content.classList.add('hidden');
+                    content.classList.remove('block');
+                }
+            });
+        };
+        elements.resTabEnglish.addEventListener('click', () => switchResultTab('English'));
+        elements.resTabIndonesia.addEventListener('click', () => switchResultTab('Indonesia'));
+        elements.resTabJson.addEventListener('click', () => switchResultTab('Json'));
+
+        // Copy buttons for analysis results
+        document.querySelectorAll('.copy-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const targetId = e.target.getAttribute('data-target');
+                const targetEl = document.getElementById(targetId);
+                if (targetEl) {
+                    targetEl.select();
+                    document.execCommand('copy');
+                    const originalText = e.target.textContent;
+                    e.target.textContent = 'DISALIN!';
+                    setTimeout(() => { e.target.textContent = originalText; }, 2000);
+                }
+            });
+        });
 
         elements.designerTabImage.addEventListener('click', () => switchDesignerTab('image'));
         elements.designerTabVideo.addEventListener('click', () => switchDesignerTab('video'));
