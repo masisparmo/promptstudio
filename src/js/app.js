@@ -916,7 +916,19 @@ document.addEventListener('DOMContentLoaded', () => {
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
                 });
-                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                if (!response.ok) {
+                    const errBody = await response.text();
+                    let errMsg = `HTTP error! status: ${response.status}`;
+                    try {
+                        const errJson = JSON.parse(errBody);
+                        if (errJson.error && errJson.error.message) {
+                            errMsg += ` - ${errJson.error.message}`;
+                        }
+                    } catch (e) {
+                        errMsg += ` - ${errBody}`;
+                    }
+                    throw new Error(errMsg);
+                }
                 const result = await response.json();
                 if (result.candidates && result.candidates[0].content && result.candidates[0].content.parts[0].text) {
                     return result.candidates[0].content.parts[0].text;
