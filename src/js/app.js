@@ -916,7 +916,19 @@ document.addEventListener('DOMContentLoaded', () => {
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
                 });
-                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                if (!response.ok) {
+                    const errBody = await response.text();
+                    let errMsg = `HTTP error! status: ${response.status}`;
+                    try {
+                        const errJson = JSON.parse(errBody);
+                        if (errJson.error && errJson.error.message) {
+                            errMsg += ` - ${errJson.error.message}`;
+                        }
+                    } catch (e) {
+                        errMsg += ` - ${errBody}`;
+                    }
+                    throw new Error(errMsg);
+                }
                 const result = await response.json();
                 if (result.candidates && result.candidates[0].content && result.candidates[0].content.parts[0].text) {
                     return result.candidates[0].content.parts[0].text;
@@ -2490,7 +2502,7 @@ Berikan respons HANYA dalam format JSON valid.`;
                 Instruksi PENTING:
                 1. Hasilkan PUISI (bukan lirik lagu), GAYA (Styles), dan 5 JUDUL.
                 2. PUISI harus puitis dan sesuai dengan tema.
-                3. GAYA (Styles) harus mendeskripsikan musik instrumental, fokus pada alat musik utama yang dipilih. JANGAN menyebut nama artis.
+                3. GAYA (Styles) harus mendeskripsikan musik instrumental, fokus pada alat musik utama yang dipilih. Maksimal ${batasKarakter} karakter. JANGAN menyebut nama artis.
                 4. Jawab HANYA dalam format JSON.`;
 
                 userQuery = `Buatkan saya konten instrumental dengan detail:
@@ -2499,8 +2511,8 @@ Berikan respons HANYA dalam format JSON valid.`;
                 songSchema = {
                     type: "OBJECT",
                     properties: {
-                        "lirik": { "type": "STRING", "description": "Sebuah puisi yang sesuai dengan tema." },
-                        "gaya": { "type": "STRING", "description": `Gaya musik instrumental, maksimal ${batasKarakter} karakter.` },
+                        "lirik": { "type": "STRING" },
+                        "gaya": { "type": "STRING" },
                         "judul_lagu": { "type": "ARRAY", "items": { "type": "STRING" } }
                     },
                     required: ["lirik", "gaya", "judul_lagu"]
@@ -2512,7 +2524,7 @@ Berikan respons HANYA dalam format JSON valid.`;
                 1. Hasilkan LIRIK, GAYA (Styles), dan 5 JUDUL LAGU.
                 2. LIRIK harus memiliki format terstruktur dengan label seperti [Verse], [Chorus], dll.
                 3. **Sangat Penting: Di dalam JSON, setiap baris lirik HARUS diakhiri dengan karakter newline escape (\\n) untuk jeda baris.**
-                4. GAYA (Styles) harus berupa daftar kata kunci deskriptif, TANPA menyebutkan nama artis.
+                4. GAYA (Styles) harus berupa daftar kata kunci deskriptif, maksimal ${batasKarakter} karakter, TANPA menyebutkan nama artis.
                 5. Jawab HANYA dalam format JSON.`;
 
                 userQuery = `Buatkan saya konten lagu lengkap dengan detail:
@@ -2521,8 +2533,8 @@ Berikan respons HANYA dalam format JSON valid.`;
                 songSchema = {
                     type: "OBJECT",
                     properties: {
-                        "lirik": { "type": "STRING", "description": "Lirik lagu terstruktur." },
-                        "gaya": { "type": "STRING", "description": `Gaya musik, maksimal ${batasKarakter} karakter.` },
+                        "lirik": { "type": "STRING" },
+                        "gaya": { "type": "STRING" },
                         "judul_lagu": { "type": "ARRAY", "items": { "type": "STRING" } }
                     },
                     required: ["lirik", "gaya", "judul_lagu"]
